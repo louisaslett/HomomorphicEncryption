@@ -1,0 +1,7 @@
+useDynLib(FHE)
+exportPattern("^[[:alpha:]]+")
+#export("+.FandV")
+#export("-.FandV")
+#export("*.FandV")
+import(methods)
+import(Rcpp)

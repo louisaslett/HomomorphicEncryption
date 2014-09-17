@@ -1,0 +1,210 @@
+#' Fan and Vercauteren encryption scheme
+#' 
+#' The Fan and Vercauteren scheme is implemented in this package.
+#' 
+#' Description of the scheme.
+#' 
+#' @name FandV
+#' 
+#' @usage
+#' p <- pars("FandV")
+#' 
+#' @examples
+#' # Benchmark the performance of the scheme
+#' library(microbenchmark)
+#' p <- pars("FandV")
+#' microbenchmark({ keys <- keygen(p) }, unit="ms")
+#' microbenchmark({ ct1 <- enc(keys$pk, 2) }, unit="ms")
+#' ct2 <- enc(keys$pk, 3)
+#' microbenchmark({ ct1 + ct2 }, unit="ms")
+#' microbenchmark({ ct1 * ct2 }, unit="ms")
+#' microbenchmark({ dec(keys$sk, ct1) }, unit="ms")
+#' 
+NULL
+
+loadModule("FandV", TRUE)
+
+# http://stackoverflow.com/questions/18151619/operator-overloading-in-r-reference-classes
+# evalqOnLoad used in package RcppBDT
+evalqOnLoad({
+  # Single ciphertexts
+  setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
+    ct <- e1$add(e2)
+    # Prepare return result
+    attr(ct, "FHEt") <- "ct"
+    attr(ct, "FHEs") <- "FandV"
+    ct
+  })
+  setMethod("-", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
+    ct <- e1$sub(e2)
+    # Prepare return result
+    attr(ct, "FHEt") <- "ct"
+    attr(ct, "FHEs") <- "FandV"
+    ct
+  })
+  setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
+    ct <- e1$mul(e2)
+    # Prepare return result
+    attr(ct, "FHEt") <- "ct"
+    attr(ct, "FHEs") <- "FandV"
+    ct
+  })
+  
+  # Vectors of ciphertexts
+  setMethod("c", "Rcpp_FandV_ct", function (x, ..., recursive = FALSE) {
+    res <- new(FandV_ct_vec)
+    res$push(x)
+    
+    args <- list(...)
+    for(i in 1:length(args)) {
+      if(class(args[[i]])=="Rcpp_FandV_ct") {
+        res$push(args[[i]])
+      } else if(class(args[[i]])=="Rcpp_FandV_ct_vec") {
+        res$pushvec(args[[i]])
+      } else {
+        stop("only Fan and Vercauteren ciphertexts or ciphertext vectors can be concatenated")
+      }
+    }
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("c", "Rcpp_FandV_ct_vec", function (x, ..., recursive = FALSE) {
+    res <- new(FandV_ct_vec)
+    res$pushvec(x)
+    
+    args <- list(...)
+    for(i in 1:length(args)) {
+      if(class(args[[i]])=="Rcpp_FandV_ct") {
+        res$push(args[[i]])
+      } else if(class(args[[i]])=="Rcpp_FandV_ct_vec") {
+        res$pushvec(args[[i]])
+      } else {
+        stop("only Fan and Vercauteren ciphertexts or ciphertext vectors can be concatenated")
+      }
+    }
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("[", "Rcpp_FandV_ct_vec", function(x, i, j, ..., drop=TRUE) {
+    i <- as.integer(i)
+    if(max(abs(i))>x$size()) {
+      stop("out of bounds")
+    }
+    if(min(i) < 0 && max(i) > 0) {
+      stop("only 0's may be mixed with negative subscripts")
+    }
+    if(min(i) < 0)
+      res <- x$without(-sort(i)-1)
+    else
+      res <- x$subset(i-1)
+    if(res$size() == 1) {
+      ct <- res$get(0)
+      attr(ct, "FHEt") <- "ct"
+      attr(ct, "FHEs") <- "FandV"
+      return(ct)
+    }
+    if(res$size() == 0) {
+      return(NULL)
+    }
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_vec", value="Rcpp_FandV_ct"), function (x, i, j, ..., value) {
+    i <- as.integer(i)
+    if(length(i) > 1)
+      stop("only single element assignment currently supported for FandV ciphertext vectors")
+    if(i<1 || i>x$size()) {
+      stop("out of bounds")
+    }
+    x$set(i-1, value)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    x
+  })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
+    stop("only a ciphertext can be assigned to this vector")
+  })
+  setMethod("+", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
+      stop("longer object length is not a multiple of shorter object length")
+    }
+    res <- e1$add(e2)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
+      stop("longer object length is not a multiple of shorter object length")
+    }
+    res <- e1$mul(e2)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("+", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
+    res <- e1$addct(e2)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    res <- e2$addct(e1)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
+    res <- e1$mulct(e2)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    res <- e2$mulct(e1)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+})
+
+loadFHE.Rcpp_FandV_ct <- function(file) {
+  res <- load_FandV_ct(file)
+  attr(res, "FHEt") <- "ct"
+  attr(res, "FHEs") <- "FandV"
+  res
+}
+
+loadFHE.Rcpp_FandV_ct_vec <- function(file) {
+  res <- load_FandV_ct_vec(file)
+  attr(res, "FHEt") <- "ctvec"
+  attr(res, "FHEs") <- "FandV"
+  res
+}
+
+loadFHE.FandV_keys <- function(file) {
+  res <- load_FandV_keys(file)
+  attr(res$pk, "FHEt") <- "pk"
+  attr(res$pk, "FHEs") <- "FandV"
+  attr(res$sk, "FHEt") <- "sk"
+  attr(res$sk, "FHEs") <- "FandV"
+  attr(res$rlk, "FHEt") <- "rlk"
+  attr(res$rlk, "FHEs") <- "FandV"
+  class(res) <- "FandV_keys"
+  attr(res, "FHEt") <- "keys"
+  attr(res, "FHEs") <- "FandV"
+  res
+}
