@@ -15,6 +15,7 @@
 
 using namespace Rcpp;
 
+// Do centred modulo q reduction of all coefficients of polynomial p ... [p]_q
 void fmpz_polyxx_q(fmpz_polyxx& p, fmpzxx q) {
   fmpzxx tmp, qo2(q/2);
   for(int i=0; i<p.length(); i++) {
@@ -26,6 +27,7 @@ void fmpz_polyxx_q(fmpz_polyxx& p, fmpzxx q) {
 }
 
 void fmpz_rand(fmpzxx &p, unsigned int bits) { // Random number from 0 to 2^bits-1
+  RNGScope scope;
   p = 0;
   for(int i=0; i<bits/32; i++) {
     p = (p << 32) + ((unsigned int) R::runif(0.0, 4294967295.0));

@@ -19,7 +19,7 @@ class FandV_rlk;
 class FandV_par {
   public:
     // Constructors
-    FandV_par(int d_=4096, double sigma_=16.0, int qpow_=128, int tpow_=15);
+    FandV_par(int d_=4096, double sigma_=16.0, int qpow_=128, int t_=32768);
     FandV_par(const FandV_par& par);
     
     // Operators
@@ -38,8 +38,8 @@ class FandV_par {
     // Don't private these to keep parameters object very lightweight, because
     // the keys are going to hold copies
     double sigma;
-    int qpow, tpow;
-    fmpzxx q, t, T, qot; // Coefficient modulo values
+    int qpow;
+    fmpzxx q, t, T, Delta; // Coefficient modulo values
     fmpz_polyxx Phi; // Cyclotomic polynomial defining ring modulo
 };
 

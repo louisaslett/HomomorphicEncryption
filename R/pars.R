@@ -10,7 +10,7 @@
 #'   \item{\code{sigma}}{the standard deviation of the discrete Gaussian used to 
 #' induce a distribution on the cyclotomic polynomial ring (default 16.0);}
 #'   \item{\code{qpow}}{the power of 2 to use for the coefficient modulus (default 128);}
-#'   \item{\code{tpow}}{the power of 2 to use for the encoding modulus (default 15).}
+#'   \item{\code{t}}{the value to use for the message space modulus (default 32768).}
 #' }
 #' 
 #' This function simply sets up the parameters which must be specified to use a
@@ -48,9 +48,10 @@
 pars <- function(scheme, ...) {
   args <- list(...)
   if(scheme=="FandV") {
-    p <- list(d=4096, sigma=16, qpow=128, tpow=15)
+    p <- list(d=4096, sigma=16, qpow=128, t=32768)
     if("d" %in% names(args)) {
       if(as.integer(log2(args$d))!=log2(args$d)) stop("d must be a power of 2.")
+      if(args$d<32) stop("d must >=32.")
       p$d <- args$d
     }
     if("sigma" %in% names(args)) {
@@ -62,12 +63,12 @@ pars <- function(scheme, ...) {
       if(args$qpow%%2!=0) stop("qpow must be divisible by 2 (for relinearisation optimisation).")
       p$qpow <- args$qpow
     }
-    if("tpow" %in% names(args)) {
-      if(args$tpow<=0) stop("tpow must be >0.")
-      if(args$tpow<p$qpow) stop("tpow must be >qpow.")
-      p$tpow <- args$tpow
+    if("t" %in% names(args)) {
+      if(args$t<=0) stop("t must be >0.")
+      if(log2(args$t)>p$qpow) stop("message space modulus (t) cannot exceed coefficient modulus (2^qpow).")
+      p$t <- args$t
     }
-    p <- new(FandV_par, p$d, p$sigma, p$qpow, p$tpow)
+    p <- new(FandV_par, p$d, p$sigma, p$qpow, p$t)
     attr(p, "FHEt") <- "pars"
     attr(p, "FHEs") <- "FandV"
     return(p)

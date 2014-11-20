@@ -14,27 +14,25 @@
 using namespace Rcpp;
 
 // Construct from parameters
-FandV_par::FandV_par(int d_, double sigma_, int qpow_, int tpow_) : sigma(sigma_), qpow(qpow_), tpow(tpow_), q(1), t(1), T(1) {
+FandV_par::FandV_par(int d_, double sigma_, int qpow_, int t_) : sigma(sigma_), qpow(qpow_), q(1), t(t_), T(1) {
   arith_cyclotomic_polynomial(Phi._data().inner, 2*d_); // Phi is 2d-th Cyclotomic polynomial
   
   q = q << qpow; // q=2^qpow
-  t = t << tpow; // t=2^tpow
-  qot = q/t;
+  Delta = q/t;
   T = T << (qpow/2);
 }
 
 // Copy constructor
-FandV_par::FandV_par(const FandV_par& par) : sigma(par.sigma), qpow(par.qpow), tpow(par.tpow), q(par.q), t(par.t), T(par.T), qot(par.qot), Phi(par.Phi) { }
+FandV_par::FandV_par(const FandV_par& par) : sigma(par.sigma), qpow(par.qpow), q(par.q), t(par.t), T(par.T), Delta(par.Delta), Phi(par.Phi) { }
 
 // Swap function
 void FandV_par::swap(FandV_par& a, FandV_par& b) {
   std::swap(a.sigma, b.sigma);
   std::swap(a.qpow, b.qpow);
-  std::swap(a.tpow, b.tpow);
   std::swap(a.q, b.q);
   std::swap(a.t, b.t);
   std::swap(a.T, b.T);
-  std::swap(a.qot, b.qot);
+  std::swap(a.Delta, b.Delta);
   std::swap(a.Phi, b.Phi);
 }
 
@@ -49,7 +47,7 @@ void FandV_par::show() {
   Rcout << "Fan and Vercauteren parameters\n";
   Rcout << "\u03d5 = ";
   printPoly(Phi);
-  Rcout << "\nq = " << q << " (" << qpow << "-bit integer)\nt = " << t << " (" << tpow << "-bit integer)\n" << "\u03c3 = " << sigma << "\n";
+  Rcout << "\nq = " << q << " (" << qpow << "-bit integer)\nt = " << t << "\n\u0394 = " << Delta << "\n\u03c3 = " << sigma << "\n";
 }
 
 // Keygen
@@ -62,6 +60,8 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   //pk.pk1 = fmpz_polyxx::randtest(fr, p.Phi().length(), (mp_bitcnt_t) (p.qpow()-1));
   // Use GMP and conversion instead
   // WARNING: fmpzxx and fmp_polyxx can't convert from GMP, so have to use C interface
+  
+  RNGScope scope;
   
   // Public/private keys
   pk.p = *this;
@@ -91,7 +91,9 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
     // e
     e.set_coeff(i, lround(R::rnorm(0.0,pk.p.sigma)));
   }
+  // -(a.s+e) ...
   pk.p0 = -( ((pk.p0*sk.s)%pk.p.Phi) + e );
+  // ... mod q
   fmpz_polyxx_q(pk.p0, pk.p.q);
   
   // Relin key
@@ -124,7 +126,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
 void FandV_par::save(FILE* fp) const {
   fprintf(fp, "=> FHE package object <=\nRcpp_FandV_par\n");
   
-  fprintf(fp, "%lf:%d:%d\n", sigma, qpow, tpow);
+  fprintf(fp, "%lf:%d\n", sigma, qpow);
   
   print(fp, q);
   fprintf(fp, "\n");
@@ -132,7 +134,7 @@ void FandV_par::save(FILE* fp) const {
   fprintf(fp, "\n");
   print(fp, T);
   fprintf(fp, "\n");
-  print(fp, qot);
+  print(fp, Delta);
   fprintf(fp, "\n");
   print(fp, Phi);
   fprintf(fp, "\n");
@@ -152,11 +154,11 @@ FandV_par::FandV_par(FILE* fp) {
     return;
   }
   
-  fscanf(fp, "%lf:%d:%d\n", &sigma, &qpow, &tpow);
+  fscanf(fp, "%lf:%d\n", &sigma, &qpow);
   
   read(fp, q);
   read(fp, t);
   read(fp, T);
-  read(fp, qot);
+  read(fp, Delta);
   read(fp, Phi);
 }

@@ -14,7 +14,7 @@
 using namespace Rcpp;
 
 //// Public keys ////
-FandV_pk::FandV_pk() : p(0, 0.0, 0, 0) { }
+FandV_pk::FandV_pk() : p(0, 0.0, 0, 1) { }
 
 FandV_pk::FandV_pk(const FandV_pk& pk) : p(pk.p), rlk(pk.rlk), p0(pk.p0), p1(pk.p1) { }
 
@@ -25,7 +25,7 @@ void FandV_pk::enc(int m, FandV_ct& ct) {
   
   fmpz_polyxx u, mP;
   u.realloc(p.Phi.length());
-  mP.realloc(p.tpow);
+  mP.realloc(31);
   
   // Random numbers
   for(int i=0; i<p.Phi.length(); i++) {
@@ -38,12 +38,12 @@ void FandV_pk::enc(int m, FandV_ct& ct) {
   int sign = 1;
   sign = copysign(sign, m);
   m = abs(m);
-  for(int i=0; i<p.tpow; i++) {
+  for(int i=0; i<31; i++) {
     mP.set_coeff(i, (m&1)*sign);
     m >>= 1;
   }
   
-  ct.c0 = ((p0*u)%p.Phi) + ct.c0 + p.qot*mP;
+  ct.c0 = ((p0*u)%p.Phi) + ct.c0 + p.Delta*mP;
   fmpz_polyxx_q(ct.c0, p.q);
   
   ct.c1 = ((p1*u)%p.Phi);
@@ -116,7 +116,7 @@ int FandV_sk::dec(FandV_ct& ct) {
   fmpz_polyxx_q(res, ct.p.t);
   
   int m = 0;
-  for(int i=0; i<ct.p.tpow; i++) {
+  for(int i=0; i<31; i++) {
     m += (res.get_coeff(i)*tmp).to<slong>();
     tmp *= 2;
   }
@@ -157,7 +157,7 @@ FandV_sk::FandV_sk(FILE* fp) {
 
 
 //// Relinearisation keys ////
-FandV_rlk::FandV_rlk() : p(0, 0.0, 0, 0) { }
+FandV_rlk::FandV_rlk() : p(0, 0.0, 0, 1) { }
 
 FandV_rlk::FandV_rlk(const FandV_rlk& rlk) : p(rlk.p), rlk00(rlk.rlk00), rlk01(rlk.rlk01), rlk10(rlk.rlk10), rlk11(rlk.rlk11) { }
 
