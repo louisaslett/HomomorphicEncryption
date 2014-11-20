@@ -1,4 +1,4 @@
-Package: FHE
+Package: HomomorphicEncryption
 Type: Package
 Title: Fully Homomorphic Encryption
 Version: 0.1

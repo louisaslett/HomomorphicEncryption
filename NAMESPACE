@@ -1,4 +1,4 @@
-useDynLib(FHE)
+useDynLib(HomomorphicEncryption)
 exportPattern("^[[:alpha:]]+")
 #export("+.FandV")
 #export("-.FandV")
