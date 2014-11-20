@@ -15,7 +15,10 @@
 #' @param ct a ciphertext as produced from a call to \code{\link{enc}}.
 #' 
 #' @return
-#' The decrypted integer message.
+#' The decrypted integer message.  If the value is in the range of a standard
+#' integer in R (-2147483647 to 2147483647) then an integer will be returned,
+#' otherwise a big integer object from the \code{\link{gmp}} package will be
+#' returned.
 #' 
 #' @seealso
 #' \code{\link{enc}} to encrypt messages to ciphertexts which this function decrypts.
@@ -36,14 +39,21 @@ dec <- function(sk, ct) {
 
 dec.Rcpp_FandV_sk <- function(sk, ct) {
   if(class(ct) == "Rcpp_FandV_ct") {
-    return(sk$dec(ct))
+    res <- as.bigz(sk$dec(ct))
+    if(res < 2147483647 && res > -2147483647)
+      return(as.integer(res))
+    else
+      return(res)
   } else {
-    res <- sk$dec(ct[1])
+    res <- as.bigz(sk$dec(ct[1]))
     
     for(i in 2:ct$size()) {
-      res <- c(res, sk$dec(ct[i]))
+      res <- c(res, as.bigz(sk$dec(ct[i])))
     }
     
-    return(res)
+    if(sum(res > 2147483647 | res < -2147483647) == 0)
+      return(as.integer(res))
+    else
+      return(res)
   }
 }

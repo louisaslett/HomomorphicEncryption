@@ -9,6 +9,7 @@
 #include <Rcpp.h>
 #include <limits.h>
 #include <fmpz_polyxx.h>
+#include <string>
 
 
 using namespace Rcpp;
@@ -101,9 +102,9 @@ FandV_sk::FandV_sk() { }
 FandV_sk::FandV_sk(const FandV_sk& sk) : s(sk.s) { }
 
 // Decrypt
-int FandV_sk::dec(FandV_ct& ct) {
+std::string FandV_sk::dec(FandV_ct& ct) {
   fmpz_polyxx res, res2;
-  fmpzxx tmp(1);
+  fmpzxx tmp(1), m(0);
   
   res = ct.c0+((ct.c1*s)%ct.p.Phi);
   fmpz_polyxx_q(res, ct.p.q);
@@ -115,13 +116,12 @@ int FandV_sk::dec(FandV_ct& ct) {
   }
   fmpz_polyxx_q(res, ct.p.t);
   
-  int m = 0;
-  for(int i=0; i<31; i++) {
-    m += (res.get_coeff(i)*tmp).to<slong>();
+  for(int i=0; i<res.length(); i++) {
+    m += res.get_coeff(i)*tmp;
     tmp *= 2;
   }
   
-  return(m);
+  return(m.to_string());
 }
 
 void FandV_sk::show() {

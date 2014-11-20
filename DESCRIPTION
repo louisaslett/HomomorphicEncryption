@@ -12,6 +12,7 @@ Imports:
     Rcpp (>= 0.11.2),
     methods
 LinkingTo: Rcpp
+Depends: gmp
 Suggests:
     testthat,
     microbenchmark

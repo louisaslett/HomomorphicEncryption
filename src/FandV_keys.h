@@ -69,7 +69,7 @@ class FandV_sk {
     FandV_sk(const FandV_sk& sk);
     
     // Decrypt
-    int dec(FandV_ct& ct);
+    std::string dec(FandV_ct& ct);
     
     // Print
     void show();

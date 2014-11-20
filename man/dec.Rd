@@ -12,7 +12,10 @@ dec(sk, ct)
 function.}
 }
 \value{
-The decrypted integer message.
+The decrypted integer message.  If the value is in the range of a standard
+integer in R (-2147483647 to 2147483647) then an integer will be returned,
+otherwise a big integer object from the \code{\link{gmp}} package will be
+returned.
 }
 \description{
 This decrypts an integer message which has been encrypted under one of the
