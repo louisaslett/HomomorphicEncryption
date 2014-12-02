@@ -156,7 +156,7 @@ FandV_par::FandV_par(FILE* fp) {
     return;
   }
   
-  fscanf(fp, "%lf:%d\n", &sigma, &qpow);
+  len = fscanf(fp, "%lf:%d\n", &sigma, &qpow);
   
   read(fp, q);
   read(fp, t);

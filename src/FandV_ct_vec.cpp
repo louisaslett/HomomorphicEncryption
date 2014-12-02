@@ -153,7 +153,7 @@ FandV_ct_vec::FandV_ct_vec(FILE* fp) {
   }
   
   int vecsz;
-  fscanf(fp, "n=%d\n", &vecsz); Rcout << vecsz << "\n";
+  len = fscanf(fp, "n=%d\n", &vecsz); Rcout << vecsz << "\n";
   for(int i=0; i<vecsz; i++) {
     FandV_ct ct(fp);
     len = getline(&buf, &bufn, fp); // Advance past the new line
