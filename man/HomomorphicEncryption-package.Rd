@@ -1,6 +1,6 @@
-\name{FHE-package}
-\alias{FHE-package}
-\alias{FHE}
+\name{HomomorphicEncryption-package}
+\alias{HomomorphicEncryption-package}
+\alias{HomomorphicEncryption}
 \docType{package}
 \title{
 Homomorphic Encryption
@@ -14,7 +14,7 @@ unencrypted data.
 }
 \details{
 \tabular{ll}{
-Package: \tab FHE\cr
+Package: \tab HomomorphicEncryption\cr
 Type: \tab Package\cr
 Version: \tab 0.1\cr
 Date: \tab 2014-07-18\cr
