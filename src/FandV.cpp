@@ -151,23 +151,25 @@ List load_FandV_keys(const std::string& file) {
   }
   
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (KEYS)\n";
+    free(buf);
     return(keys);
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("FandV_keys\n", buf, len) != 0) {
     Rcout << "Error: file does not contain key objects\n";
+    free(buf);
     return(keys);
   }
   
   FandV_sk sk(fp);
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   FandV_pk pk(fp);
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   FandV_rlk rlk(fp);
   
   keys["sk"] = sk;
@@ -176,6 +178,7 @@ List load_FandV_keys(const std::string& file) {
   
   fclose(fp);
   
+  free(buf);
   return(keys);
 }
 

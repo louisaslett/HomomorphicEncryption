@@ -141,16 +141,18 @@ void FandV_par::save(FILE* fp) const {
 }
 FandV_par::FandV_par(FILE* fp) {
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (PAR)\n";
+    free(buf);
     return;
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("Rcpp_FandV_par\n", buf, len) != 0) {
     Rcout << "Error: file does not contain a parameters object\n";
+    free(buf);
     return;
   }
   
@@ -161,4 +163,6 @@ FandV_par::FandV_par(FILE* fp) {
   read(fp, T);
   read(fp, Delta);
   read(fp, Phi);
+  
+  free(buf);
 }

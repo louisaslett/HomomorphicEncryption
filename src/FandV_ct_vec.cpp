@@ -137,16 +137,18 @@ void FandV_ct_vec::save(FILE* fp) const {
 }
 FandV_ct_vec::FandV_ct_vec(FILE* fp) {
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (CT_VEC)\n";
+    free(buf);
     return;
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("Rcpp_FandV_ct_vec\n", buf, len) != 0) {
     Rcout << "Error: file does not contain a vector of ciphertext objects\n";
+    free(buf);
     return;
   }
   
@@ -154,7 +156,8 @@ FandV_ct_vec::FandV_ct_vec(FILE* fp) {
   fscanf(fp, "n=%d\n", &vecsz); Rcout << vecsz << "\n";
   for(int i=0; i<vecsz; i++) {
     FandV_ct ct(fp);
-    fgetln(fp, &len); // Advance past the new line
+    len = getline(&buf, &bufn, fp); // Advance past the new line
     vec.push_back(ct);
   }
+  free(buf);
 }

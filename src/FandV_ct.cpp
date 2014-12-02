@@ -162,25 +162,29 @@ void FandV_ct::save(FILE* fp) const {
 }
 FandV_ct::FandV_ct(FILE* fp) {
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (CT)\n";
+    free(buf);
     return;
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("Rcpp_FandV_ct\n", buf, len) != 0) {
     Rcout << "Error: file does not contain a single ciphertext object\n";
+    free(buf);
     return;
   }
   
   read(fp, c0);
   read(fp, c1);
   
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   rlk = FandV_rlk(fp);
   
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   p = FandV_par(fp);
+  
+  free(buf);
 }

@@ -73,26 +73,29 @@ void FandV_pk::save(FILE* fp) const {
 }
 FandV_pk::FandV_pk(FILE* fp) {
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (PK)\n";
+    free(buf);
     return;
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("Rcpp_FandV_pk\n", buf, len) != 0) {
     Rcout << "Error: file does not contain a public key\n";
+    free(buf);
     return;
   }
   
   read(fp, p0);
   read(fp, p1);
   
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   rlk = FandV_rlk(fp);
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   p = FandV_par(fp);
+  free(buf);
 }
 
 
@@ -139,20 +142,23 @@ void FandV_sk::save(FILE* fp) const {
 }
 FandV_sk::FandV_sk(FILE* fp) {
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (SK)\n";
+    free(buf);
     return;
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("Rcpp_FandV_sk\n", buf, len) != 0) {
     Rcout << "Error: file does not contain a secret key\n";
+    free(buf);
     return;
   }
   
   read(fp, s);
+  free(buf);
 }
 
 
@@ -189,16 +195,18 @@ void FandV_rlk::save(FILE* fp) const {
 }
 FandV_rlk::FandV_rlk(FILE* fp) {
   // Check for header line
-  char *buf;
+  char *buf = NULL; size_t bufn = 0;
   size_t len;
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (RLK)\n";
+    free(buf);
     return;
   }
-  buf = fgetln(fp, &len);
+  len = getline(&buf, &bufn, fp);
   if(strncmp("Rcpp_FandV_rlk\n", buf, len) != 0) {
     Rcout << "Error: file does not contain a relinearisation key\n";
+    free(buf);
     return;
   }
   
@@ -207,6 +215,7 @@ FandV_rlk::FandV_rlk(FILE* fp) {
   read(fp, rlk10);
   read(fp, rlk11);
   
-  fgetln(fp, &len); // Advance past the new line
+  len = getline(&buf, &bufn, fp); // Advance past the new line
   p = FandV_par(fp);
+  free(buf);
 }
