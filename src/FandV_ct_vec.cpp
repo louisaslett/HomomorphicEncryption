@@ -112,16 +112,25 @@ FandV_ct_vec FandV_ct_vec::mulct(const FandV_ct& ct) const {
   }
   return(res);
 }
+
 FandV_ct FandV_ct_vec::sum() const {
-//  FandV_ct res(p, rlk);
-//  
-//  return(res);
+  FandV_ct res(vec[0]);
+  
+  for(int i=1; i<vec.size(); i++) {
+    res = res.add(vec[i]);
+  }
+  
+  return(res);
 }
 
 FandV_ct FandV_ct_vec::prod() const {
-//  FandV_ct res(p, rlk);
-//  
-//  return(res);
+  FandV_ct res(vec[0]);
+  
+  for(int i=1; i<vec.size(); i++) {
+    res = res.mul(vec[i]);
+  }
+  
+  return(res);
 }
 
 void FandV_ct_vec::show() const {

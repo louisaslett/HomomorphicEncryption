@@ -179,6 +179,20 @@ evalqOnLoad({
     attr(res, "FHEs") <- "FandV"
     res
   })
+  setMethod("sum", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
+    res <- x$sum()
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("prod", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
+    res <- x$prod()
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
 })
 
 loadFHE.Rcpp_FandV_ct <- function(file) {

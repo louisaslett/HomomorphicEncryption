@@ -233,6 +233,8 @@ RCPP_MODULE(FandV) {
     .method("get", &FandV_ct_vec::get)
     .method("mul", &FandV_ct_vec::mul)
     .method("mulct", &FandV_ct_vec::mulct)
+    .method("sum", &FandV_ct_vec::sum)
+    .method("prod", &FandV_ct_vec::prod)
     .method("push", &FandV_ct_vec::push)
     .method("pushvec", &FandV_ct_vec::pushvec)
     .method("set", &FandV_ct_vec::set)
