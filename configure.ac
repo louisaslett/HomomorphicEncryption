@@ -1,4 +1,4 @@
-AC_INIT([PopMCMC], 0.1)
+AC_INIT([HomomorphicEncryption], 0.1)
 
 dnl Louis Aslett (aslett@stats.ox.ac.uk)
 dnl September 2014
@@ -42,7 +42,7 @@ flint_home=""
 AC_ARG_WITH([flint],
             AC_HELP_STRING([--with-flint=MGR],
                            [specify the folder containing FLINT include and lib directories, e.g. /usr/local]),
-            [flint=$flint])
+            [flint=$withval])
 if test [ -n "$flint" ] ; then
 FLINT_HOME="${flint}"
 else
