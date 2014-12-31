@@ -48,7 +48,7 @@ class FandV_pk {
     FandV_pk(const FandV_pk& pk);
     
     // Encrypt
-    void enc(int m, FandV_ct& ct);
+    void enc(int m, FandV_ct& ct) const;
     void encvec(IntegerVector m, FandV_ct_vec& ctvec);
     
     // Print

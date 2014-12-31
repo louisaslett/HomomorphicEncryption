@@ -49,16 +49,6 @@ enc.Rcpp_FandV_pk <- function(pk, m) {
     attr(ct, "FHEs") <- "FandV"
     return(ct)
   } else {
-#     res <- new(FandV_ct, pk$p, pk$rlk)
-#     pk$enc(m[1], res)
-#     
-#     for(i in 2:length(m)) {
-#       ct <- new(FandV_ct, pk$p, pk$rlk)
-#       pk$enc(m[i], ct)
-#       
-#       res <- c(res, ct)
-#     }
-#     return(res)
     res <- new(FandV_ct_vec)
     pk$encvec(m, res)
     return(res)

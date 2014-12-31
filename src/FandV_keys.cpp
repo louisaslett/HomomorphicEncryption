@@ -12,6 +12,10 @@
 #include <fmpz_polyxx.h>
 #include <string>
 
+// [[Rcpp::depends(RcppParallel)]]
+#include <RcppParallel.h>
+using namespace RcppParallel;
+
 using namespace Rcpp;
 
 //// Public keys ////
@@ -20,7 +24,7 @@ FandV_pk::FandV_pk() : p(0, 0.0, 0, 1) { }
 FandV_pk::FandV_pk(const FandV_pk& pk) : p(pk.p), rlk(pk.rlk), p0(pk.p0), p1(pk.p1) { }
 
 // Encrypt
-void FandV_pk::enc(int m, FandV_ct& ct) {
+void FandV_pk::enc(int m, FandV_ct& ct) const {
   ct.c0.realloc(p.Phi.length());
   ct.c1.realloc(p.Phi.length());
   
@@ -51,14 +55,29 @@ void FandV_pk::enc(int m, FandV_ct& ct) {
   fmpz_polyxx_q(ct.c1, p.q);
 }
 
+struct FandV_EncVec : public Worker {
+  // Input values to encrypt & key
+  const IntegerVector* input;
+  const FandV_pk* pk;
+  
+  // Output vector of cipher texts
+  std::vector<FandV_ct>* output;
+  
+  // Constructor
+  FandV_EncVec(const FandV_pk* pk_, const IntegerVector* input_, std::vector<FandV_ct>* output_) { pk=pk_; input=input_; output=output_; }
+  
+  // function call operator that work for the specified range (begin/end)
+  void operator()(std::size_t begin, std::size_t end) {
+    for(std::size_t i = begin; i < end; i++) {
+      pk->enc((*input)[i], output->at(i));
+    }
+  }
+};
 void FandV_pk::encvec(IntegerVector m, FandV_ct_vec& ctvec) {
   FandV_ct ct(p, rlk);
   ctvec.vec.resize(m.size(), ct);
-  for(int i=0; i<m.size(); i++) {
-    FandV_ct tmp(p, rlk);
-    enc(m[i], tmp);
-    ctvec.set(i, tmp);
-  }
+  FandV_EncVec encEngine(this, &m, &(ctvec.vec));
+  parallelFor(0, m.size(), encEngine);
 }
   
 void FandV_pk::show() {
