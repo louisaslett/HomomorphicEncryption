@@ -122,12 +122,6 @@ FandV_ct_vec FandV_ct_vec::mulct(const FandV_ct& ct) const {
   return(res);
 }
 
-// This is a functioning parallel version of the sum function, *but*
-//   it seems to use a lot more memory due to all the temporary polynomials
-//   and is much slower because sum is already quite fast in serial.
-// Add appropriate entries to DESCRIPTION and NAMESPACE files, and
-// add to headers:
-//
 struct FandV_Sum : public Worker {   
   // Source vector
   const std::vector<FandV_ct>* input;
