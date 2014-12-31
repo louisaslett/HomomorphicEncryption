@@ -36,7 +36,8 @@ class FandV_ct_vec {
     FandV_ct_vec mul(const FandV_ct_vec& x) const;
     FandV_ct_vec addct(const FandV_ct& ct) const;
     FandV_ct_vec mulct(const FandV_ct& ct) const;
-    FandV_ct sum() const;
+    FandV_ct sumParallel() const;
+    FandV_ct sumSerial() const;
     FandV_ct prod() const;
     
     // Print out

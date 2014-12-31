@@ -180,7 +180,15 @@ evalqOnLoad({
     res
   })
   setMethod("sum", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
-    res <- x$sum()
+    if(x$size() < 20) {
+      res <- x$sumSerial()
+    } else if(defaultNumThreads()*20>x$size()) {
+      setThreadOptions(x$size()%/%20); print(x$size()%/%20)
+      res <- x$sumParallel()
+    } else {
+      setThreadOptions(defaultNumThreads()); print(defaultNumThreads())
+      res <- x$sumParallel()
+    }
     
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"

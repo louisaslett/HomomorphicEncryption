@@ -8,10 +8,12 @@ Maintainer: Louis Aslett <louis.aslett@stats.ox.ac.uk>
 Description: A reference implementation of the Fan and Vercauteren homomorphic
     encrytpion scheme.
 License: GPL-2
+ByteCompile: yes
 Imports:
     Rcpp (>= 0.11.2),
-    methods
-LinkingTo: Rcpp
+    methods,
+    RcppParallel
+LinkingTo: Rcpp, RcppParallel
 Depends: gmp
 Suggests:
     testthat,
