@@ -28,6 +28,11 @@ FandV_ct_vec& FandV_ct_vec::operator=(FandV_ct_vec ct_vec) {
   return(*this);
 }
 
+// Destructor
+FandV_ct_vec::~FandV_ct_vec() {
+  //Rcout << "DESTRUCT" << std::endl;
+}
+
 // Manipulate vector
 void FandV_ct_vec::push(const FandV_ct& ct) {
   vec.push_back(ct);

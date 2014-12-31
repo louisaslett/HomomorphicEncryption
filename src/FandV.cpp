@@ -202,6 +202,7 @@ RCPP_MODULE(FandV) {
     .field("p", &FandV_pk::p)
     .field("rlk", &FandV_pk::rlk)
     .method("enc", &FandV_pk::enc)
+    .method("encvec", &FandV_pk::encvec)
     .method("show", &FandV_pk::show)
   ;
 

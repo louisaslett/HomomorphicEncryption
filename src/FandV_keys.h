@@ -6,7 +6,11 @@
 #ifndef FandV_keys_H
 #define FandV_keys_H
 
+#include <Rcpp.h>
+using namespace Rcpp;
+
 #include "FandV_par.h"
+#include "FandV_ct_vec.h"
 #include <fmpz_polyxx.h>
 
 using namespace flint;
@@ -45,6 +49,7 @@ class FandV_pk {
     
     // Encrypt
     void enc(int m, FandV_ct& ct);
+    void encvec(IntegerVector m, FandV_ct_vec& ctvec);
     
     // Print
     void show();

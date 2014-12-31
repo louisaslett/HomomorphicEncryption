@@ -14,6 +14,7 @@ class FandV_ct_vec {
     FandV_ct_vec();
     FandV_ct_vec(const std::vector<FandV_ct> v);
     FandV_ct_vec(const FandV_ct_vec& ct_vec);
+    ~FandV_ct_vec();
     
     // Operators
     FandV_ct_vec& operator=(FandV_ct_vec ct_vec);

@@ -5,12 +5,12 @@
 
 #include "FandV_keys.h"
 #include "FandV_ct.h"
+#include "FandV_ct_vec.h"
 #include "FandV.h"
 #include <Rcpp.h>
 #include <limits.h>
 #include <fmpz_polyxx.h>
 #include <string>
-
 
 using namespace Rcpp;
 
@@ -51,6 +51,16 @@ void FandV_pk::enc(int m, FandV_ct& ct) {
   fmpz_polyxx_q(ct.c1, p.q);
 }
 
+void FandV_pk::encvec(IntegerVector m, FandV_ct_vec& ctvec) {
+  FandV_ct ct(p, rlk);
+  ctvec.vec.resize(m.size(), ct);
+  for(int i=0; i<m.size(); i++) {
+    FandV_ct tmp(p, rlk);
+    enc(m[i], tmp);
+    ctvec.set(i, tmp);
+  }
+}
+  
 void FandV_pk::show() {
   Rcout << "Fan and Vercauteren public key\n";
   Rcout << "( p\u2080 = ";
