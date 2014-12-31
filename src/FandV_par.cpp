@@ -78,7 +78,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   e.realloc(pk.p.Phi.length());
   
   // Generate random parts
-  for(size_t i=0; i<pk.p.Phi.length(); i++) {
+  for(unsigned int i=0; i<pk.p.Phi.length(); i++) {
     // s
     sk.s.set_coeff(i, lround(R::runif(0.0,1.0)));
     
@@ -97,7 +97,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   fmpz_polyxx_q(pk.p0, pk.p.q);
   
   // Relin key
-  for(size_t i=0; i<pk.p.Phi.length(); i++) {
+  for(unsigned int i=0; i<pk.p.Phi.length(); i++) {
     // a0
     fmpz_rand(tmp, pk.p.qpow); // tmp \in (0, 2^q-1)
     tmp -= qo2p1; // tmp - 2^{q-1} + 1 \in (-2^{q-1}, 2^{q-1}]
@@ -126,7 +126,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
 void FandV_par::save(FILE* fp) const {
   fprintf(fp, "=> FHE package object <=\nRcpp_FandV_par\n");
   
-  fprintf(fp, "%lf:%d\n", sigma, qpow);
+  fprintf(fp, "%f:%d\n", sigma, qpow);
   
   print(fp, q);
   fprintf(fp, "\n");

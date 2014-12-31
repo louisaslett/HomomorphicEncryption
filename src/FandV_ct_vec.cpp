@@ -42,7 +42,7 @@ void FandV_ct_vec::push(const FandV_ct& ct) {
   vec.push_back(ct);
 }
 void FandV_ct_vec::pushvec(const FandV_ct_vec& ct_vec) {
-  for(int i=0; i<ct_vec.vec.size(); i++)
+  for(unsigned int i=0; i<ct_vec.vec.size(); i++)
     vec.push_back(ct_vec.vec[i]);
 }
 void FandV_ct_vec::set(int i, const FandV_ct& ct_vec) {
@@ -108,7 +108,7 @@ FandV_ct_vec FandV_ct_vec::mul(const FandV_ct_vec& x) const {
 }
 FandV_ct_vec FandV_ct_vec::addct(const FandV_ct& ct) const {
   FandV_ct_vec res(vec);
-  for(int i=0; i<vec.size(); i++) {
+  for(unsigned int i=0; i<vec.size(); i++) {
     res.vec[i] = vec[i].add(ct);
   }
   return(res);
@@ -116,7 +116,7 @@ FandV_ct_vec FandV_ct_vec::addct(const FandV_ct& ct) const {
 
 FandV_ct_vec FandV_ct_vec::mulct(const FandV_ct& ct) const {
   FandV_ct_vec res(vec);
-  for(int i=0; i<vec.size(); i++) {
+  for(unsigned int i=0; i<vec.size(); i++) {
     res.vec[i] = vec[i].mul(ct);
   }
   return(res);
@@ -158,7 +158,7 @@ FandV_ct FandV_ct_vec::sumParallel() const {
 FandV_ct FandV_ct_vec::sumSerial() const {
   FandV_ct res(vec[0]);
   
-  for(int i=1; i<vec.size(); i++) {
+  for(unsigned int i=1; i<vec.size(); i++) {
     res = res.add(vec[i]);
   }
   
@@ -168,7 +168,7 @@ FandV_ct FandV_ct_vec::sumSerial() const {
 FandV_ct FandV_ct_vec::prod() const {
   FandV_ct res(vec[0]);
   
-  for(int i=1; i<vec.size(); i++) {
+  for(unsigned int i=1; i<vec.size(); i++) {
     res = res.mul(vec[i]);
   }
   
@@ -182,7 +182,7 @@ void FandV_ct_vec::show() const {
 // Save/load
 void FandV_ct_vec::save(FILE* fp) const {
   fprintf(fp, "=> FHE package object <=\nRcpp_FandV_ct_vec\nn=%d\n", (int) vec.size());
-  for(int i=0; i<vec.size(); i++) {
+  for(unsigned int i=0; i<vec.size(); i++) {
     vec[i].save(fp);
   }
 }
