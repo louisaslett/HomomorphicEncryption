@@ -113,6 +113,43 @@ FandV_ct_vec FandV_ct_vec::mulct(const FandV_ct& ct) const {
   return(res);
 }
 
+// This is a functioning parallel version of the sum function, *but*
+//   it seems to use a lot more memory due to all the temporary polynomials
+//   and is much slower because sum is already quite fast in serial.
+// Add appropriate entries to DESCRIPTION and NAMESPACE files, and
+// add to headers:
+// // [[Rcpp::depends(RcppParallel)]]
+// #include <RcppParallel.h>
+// using namespace RcppParallel;
+//
+//struct FandV_Sum : public Worker {   
+//  // Source vector
+//  const FandV_ct_vec input;
+//  
+//  // Accumulated value
+//  FandV_ct value;
+//  
+//  // Constructors
+//  FandV_Sum(const FandV_ct_vec& input) : input(input), value(input.get(0).sub(input.get(0))) {}
+//  FandV_Sum(const FandV_Sum& sum, Split) : input(sum.input), value(input.get(0).sub(input.get(0))) {}
+//  
+//  // Accumulate
+//  void operator()(std::size_t begin, std::size_t end) {
+//    for(; begin<end; begin++) {
+//      value = value.add(input.get(begin));
+//    }
+//  }
+//  
+//  void join(const FandV_Sum& rhs) {
+//    value = value.add(rhs.value);
+//  }
+//};
+//FandV_ct FandV_ct_vec::sum() const {
+//  FandV_Sum sum(vec);
+//  parallelReduce(0, vec.size(), sum);
+//  return(sum.value);
+//}
+
 FandV_ct FandV_ct_vec::sum() const {
   FandV_ct res(vec[0]);
   
