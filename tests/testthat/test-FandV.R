@@ -73,6 +73,8 @@ test_that("Vector operations", {
   b <- c(ct2, ct3)
   b <- c(ct1, b)
   
+  ct <- enc(keys$pk, 2:4)
+  
   expect_that(dec(keys$sk, (a+b)[1]), equals(7))
   expect_that(dec(keys$sk, (a+b)[2]), equals(1))
   expect_that(dec(keys$sk, (a+b)[3]), equals(2))
@@ -82,4 +84,6 @@ test_that("Vector operations", {
   expect_that(dec(keys$sk, (a*ct1)[1]), equals(10))
   expect_that(dec(keys$sk, (a*ct1)[2]), equals(15))
   expect_that(dec(keys$sk, (a*ct1)[3]), equals(-20))
+  expect_that(dec(keys$sk, sum(ct)), equals(9))
+  expect_that(dec(keys$sk, prod(ct)), equals(24))
 })

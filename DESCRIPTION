@@ -14,7 +14,8 @@ Imports:
     methods,
     RcppParallel
 LinkingTo: Rcpp, RcppParallel
-Depends: gmp
+Depends:
+    gmp
 Suggests:
     testthat,
     microbenchmark

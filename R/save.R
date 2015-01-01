@@ -59,7 +59,7 @@ save <- function(...) {
 }
 
 save.image <- function(...) {
-  vars <- ls(all=TRUE, envir=.GlobalEnv)
+  vars <- ls(all.names=TRUE, envir=.GlobalEnv)
   nonCT <- c()
   for(var in vars) {
     var2 <- get(var, envir=.GlobalEnv)

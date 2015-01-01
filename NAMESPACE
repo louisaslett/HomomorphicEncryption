@@ -1,8 +1,16 @@
 useDynLib(HomomorphicEncryption)
-exportPattern("^[[:alpha:]]+")
-#export("+.FandV")
-#export("-.FandV")
-#export("*.FandV")
+
 import(methods)
+import(gmp)
 import(Rcpp)
 import(RcppParallel)
+
+export(pars,
+       keygen,
+       enc,
+       dec)
+
+# FandV method dispatch
+S3method(keygen, Rcpp_FandV_par)
+S3method(enc, Rcpp_FandV_pk)
+S3method(dec, Rcpp_FandV_sk)

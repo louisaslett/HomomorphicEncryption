@@ -37,32 +37,3 @@
 #' dec(keys$sk, ctSub)
 #' dec(keys$sk, ctMul)
 NULL
-
-# `+.Rcpp_FandV_ct` <- function(e1, e2) {
-#   ct <- FandV_add(e1, e2)
-#   
-#   # Prepare return result
-#   attr(ct, "FHEt") <- "ct"
-#   attr(ct, "FHEs") <- "FandV"
-#   ct
-# }
-# 
-# `-.FandV` <- function(e1, e2) {
-#   res <- list(c0=e1$c0-e2$c0, c1=e1$c1-e2$c1)
-#   class(res) <- c("FandV", "FHE_ct")
-#   res
-# }
-# 
-# `*.FandV` <- function(e1, e2) {
-#   q_t <- as.Int128(0)
-#   q_t$twoPow(p$qpow-p$tpow) # <======== Hmmm, need parameters here!
-#   
-#   t <- as.Int128(0)
-#   t$twoPow(p$tpow)
-#   q <- as.Int128(0)
-#   q$twoPow(p$qpow)
-#   
-#   res <- list(c0=t*(e1$c0*e2$c0)/q, c1=t*(e1$c0*e2$c1+e1$c1*e2$c0)/q, c2=t*(e1$c1*e2$c1)/q)
-#   class(res) <- c("FandV", "FHE_ct")
-#   res
-# }

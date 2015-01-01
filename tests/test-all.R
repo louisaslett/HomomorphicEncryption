@@ -1,2 +1,2 @@
 library(testthat)
-test_check("FHE")
+test_check("HomomorphicEncryption")

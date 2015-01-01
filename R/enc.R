@@ -49,8 +49,12 @@ enc.Rcpp_FandV_pk <- function(pk, m) {
     attr(ct, "FHEs") <- "FandV"
     return(ct)
   } else {
-    res <- new(FandV_ct_vec)
-    pk$encvec(m, res)
-    return(res)
+    ct <- new(FandV_ct_vec)
+    pk$encvec(m, ct)
+    
+    # Prepare return result
+    attr(ct, "FHEt") <- "ctvec"
+    attr(ct, "FHEs") <- "FandV"
+    return(ct)
   }
 }

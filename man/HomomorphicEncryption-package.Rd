@@ -30,8 +30,8 @@ Maintainer: Louis Aslett <aslett@stats.ox.ac.uk>
 ~~ Literature or other references for background information ~~
 }
 \keyword{ package }
-\seealso{
-}
+%\seealso{
+%}
 \examples{
 # Generate cryptographic parameters
 p <- pars("FandV")
