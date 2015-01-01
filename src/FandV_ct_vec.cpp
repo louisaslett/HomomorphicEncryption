@@ -159,7 +159,40 @@ FandV_ct FandV_ct_vec::sumSerial() const {
   return(res);
 }
 
-FandV_ct FandV_ct_vec::prod() const {
+struct FandV_Prod : public Worker {   
+  // Source vector
+  const std::vector<FandV_ct>* input;
+  
+  // Accumulated value
+  bool valueSet;
+  FandV_ct value;
+  
+  // Constructors
+  FandV_Prod(const std::vector<FandV_ct>* input_) : valueSet(false), value(input_->at(0).p, input_->at(0).rlk) { input = input_; }
+  FandV_Prod(const FandV_Prod& prod, Split) : valueSet(false), value(prod.input->at(0).p, prod.input->at(0).rlk) { input = prod.input; }
+  
+  // Accumulate
+  void operator()(std::size_t begin, std::size_t end) {
+    for(; begin<end; begin++) {
+      if(!valueSet) {
+        value = input->at(begin);
+        valueSet = true;
+      } else {
+        value = value.mul(input->at(begin));
+      }
+    }
+  }
+  
+  void join(const FandV_Prod& rhs) {
+    value = value.mul(rhs.value);
+  }
+};
+FandV_ct FandV_ct_vec::prodParallel() const {
+  FandV_Prod prod(&vec);
+  parallelReduce(0, vec.size(), prod);
+  return(prod.value);
+}
+FandV_ct FandV_ct_vec::prodSerial() const {
   FandV_ct res(vec[0]);
   
   for(unsigned int i=1; i<vec.size(); i++) {

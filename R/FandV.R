@@ -190,14 +190,14 @@ evalqOnLoad({
       res <- x$sumParallel()
     }
     
-    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEt") <- "ct"
     attr(res, "FHEs") <- "FandV"
     res
   })
   setMethod("prod", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
-    res <- x$prod()
+    res <- x$prodParallel()
     
-    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEt") <- "ct"
     attr(res, "FHEs") <- "FandV"
     res
   })
