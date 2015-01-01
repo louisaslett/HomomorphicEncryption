@@ -230,3 +230,16 @@ loadFHE.FandV_keys <- function(file) {
   attr(res, "FHEs") <- "FandV"
   res
 }
+
+# Dummies because:
+#  1. Rcpp modules don't seem to work with S3method() in NAMESPACE
+#  2. path.expand() in the saveFHE method doesn't overwrite the file argument
+saveFHE.FandV_keys <- function(object, file) {
+  saveFHE.FandV_keys2(object, path.expand(file))
+}
+saveFHE.Rcpp_FandV_ct <- function(object, file) {
+  saveFHE.Rcpp_FandV_ct2(object, path.expand(file))
+}
+saveFHE.Rcpp_FandV_ct_vec <- function(object, file) {
+  saveFHE.Rcpp_FandV_ct_vec2(object, path.expand(file))
+}

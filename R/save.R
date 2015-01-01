@@ -33,6 +33,7 @@ loadFHE <- function(file) {
   if(header[1] != "=> FHE package object <=") {
     stop("File does not contain a ciphertext or key object")
   }
+  file <- path.expand(file)
   eval(parse(text=paste("loadFHE.", header[2], "(file)", sep="")))
 }
 

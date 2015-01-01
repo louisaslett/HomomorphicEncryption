@@ -5,12 +5,23 @@ import(gmp)
 import(Rcpp)
 import(RcppParallel)
 
+# Main encryption functions
 export(pars,
        keygen,
        enc,
        dec)
 
+# I/O utility functions
+export(saveFHE,
+       loadFHE,
+       save,
+       save.image,
+       saveRDS)
+
 # FandV method dispatch
 S3method(keygen, Rcpp_FandV_par)
 S3method(enc, Rcpp_FandV_pk)
 S3method(dec, Rcpp_FandV_sk)
+S3method(saveFHE, FandV_keys)
+S3method(saveFHE, Rcpp_FandV_ct)
+S3method(saveFHE, Rcpp_FandV_ct_vec)

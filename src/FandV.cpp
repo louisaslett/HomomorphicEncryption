@@ -247,10 +247,10 @@ RCPP_MODULE(FandV) {
     .method("without", &FandV_ct_vec::without)
   ;
   
-  function("saveFHE.Rcpp_FandV_ct", &save_FandV_ct);
+  function("saveFHE.Rcpp_FandV_ct2", &save_FandV_ct);
   function("load_FandV_ct", &load_FandV_ct);
-  function("saveFHE.Rcpp_FandV_ct_vec", &save_FandV_ct_vec);
+  function("saveFHE.Rcpp_FandV_ct_vec2", &save_FandV_ct_vec);
   function("load_FandV_ct_vec", &load_FandV_ct_vec);
-  function("saveFHE.FandV_keys", &save_FandV_keys);
+  function("saveFHE.FandV_keys2", &save_FandV_keys);
   function("load_FandV_keys", &load_FandV_keys);
 }
