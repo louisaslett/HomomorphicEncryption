@@ -238,6 +238,7 @@ RCPP_MODULE(FandV) {
     .method("sumSerial", &FandV_ct_vec::sumSerial)
     .method("prodParallel", &FandV_ct_vec::prodParallel)
     .method("prodSerial", &FandV_ct_vec::prodSerial)
+    .method("innerprod", &FandV_ct_vec::innerprod)
     .method("push", &FandV_ct_vec::push)
     .method("pushvec", &FandV_ct_vec::pushvec)
     .method("set", &FandV_ct_vec::set)

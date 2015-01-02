@@ -151,6 +151,19 @@ evalqOnLoad({
     attr(res, "FHEs") <- "FandV"
     res
   })
+  # This is weird.  %*% doesn't support S4 method dispatch.  I think this is because
+  # this pkg 'Depend's on gmp and for some reason they force S3 dispatch on %*%
+  # See gmp package source: gmp/R/matrix-prods.R, line 47 (top is if(FALSE)'ed out)
+#   setMethod("%*%", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(x, y) {
+#     if(x$size()!=y$size()) {
+#       stop("non-conformable arguments")
+#     }
+#     res <- x$innerprod(y)
+#     
+#     attr(res, "FHEt") <- "ct"
+#     attr(res, "FHEs") <- "FandV"
+#     res
+#   }
   setMethod("+", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
     res <- e1$addct(e2)
     
@@ -202,6 +215,18 @@ evalqOnLoad({
     res
   })
 })
+
+# See above for why this is here
+`%*%.Rcpp_FandV_ct_vec` <- function(x, y) {
+  if(x$size()!=y$size()) {
+    stop("non-conformable arguments")
+  }
+  res <- x$innerprod(y)
+  
+  attr(res, "FHEt") <- "ct"
+  attr(res, "FHEs") <- "FandV"
+  res
+}
 
 loadFHE.Rcpp_FandV_ct <- function(file) {
   res <- load_FandV_ct(file)

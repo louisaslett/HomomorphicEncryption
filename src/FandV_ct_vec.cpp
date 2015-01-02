@@ -202,6 +202,41 @@ FandV_ct FandV_ct_vec::prodSerial() const {
   return(res);
 }
 
+struct FandV_InnerProd : public Worker {   
+  // Source vector
+  const std::vector<FandV_ct>* x;
+  const std::vector<FandV_ct>* y;
+  
+  // Accumulated value
+  bool resSet;
+  FandV_ct res;
+  
+  // Constructors
+  FandV_InnerProd(const std::vector<FandV_ct>* x_, const std::vector<FandV_ct>* y_) : resSet(false), res(x_->at(0).p, x_->at(0).rlk) { x = x_; y = y_; }
+  FandV_InnerProd(const FandV_InnerProd& innerprod, Split) : resSet(false), res(innerprod.x->at(0).p, innerprod.x->at(0).rlk) { x = innerprod.x; y = innerprod.y; }
+  
+  // Accumulate
+  void operator()(std::size_t begin, std::size_t end) {
+    for(; begin<end; begin++) {
+      if(!resSet) {
+        res = x->at(begin).mul(y->at(begin));
+        resSet = true;
+      } else {
+        res = res.add(x->at(begin).mul(y->at(begin)));
+      }
+    }
+  }
+  
+  void join(const FandV_InnerProd& rhs) {
+    res = res.add(rhs.res);
+  }
+};
+FandV_ct FandV_ct_vec::innerprod(const FandV_ct_vec& x) const {
+  FandV_InnerProd innerprod(&vec, &(x.vec));
+  parallelReduce(0, vec.size(), innerprod);
+  return(innerprod.res);
+}
+
 void FandV_ct_vec::show() const {
   Rcout << "Vector of " << vec.size() << " Fan and Vercauteren cipher texts\n";
 }

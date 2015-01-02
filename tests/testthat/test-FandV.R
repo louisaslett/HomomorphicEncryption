@@ -86,4 +86,5 @@ test_that("Vector operations", {
   expect_that(dec(keys$sk, (a*ct1)[3]), equals(-20))
   expect_that(dec(keys$sk, sum(ct)), equals(9))
   expect_that(dec(keys$sk, prod(ct)), equals(24))
+  expect_that(dec(keys$sk, a%*%b), equals(-20))
 })
