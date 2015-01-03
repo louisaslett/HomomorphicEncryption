@@ -11,6 +11,7 @@
 #' bootstrapping procedure which reduces the noise.
 #' 
 #' @name Arithmetic
+#' @aliases + - *
 #' 
 #' @usage
 #' ct1 + ct2
