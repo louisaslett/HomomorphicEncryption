@@ -54,6 +54,8 @@ test_that("Vectors", {
   expect_that(dec(keys$sk, a[3:1][3]), equals(2))
   expect_that(dec(keys$sk, a[-c(2,1)]), equals(-4))
   expect_that(dec(keys$sk, b), equals(c(2,3,-4)))
+  b[1] <- a[3]
+  expect_that(dec(keys$sk, b), equals(c(-4,3,-4)))
 })
 
 test_that("Vector operations", {

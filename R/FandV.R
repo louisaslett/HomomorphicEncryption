@@ -124,8 +124,8 @@ evalqOnLoad({
     }
     x$set(i-1, value)
     
-    attr(res, "FHEt") <- "ctvec"
-    attr(res, "FHEs") <- "FandV"
+    attr(x, "FHEt") <- "ctvec"
+    attr(x, "FHEs") <- "FandV"
     x
   })
   setMethod("[<-", signature(x="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
