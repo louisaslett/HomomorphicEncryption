@@ -265,6 +265,11 @@ RCPP_MODULE(FandV) {
     .method("subsetV", &FandV_ct_mat::subsetV)
     .method("set", &FandV_ct_mat::set)
     .method("show", &FandV_ct_mat::show)
+    .method("add", &FandV_ct_mat::add)
+    .method("mul", &FandV_ct_mat::mul)
+    .method("addct", &FandV_ct_mat::addct)
+    .method("mulct", &FandV_ct_mat::mulct)
+    .method("matmul", &FandV_ct_mat::matmul)
   ;
   
   function("saveFHE.FandV_keys2", &save_FandV_keys);

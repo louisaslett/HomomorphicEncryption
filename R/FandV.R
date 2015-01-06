@@ -354,81 +354,58 @@ evalqOnLoad({
   setMethod("[<-", signature(x="Rcpp_FandV_ct_mat"), function (x, i, j, ..., value) {
     stop("only a ciphertext can be assigned to this vector")
   })
-#   setMethod("+", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
-#     if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
-#       stop("longer object length is not a multiple of shorter object length")
-#     }
-#     res <- e1$add(e2)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
-#   setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
-#     if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
-#       stop("longer object length is not a multiple of shorter object length")
-#     }
-#     res <- e1$mul(e2)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
+  setMethod("+", signature(e1="Rcpp_FandV_ct_mat", e2="Rcpp_FandV_ct_mat"), function(e1, e2) {
+    if(e1$nrow!=e2$nrow || e2$ncol!=e2$ncol) {
+      stop("non-conformable matrix sizes")
+    }
+    res <- e1$add(e2)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", signature(e1="Rcpp_FandV_ct_mat", e2="Rcpp_FandV_ct_mat"), function(e1, e2) {
+    if(e1$nrow!=e2$nrow || e2$ncol!=e2$ncol) {
+      stop("non-conformable matrix sizes")
+    }
+    res <- e1$mul(e2)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
   # This is weird.  %*% doesn't support S4 method dispatch.  I think this is because
   # this pkg 'Depend's on gmp and for some reason they force S3 dispatch on %*%
   # See gmp package source: gmp/R/matrix-prods.R, line 47 (top is if(FALSE)'ed out)
-#   setMethod("%*%", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(x, y) {
-#   }
-#   setMethod("+", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
-#     res <- e1$addct(e2)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
-#   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
-#     res <- e2$addct(e1)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
-#   setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
-#     res <- e1$mulct(e2)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
-#   setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
-#     res <- e2$mulct(e1)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
-#   setMethod("sum", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
-#     if(x$size() < 20) {
-#       res <- x$sumSerial()
-#     } else if(defaultNumThreads()*20>x$size()) {
-#       setThreadOptions(x$size()%/%20)
-#       res <- x$sumParallel()
-#     } else {
-#       setThreadOptions(defaultNumThreads())
-#       res <- x$sumParallel()
-#     }
-#     
-#     attr(res, "FHEt") <- "ct"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
-#   setMethod("prod", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
-#     res <- x$prodParallel()
-#     
-#     attr(res, "FHEt") <- "ct"
-#     attr(res, "FHEs") <- "FandV"
-#     res
-#   })
+#   setMethod("%*%", c("Rcpp_FandV_ct_mat", "Rcpp_FandV_ct_mat"), function(x, y) {})
+  setMethod("+", c("Rcpp_FandV_ct_mat", "Rcpp_FandV_ct"), function(e1, e2) {
+    res <- e1$addct(e2)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_mat"), function(e1, e2) {
+    res <- e2$addct(e1)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct_mat", "Rcpp_FandV_ct"), function(e1, e2) {
+    res <- e1$mulct(e2)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_mat"), function(e1, e2) {
+    res <- e2$mulct(e1)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
 })
 
 matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
@@ -440,7 +417,6 @@ matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALS
   res
 }
 
-
 # See above for why this is here
 `%*%.Rcpp_FandV_ct_vec` <- function(x, y) {
   if(x$size()!=y$size()) {
@@ -449,6 +425,20 @@ matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALS
   res <- x$innerprod(y)
   
   attr(res, "FHEt") <- "ct"
+  attr(res, "FHEs") <- "FandV"
+  res
+}
+# Again, see above for why this is here
+`%*%.Rcpp_FandV_ct_mat` <- function(x, y) {
+  if(class(y)!="Rcpp_FandV_ct_mat") {
+    stop("can only multiply by another encrypted matrix")
+  }
+  if(x$ncol!=y$nrow) {
+    stop("non-conformable arguments")
+  }
+  res <- x$matmul(y)
+  
+  attr(res, "FHEt") <- "ctmat"
   attr(res, "FHEs") <- "FandV"
   res
 }

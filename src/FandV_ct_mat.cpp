@@ -75,7 +75,7 @@ FandV_ct_vec FandV_ct_mat::subsetV(IntegerVector i) const {
 
 // R level ops
 FandV_ct_mat FandV_ct_mat::add(const FandV_ct_mat& x) const {
-  FandV_ct_mat res;
+  FandV_ct_mat res(mat, nrow, ncol);
   
   if(nrow!=x.nrow || ncol!=x.ncol || mat.size()!=x.mat.size()) {
     return(res);
@@ -86,7 +86,7 @@ FandV_ct_mat FandV_ct_mat::add(const FandV_ct_mat& x) const {
   return(res);
 }
 FandV_ct_mat FandV_ct_mat::mul(const FandV_ct_mat& x) const {
-  FandV_ct_mat res;
+  FandV_ct_mat res(mat, nrow, ncol);
   
   if(nrow!=x.nrow || ncol!=x.ncol || mat.size()!=x.mat.size()) {
     return(res);
@@ -107,6 +107,25 @@ FandV_ct_mat FandV_ct_mat::mulct(const FandV_ct& ct) const {
   FandV_ct_mat res(mat, nrow, ncol);
   for(unsigned int i=0; i<mat.size(); i++) {
     res.mat[i] = mat[i].mul(ct);
+  }
+  return(res);
+}
+FandV_ct_mat FandV_ct_mat::matmul(const FandV_ct_mat& y) const {
+  FandV_ct_mat res;
+  // Setup destination size
+  res.mat.resize(nrow*y.ncol, mat[0]);
+  res.nrow = nrow;
+  res.ncol = y.ncol;
+  
+  // Do naive multiply ... switch for something clever like Strassen's algorithm in future
+  for(unsigned int i=0; i<nrow; i++) {
+    for(unsigned int j=0; j<y.ncol; j++) {
+      FandV_ct sum(mat[0].p, mat[0].rlk);
+      for(unsigned int k=0; k<ncol; k++) {
+        sum = sum.add(mat[i + k*nrow].mul(y.mat[k + j*y.nrow]));
+      }
+      res.mat[i + j*nrow] = sum;
+    }
   }
   return(res);
 }

@@ -114,3 +114,31 @@ test_that("Matrices", {
   m[2,3] <- 20
   expect_that(dec(keys$sk, ct), equals(m))
 })
+
+test_that("Matrix operations", {
+  p <- pars("FandV")
+  keys <- keygen(p)
+  
+  m <- 20
+  m1 <- matrix(1:6,3)
+  m2 <- matrix(1:6-6,3)
+  
+  ct <- enc(keys$pk, m)
+  ct1 <- enc(keys$pk, m1)
+  ct2 <- enc(keys$pk, m2)
+  
+  expect_that(dec(keys$sk, ct1+ct2), equals(m1+m2))
+  expect_that(dec(keys$sk, ct1*ct2), equals(m1*m2))
+  expect_that(dec(keys$sk, ct1+ct), equals(m1+m))
+  expect_that(dec(keys$sk, ct+ct1), equals(m+m1))
+  expect_that(dec(keys$sk, ct1*ct), equals(m1*m))
+  expect_that(dec(keys$sk, ct*ct1), equals(m*m1))
+  
+  m1 <- matrix(2:7,3)
+  m2 <- matrix(1:6-6,2)
+  
+  ct1 <- enc(keys$pk, m1)
+  ct2 <- enc(keys$pk, m2)
+  
+  expect_that(dec(keys$sk, ct1%*%ct2), equals(m1%*%m2))
+})
