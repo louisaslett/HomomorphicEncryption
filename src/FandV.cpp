@@ -263,6 +263,7 @@ RCPP_MODULE(FandV) {
     .method("get", &FandV_ct_mat::get)
     .method("subset", &FandV_ct_mat::subset)
     .method("subsetV", &FandV_ct_mat::subsetV)
+    .method("set", &FandV_ct_mat::set)
     .method("show", &FandV_ct_mat::show)
   ;
   

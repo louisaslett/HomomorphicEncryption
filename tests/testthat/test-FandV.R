@@ -91,7 +91,7 @@ test_that("Vector operations", {
   expect_that(dec(keys$sk, a%*%b), equals(-20))
 })
 
-test_that("Matrix indexing", {
+test_that("Matrices", {
   p <- pars("FandV")
   keys <- keygen(p)
   m <- matrix(1:9, 3)
@@ -110,4 +110,7 @@ test_that("Matrix indexing", {
   expect_that(dec(keys$sk, ct[c(1,3),-2]), equals(m[c(1,3),-2]))
   expect_that(dec(keys$sk, ct[c(1,3),3]), equals(m[c(1,3),3]))
   expect_that(dec(keys$sk, ct[c(1,3),3,drop=FALSE]), equals(m[c(1,3),3,drop=FALSE]))
+  ct[2,3] <- enc(keys$pk, 20)
+  m[2,3] <- 20
+  expect_that(dec(keys$sk, ct), equals(m))
 })

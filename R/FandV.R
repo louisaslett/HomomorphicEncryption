@@ -219,24 +219,9 @@ evalqOnLoad({
   # gmp package again overrides matrix and makes it S3 dispatch
 #   setMethod("matrix", "Rcpp_FandV_ct_vec", function (data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
 #   })
-#   setMethod("c", "Rcpp_FandV_ct_vec", function (x, ..., recursive = FALSE) {
-#     res <- new(FandV_ct_vec)
-#     res$pushvec(x)
-#     
-#     args <- list(...)
-#     for(i in 1:length(args)) {
-#       if(class(args[[i]])=="Rcpp_FandV_ct") {
-#         res$push(args[[i]])
-#       } else if(class(args[[i]])=="Rcpp_FandV_ct_vec") {
-#         res$pushvec(args[[i]])
-#       } else {
-#         stop("only Fan and Vercauteren ciphertexts or ciphertext vectors can be concatenated")
-#       }
-#     }
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     res
+  # TODO: probably not that useful, but base R will allow a matrix to concatenate
+  #       with a scalar vector and just coerces the matrix to a vector columnwise
+#   setMethod("c", "Rcpp_FandV_ct_mat", function (x, ..., recursive = FALSE) {
 #   })
   setMethod("[", signature(x="Rcpp_FandV_ct_mat", i="missing", j="missing", drop="ANY"), function(x, i, j, ..., drop=TRUE) x)
   setMethod("[", signature(x="Rcpp_FandV_ct_mat", i="numeric", j="missing", drop="ANY"), function(x, i, j, ..., drop=TRUE) {
@@ -349,22 +334,26 @@ evalqOnLoad({
     
     return(res)
   })
-#   setMethod("[<-", signature(x="Rcpp_FandV_ct_vec", value="Rcpp_FandV_ct"), function (x, i, j, ..., value) {
-#     i <- as.integer(i)
-#     if(length(i) > 1)
-#       stop("only single element assignment currently supported for FandV ciphertext vectors")
-#     if(i<1 || i>x$size()) {
-#       stop("out of bounds")
-#     }
-#     x$set(i-1, value)
-#     
-#     attr(res, "FHEt") <- "ctvec"
-#     attr(res, "FHEs") <- "FandV"
-#     x
-#   })
-#   setMethod("[<-", signature(x="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
-#     stop("only a ciphertext can be assigned to this vector")
-#   })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_mat", i="numeric", j="numeric", value="Rcpp_FandV_ct"), function (x, i, j, ..., value) {
+    i <- as.integer(i)
+    j <- as.integer(j)
+    if(length(i) > 1 || length(j) > 1)
+      stop("only single element assignment currently supported for FandV ciphertext vectors")
+    if((min(i) < 1 && max(i) > x$nrow) || (min(j) < 1 && max(j) > x$ncol)) {
+      stop("out of bounds")
+    }
+    x$set(i-1, j-1, value)
+    
+    attr(x, "FHEt") <- "ctmat"
+    attr(x, "FHEs") <- "FandV"
+    x
+  })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_mat", value="Rcpp_FandV_ct"), function (x, i, j, ..., value) {
+    stop("only single element assignment currently supported for FandV ciphertext vectors")
+  })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_mat"), function (x, i, j, ..., value) {
+    stop("only a ciphertext can be assigned to this vector")
+  })
 #   setMethod("+", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
 #     if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
 #       stop("longer object length is not a multiple of shorter object length")
