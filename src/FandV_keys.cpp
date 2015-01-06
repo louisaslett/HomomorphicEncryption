@@ -3,20 +3,23 @@
  August 2014
 */
 
-#include "FandV_keys.h"
-#include "FandV_ct.h"
-#include "FandV_ct_vec.h"
-#include "FandV.h"
 #include <Rcpp.h>
-#include <limits.h>
-#include <fmpz_polyxx.h>
-#include <string>
+using namespace Rcpp;
 
-// [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
 using namespace RcppParallel;
 
-using namespace Rcpp;
+#include <limits.h>
+#include <string>
+
+#include "FandV_keys.h"
+#include "FandV_ct.h"
+#include "FandV_ct_vec.h"
+#include "FandV_ct_mat.h"
+#include "FandV.h"
+
+#include <fmpz_polyxx.h>
+using namespace flint;
 
 //// Public keys ////
 FandV_pk::FandV_pk() : p(0, 0.0, 0, 1) { }
@@ -77,6 +80,14 @@ void FandV_pk::encvec(IntegerVector m, FandV_ct_vec& ctvec) {
   FandV_ct ct(p, rlk);
   ctvec.vec.resize(m.size(), ct);
   FandV_EncVec encEngine(this, &m, &(ctvec.vec));
+  parallelFor(0, m.size(), encEngine);
+}
+void FandV_pk::encmat(IntegerVector m, int nrow, int ncol, FandV_ct_mat& ctmat) {
+  FandV_ct ct(p, rlk);
+  ctmat.mat.resize(m.size(), ct);
+  ctmat.nrow = nrow;
+  ctmat.ncol = ncol;
+  FandV_EncVec encEngine(this, &m, &(ctmat.mat));
   parallelFor(0, m.size(), encEngine);
 }
   

@@ -8,8 +8,8 @@
 
 #include "FandV_par.h"
 #include "FandV_keys.h"
-#include <fmpz_mod_polyxx.h>
 
+#include <fmpz_polyxx.h>
 using namespace flint;
 
 class FandV_ct {

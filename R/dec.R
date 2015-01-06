@@ -31,7 +31,7 @@
 #' 
 #' @author Louis Aslett
 dec <- function(sk, ct) {
-  if(is.null(attr(ct, "FHEt")) || (attr(ct, "FHEt")!="ct" && attr(ct, "FHEt")!="ctvec")) stop("ct argument does not contain a cipher text.")
+  if(is.null(attr(ct, "FHEt")) || (attr(ct, "FHEt")!="ct" && attr(ct, "FHEt")!="ctvec" && attr(ct, "FHEt")!="ctmat")) stop("ct argument does not contain a cipher text.")
   if(is.null(attr(sk, "FHEt")) || attr(sk, "FHEt")!="sk") stop("sk argument is not a secret key.")
   if(is.null(attr(ct, "FHEs")) || is.null(attr(sk, "FHEs")) || attr(ct, "FHEs")!=attr(sk, "FHEs")) stop("Mismatch between cryptographic scheme specified by key and cipher text.")
   UseMethod("dec", sk)
@@ -44,7 +44,7 @@ dec.Rcpp_FandV_sk <- function(sk, ct) {
       return(as.integer(res))
     else
       return(res)
-  } else {
+  } else if(class(ct) == "Rcpp_FandV_ct_vec") {
     res <- as.bigz(sk$dec(ct[1]))
     
     for(i in 2:ct$size()) {
@@ -55,5 +55,16 @@ dec.Rcpp_FandV_sk <- function(sk, ct) {
       return(as.integer(res))
     else
       return(res)
+  } else if(class(ct) == "Rcpp_FandV_ct_mat") {
+    res <- as.bigz(sk$dec(ct[1]))
+    
+    for(i in 2:ct$size()) {
+      res <- c(res, as.bigz(sk$dec(ct[i])))
+    }
+    
+    if(sum(res > 2147483647 | res < -2147483647) == 0)
+      return(matrix(as.integer(res), nrow=ct$nrow, ncol=ct$ncol))
+    else
+      return(matrix(res, nrow=ct$nrow, ncol=ct$ncol))
   }
 }

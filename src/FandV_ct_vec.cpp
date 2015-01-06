@@ -10,7 +10,6 @@
 #include <math.h>
 #include "FandV.h"
 
-// [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
 using namespace RcppParallel;
 

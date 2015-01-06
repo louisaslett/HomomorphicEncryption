@@ -4,16 +4,21 @@
 */
 
 #include <Rcpp.h>
+using namespace Rcpp;
+
+#include <fmpzxx.h>
+#include <fmpz_polyxx.h>
+using namespace flint;
+
+#include <vector>
+#include <stdio.h>
+
 #include "FandV_par.h"
 #include "FandV_keys.h"
 #include "FandV_ct.h"
 #include "FandV_ct_vec.h"
-#include <fmpzxx.h>
-#include <fmpz_polyxx.h>
-#include <vector>
-#include <stdio.h>
+#include "FandV_ct_mat.h"
 
-using namespace Rcpp;
 
 // Do centred modulo q reduction of all coefficients of polynomial p ... [p]_q
 void fmpz_polyxx_q(fmpz_polyxx& p, fmpzxx q) {
@@ -189,6 +194,7 @@ RCPP_EXPOSED_CLASS(FandV_sk)
 RCPP_EXPOSED_CLASS(FandV_rlk)
 RCPP_EXPOSED_CLASS(FandV_ct)
 RCPP_EXPOSED_CLASS(FandV_ct_vec)
+RCPP_EXPOSED_CLASS(FandV_ct_mat)
 
 RCPP_MODULE(FandV) {
   class_<FandV_par>("FandV_par")
@@ -203,6 +209,7 @@ RCPP_MODULE(FandV) {
     .field("rlk", &FandV_pk::rlk)
     .method("enc", &FandV_pk::enc)
     .method("encvec", &FandV_pk::encvec)
+    .method("encmat", &FandV_pk::encmat)
     .method("show", &FandV_pk::show)
   ;
 
@@ -248,10 +255,21 @@ RCPP_MODULE(FandV) {
     .method("without", &FandV_ct_vec::without)
   ;
   
+  class_<FandV_ct_mat>("FandV_ct_mat")
+    .constructor()
+    .field("nrow", &FandV_ct_mat::nrow)
+    .field("ncol", &FandV_ct_mat::ncol)
+    .method("size", &FandV_ct_mat::size)
+    .method("get", &FandV_ct_mat::get)
+    .method("subset", &FandV_ct_mat::subset)
+    .method("subsetV", &FandV_ct_mat::subsetV)
+    .method("show", &FandV_ct_mat::show)
+  ;
+  
+  function("saveFHE.FandV_keys2", &save_FandV_keys);
+  function("load_FandV_keys", &load_FandV_keys);
   function("saveFHE.Rcpp_FandV_ct2", &save_FandV_ct);
   function("load_FandV_ct", &load_FandV_ct);
   function("saveFHE.Rcpp_FandV_ct_vec2", &save_FandV_ct_vec);
   function("load_FandV_ct_vec", &load_FandV_ct_vec);
-  function("saveFHE.FandV_keys2", &save_FandV_keys);
-  function("load_FandV_keys", &load_FandV_keys);
 }

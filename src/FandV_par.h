@@ -6,10 +6,11 @@
 #ifndef FandV_par_H
 #define FandV_par_H
 
+#include <fmpzxx.h>
 #include <fmpz_polyxx.h>
-#include <Rcpp.h>
-
 using namespace flint;
+
+#include <Rcpp.h>
 using namespace Rcpp;
 
 class FandV_pk;

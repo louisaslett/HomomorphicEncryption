@@ -9,13 +9,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "FandV_par.h"
-#include "FandV_ct_vec.h"
 #include <fmpz_polyxx.h>
-
 using namespace flint;
 
+#include "FandV_par.h"
+
 class FandV_ct;
+class FandV_ct_vec;
+class FandV_ct_mat;
 class FandV_sk;
 class FandV_pk;
 
@@ -50,6 +51,7 @@ class FandV_pk {
     // Encrypt
     void enc(int m, FandV_ct& ct) const;
     void encvec(IntegerVector m, FandV_ct_vec& ctvec);
+    void encmat(IntegerVector m, int nrow, int ncol, FandV_ct_mat& ctmat);
     
     // Print
     void show();

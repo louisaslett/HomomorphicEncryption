@@ -48,6 +48,14 @@ enc.Rcpp_FandV_pk <- function(pk, m) {
     attr(ct, "FHEt") <- "ct"
     attr(ct, "FHEs") <- "FandV"
     return(ct)
+  } else if(is.matrix(m)) {
+    ct <- new(FandV_ct_mat)
+    pk$encmat(as.vector(m), nrow(m), ncol(m), ct)
+    
+    # Prepare return result
+    attr(ct, "FHEt") <- "ctmat"
+    attr(ct, "FHEs") <- "FandV"
+    return(ct)
   } else {
     ct <- new(FandV_ct_vec)
     pk$encvec(m, ct)

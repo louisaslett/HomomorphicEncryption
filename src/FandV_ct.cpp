@@ -3,15 +3,16 @@
  August 2014
 */
 
-#include "FandV_ct.h"
 #include <Rcpp.h>
+using namespace Rcpp;
+
 #include <iostream>
 #include <math.h>
-#include "FandV.h"
 #include <stdio.h>
 #include <string.h>
 
-using namespace Rcpp;
+#include "FandV_ct.h"
+#include "FandV.h"
 
 // Construct from parameters
 FandV_ct::FandV_ct(const FandV_par& p_, const FandV_rlk& rlk_) : p(p_), rlk(rlk_) { }
