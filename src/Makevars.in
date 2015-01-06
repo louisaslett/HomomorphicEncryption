@@ -2,6 +2,6 @@ GMP_HOME = @GMP_HOME@
 MPFR_HOME = @MPFR_HOME@
 FLINT_HOME = @FLINT_HOME@
 #PKG_CPPFLAGS=-I/usr/local-core2/include/flint
-PKG_CPPFLAGS=-I$(GMP_HOME)/include -I$(MPFR_HOME)/include -I$(FLINT_HOME)/include/flint
+PKG_CPPFLAGS=-std=c++11 -I$(GMP_HOME)/include -I$(MPFR_HOME)/include -I$(FLINT_HOME)/include/flint
 #PKG_LIBS=-L/usr/local-core2/lib -lgmp -lmpfr -lflint
 PKG_LIBS=-L$(GMP_HOME)/lib -L$(MPFR_HOME)/lib -L$(FLINT_HOME)/lib -lgmp -lmpfr -lflint
