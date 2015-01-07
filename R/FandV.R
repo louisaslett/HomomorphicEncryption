@@ -436,7 +436,7 @@ matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALS
   if(x$ncol!=y$nrow) {
     stop("non-conformable arguments")
   }
-  res <- x$matmul(y)
+  res <- x$matmulParallel(y)
   
   attr(res, "FHEt") <- "ctmat"
   attr(res, "FHEs") <- "FandV"
