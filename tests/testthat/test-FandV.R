@@ -77,9 +77,13 @@ test_that("Vector operations", {
   
   ct <- enc(keys$pk, 2:4)
   
+  expect_that(dec(keys$sk, a%*%b), equals(-20))
   expect_that(dec(keys$sk, (a+b)[1]), equals(7))
   expect_that(dec(keys$sk, (a+b)[2]), equals(1))
   expect_that(dec(keys$sk, (a+b)[3]), equals(2))
+  expect_that(dec(keys$sk, a-b), equals(c(-3, 5, -10)))
+  expect_that(dec(keys$sk, c(a, ct1)-c(ct2, ct3)), equals(c(4, -3, -2, -1)))
+  expect_that(dec(keys$sk, c(ct2, ct3)-c(a, ct1)), equals(c(-4, 3, 2, 1))) ### Why does including this test (which passes) result in an error if the inner product test is done after, not before?  Error in signalCondition(e): no function to return from, jumping to top level
   expect_that(dec(keys$sk, (a*b)[1]), equals(10))
   expect_that(dec(keys$sk, (a*b)[2]), equals(-6))
   expect_that(dec(keys$sk, (a*b)[3]), equals(-24))
@@ -88,7 +92,6 @@ test_that("Vector operations", {
   expect_that(dec(keys$sk, (a*ct1)[3]), equals(-20))
   expect_that(dec(keys$sk, sum(ct)), equals(9))
   expect_that(dec(keys$sk, prod(ct)), equals(24))
-  expect_that(dec(keys$sk, a%*%b), equals(-20))
 })
 
 test_that("Matrices", {

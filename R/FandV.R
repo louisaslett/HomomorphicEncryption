@@ -141,6 +141,16 @@ evalqOnLoad({
     attr(res, "FHEs") <- "FandV"
     res
   })
+  setMethod("-", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
+      stop("longer object length is not a multiple of shorter object length")
+    }
+    res <- e1$sub(e2)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
   setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
     if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
       stop("longer object length is not a multiple of shorter object length")
@@ -173,6 +183,20 @@ evalqOnLoad({
   })
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
     res <- e2$addct(e1)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("-", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
+    res <- e1$subct(e2, FALSE)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("-", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    res <- e2$subct(e1, TRUE)
     
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"

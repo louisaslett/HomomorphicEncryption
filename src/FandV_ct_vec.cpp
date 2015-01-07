@@ -83,7 +83,24 @@ FandV_ct_vec FandV_ct_vec::add(const FandV_ct_vec& x) const {
   } else {
     res.vec = x.vec;
     for(int i=0; i<xsz; i++) {
-      res.vec[i] = x.vec[i].add(vec[i%xsz]);
+      res.vec[i] = x.vec[i].add(vec[i%sz]);
+    }
+  }
+  return(res);
+}
+FandV_ct_vec FandV_ct_vec::sub(const FandV_ct_vec& x) const {
+  int sz = vec.size(), xsz = x.vec.size();
+  
+  FandV_ct_vec res;
+  if(sz>=xsz) {
+    res.vec = vec;
+    for(int i=0; i<sz; i++) {
+      res.vec[i] = vec[i].sub(x.vec[i%xsz]);
+    }
+  } else {
+    res.vec = x.vec;
+    for(int i=0; i<xsz; i++) {
+      res.vec[i] = vec[i%sz].sub(x.vec[i]);
     }
   }
   return(res);
@@ -112,7 +129,17 @@ FandV_ct_vec FandV_ct_vec::addct(const FandV_ct& ct) const {
   }
   return(res);
 }
-
+FandV_ct_vec FandV_ct_vec::subct(const FandV_ct& ct, const int rev) const {
+  FandV_ct_vec res(vec);
+  for(unsigned int i=0; i<vec.size(); i++) {
+    if(rev==0) {
+      res.vec[i] = vec[i].sub(ct);
+    } else {
+      res.vec[i] = ct.sub(vec[i]);
+    }
+  }
+  return(res);
+}
 FandV_ct_vec FandV_ct_vec::mulct(const FandV_ct& ct) const {
   FandV_ct_vec res(vec);
   for(unsigned int i=0; i<vec.size(); i++) {

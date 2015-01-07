@@ -238,6 +238,8 @@ RCPP_MODULE(FandV) {
     .constructor()
     .method("add", &FandV_ct_vec::add)
     .method("addct", &FandV_ct_vec::addct)
+    .method("sub", &FandV_ct_vec::sub)
+    .method("subct", &FandV_ct_vec::subct)
     .method("get", &FandV_ct_vec::get)
     .method("mul", &FandV_ct_vec::mul)
     .method("mulct", &FandV_ct_vec::mulct)
