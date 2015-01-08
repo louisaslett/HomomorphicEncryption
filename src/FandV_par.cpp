@@ -3,15 +3,14 @@
  August 2014
 */
 
-#include "FandV_par.h"
 #include <Rcpp.h>
+using namespace Rcpp;
+
 #include <arith.h>
-//#include <iostream>
-//#include <math.h>
+
+#include "FandV_par.h"
 #include "FandV.h"
 #include "FandV_keys.h"
-
-using namespace Rcpp;
 
 // Construct from parameters
 FandV_par::FandV_par(int d_, double sigma_, int qpow_, int t_) : sigma(sigma_), qpow(qpow_), q(1), t(t_), T(1) {

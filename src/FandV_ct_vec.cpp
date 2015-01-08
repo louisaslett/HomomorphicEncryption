@@ -3,17 +3,18 @@
  August 2014
 */
 
-#include "FandV_ct.h"
-#include "FandV_ct_vec.h"
 #include <Rcpp.h>
-#include <iostream>
-#include <math.h>
-#include "FandV.h"
+using namespace Rcpp;
 
 #include <RcppParallel.h>
 using namespace RcppParallel;
 
-using namespace Rcpp;
+#include <iostream>
+#include <math.h>
+
+#include "FandV_ct.h"
+#include "FandV_ct_vec.h"
+#include "FandV.h"
 
 // Construct from parameters
 FandV_ct_vec::FandV_ct_vec() { }
