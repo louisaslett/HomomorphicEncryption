@@ -2,7 +2,7 @@
  Louis Aslett (aslett@stats.ox.ac.uk)
  August 2014
 */
-
+//#define RCPP_DEBUG_LEVEL 1
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -19,6 +19,11 @@ using namespace flint;
 #include "FandV_ct_vec.h"
 #include "FandV_ct_mat.h"
 
+// Uncomment function definition here and the module export below then call with HomomorphicEncryption:::HEmem()
+//#include <malloc.h>
+//void HEmem() {
+//  malloc_stats();
+//}
 
 // Do centred modulo q reduction of all coefficients of polynomial p ... [p]_q
 void fmpz_polyxx_q(fmpz_polyxx& p, fmpzxx q) {
@@ -281,4 +286,5 @@ RCPP_MODULE(FandV) {
   function("load_FandV_ct", &load_FandV_ct);
   function("saveFHE.Rcpp_FandV_ct_vec2", &save_FandV_ct_vec);
   function("load_FandV_ct_vec", &load_FandV_ct_vec);
+//  function("HEmem", &HEmem);
 }
