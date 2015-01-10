@@ -29,6 +29,7 @@ loadModule("FandV", TRUE)
 evalqOnLoad({
   ##### Missing S4 generics #####
   setGeneric("diag")
+  setGeneric("diag<-")
   
   ##### Single ciphertexts #####
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
@@ -54,6 +55,7 @@ evalqOnLoad({
   })
   
   ##### Vectors of ciphertexts #####
+  ### TODO: diff
   setMethod("c", "Rcpp_FandV_ct", function (x, ..., recursive = FALSE) {
     res <- new(FandV_ct_vec)
     res$push(x)
@@ -264,6 +266,7 @@ evalqOnLoad({
   })
   
   ##### Matrices of ciphertexts #####
+  # TODO: t, rbind, cbind, norm (those that can be done), crossprod, tcrossprod, diff
   # gmp package again overrides matrix and makes it S3 dispatch
 #   setMethod("matrix", "Rcpp_FandV_ct_vec", function (data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
 #   })
@@ -470,6 +473,27 @@ evalqOnLoad({
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"
     res
+  })
+  setMethod("diag<-", signature(x="Rcpp_FandV_ct_mat", value="Rcpp_FandV_ct_vec"), function(x, value) {
+    if(length(value) != min(x$nrow, x$ncol))
+      stop("replacement diagonal has wrong length")
+    
+    for(i in 0:(min(x$nrow, x$ncol)-1)) {
+      x$set(i, i, value[i+1])
+    }
+    
+    attr(x, "FHEt") <- "ctmat"
+    attr(x, "FHEs") <- "FandV"
+    x
+  })
+  setMethod("diag<-", signature(x="Rcpp_FandV_ct_mat", value="Rcpp_FandV_ct"), function(x, value) {
+    for(i in 0:(min(x$nrow, x$ncol)-1)) {
+      x$set(i, i, value)
+    }
+    
+    attr(x, "FHEt") <- "ctmat"
+    attr(x, "FHEs") <- "FandV"
+    x
   })
 })
 

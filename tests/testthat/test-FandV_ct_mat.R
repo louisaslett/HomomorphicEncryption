@@ -27,6 +27,15 @@ test_that("Matrices", {
   expect_that(dec(keys$sk, ct), equals(m))
   
   expect_that(dec(keys$sk, diag(ct)), equals(diag(m)))
+  m2 <- 10:12
+  ct2 <- enc(keys$pk, m2)
+  diag(m) <- m2
+  diag(ct) <- ct2
+  expect_that(dec(keys$sk, ct), equals(m))
+  diag(m) <- m2[1]
+  diag(ct) <- ct2[1]
+  expect_that(dec(keys$sk, ct), equals(m))
+  
   m <- 1:2
   ct <- enc(keys$pk, m)
   expect_that(dec(keys$sk, diag(ct)), equals(diag(m)))
