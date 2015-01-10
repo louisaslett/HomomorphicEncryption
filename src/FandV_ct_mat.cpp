@@ -44,6 +44,24 @@ FandV_ct_mat::~FandV_ct_mat() {
 void FandV_ct_mat::set(int i, int j, const FandV_ct& ct) {
   mat[i + j*nrow] = ct;
 }
+void FandV_ct_mat::setmatrix(const FandV_ct_vec& ct_vec, int nrow_, int ncol_, int byrow) {
+  std::vector<FandV_ct>().swap(mat); // clear the matrix data store and reset allocation
+  if(!byrow) {
+    for(int j=0; j<ncol_; j++) {
+      for(int i=0; i<nrow_; i++) {
+        mat.push_back(ct_vec.get((i + j*nrow_)%ct_vec.size()));
+      }
+    }
+  } else {
+    for(int i=0; i<nrow_; i++) {
+      for(int j=0; j<ncol_; j++) {
+        mat.push_back(ct_vec.get((i + j*nrow_)%ct_vec.size()));
+      }
+    }
+  }
+  nrow = nrow_;
+  ncol = ncol_;
+}
 
 // Access ...
 int FandV_ct_mat::size() const {

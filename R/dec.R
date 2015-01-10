@@ -58,8 +58,10 @@ dec.Rcpp_FandV_sk <- function(sk, ct) {
   } else if(class(ct) == "Rcpp_FandV_ct_mat") {
     res <- as.bigz(sk$dec(ct[1]))
     
-    for(i in 2:ct$size()) {
-      res <- c(res, as.bigz(sk$dec(ct[i])))
+    if(ct$size()>1) {
+      for(i in 2:ct$size()) {
+        res <- c(res, as.bigz(sk$dec(ct[i])))
+      }
     }
     
     if(sum(res > 2147483647 | res < -2147483647) == 0)

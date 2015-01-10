@@ -18,6 +18,9 @@ export(saveFHE,
        save.image,
        saveRDS)
 
+# Methods which are not S4 generic by default
+exportMethods("diag")
+
 # FandV method dispatch
 S3method(keygen, Rcpp_FandV_par)
 S3method(enc, Rcpp_FandV_pk)
@@ -26,5 +29,6 @@ S3method(saveFHE, FandV_keys)
 S3method(saveFHE, Rcpp_FandV_ct)
 S3method(saveFHE, Rcpp_FandV_ct_vec)
 S3method("%*%", Rcpp_FandV_ct_vec) # See FandV.R for why this is necessary
-S3method("matrix", Rcpp_FandV_ct_vec)
 S3method("%*%", Rcpp_FandV_ct_mat)
+S3method("matrix", Rcpp_FandV_ct)
+S3method("matrix", Rcpp_FandV_ct_vec)

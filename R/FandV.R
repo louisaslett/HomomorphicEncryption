@@ -27,6 +27,9 @@ loadModule("FandV", TRUE)
 # http://stackoverflow.com/questions/18151619/operator-overloading-in-r-reference-classes
 # evalqOnLoad used in package RcppBDT
 evalqOnLoad({
+  ##### Missing S4 generics #####
+  setGeneric("diag")
+  
   ##### Single ciphertexts #####
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
     ct <- e1$add(e2)
@@ -238,6 +241,27 @@ evalqOnLoad({
     attr(res, "FHEs") <- "FandV"
     res
   })
+  setMethod("length", signature(x="Rcpp_FandV_ct_vec"), function(x) {
+    return(x$size())
+  })
+  setMethod("diag", signature(x="Rcpp_FandV_ct_vec", nrow="missing"), function(x, ncol) { diag(x, length(x), ncol) })
+  setMethod("diag", signature(x="Rcpp_FandV_ct_vec"), function(x, nrow, ncol) {
+    if(missing(nrow) && missing(ncol))
+      nrow <- ncol <- length(x)
+    if(missing(ncol) && !missing(nrow))
+      ncol <- nrow
+    
+    tmp <- new(FandV_ct, x[1]$p, x[1]$rlk)
+    
+    res <- matrix(tmp, nrow, ncol)
+    for(i in 0:(min(c(nrow,ncol))-1)) {
+      res$set(i, i, x[(i%%length(x))+1])
+    }
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
   
   ##### Matrices of ciphertexts #####
   # gmp package again overrides matrix and makes it S3 dispatch
@@ -430,15 +454,49 @@ evalqOnLoad({
     attr(res, "FHEs") <- "FandV"
     res
   })
+  setMethod("dim", signature(x="Rcpp_FandV_ct_mat"), function(x) {
+    c(x$nrow, x$ncol)
+  })
+  setMethod("length", signature(x="Rcpp_FandV_ct_mat"), function(x) {
+    x$nrow*x$ncol
+  })
+  setMethod("diag", signature(x="Rcpp_FandV_ct_mat"), function(x, nrow, ncol) {
+    if(!missing(nrow) || !missing(ncol))
+      stop("'nrow' or 'ncol' cannot be specified when 'x' is a cipher text matrix")
+    
+    tmp <- matrix(0:(x$size()-1), nrow=x$nrow, ncol=x$ncol)
+    res <- x$subsetV(as.vector(diag(tmp)))
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
 })
 
 matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
+  # Similar logic to r-source/src/main/array.c, do_matrix function from R
+  if(missing(nrow) && missing(ncol)) {
+    nrow <- length(data)
+  } else if(missing(nrow)) {
+    nrow <- ceiling(length(data)/ncol)
+  } else if(missing(ncol)) {
+    ncol <- ceiling(length(data)/nrow)
+  }
+  if((nrow*ncol)%%length(data)!=0) {
+    stop("data length [", length(data), "] is not a sub-multiple or multiple of the number of rows/cols")
+  }
+  
   res <- new(FandV_ct_mat)
   res$setmatrix(data, nrow, ncol, byrow)
   
   attr(res, "FHEt") <- "ctmat"
   attr(res, "FHEs") <- "FandV"
   res
+}
+matrix.Rcpp_FandV_ct <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
+  x <- new(FandV_ct_vec)
+  x$push(data)
+  matrix(x, nrow, ncol, byrow, ...)
 }
 
 # See above for why this is here
