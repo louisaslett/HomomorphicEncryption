@@ -30,6 +30,7 @@ evalqOnLoad({
   ##### Missing S4 generics #####
   setGeneric("diag")
   setGeneric("diag<-")
+  setGeneric("t")
   
   ##### Single ciphertexts #####
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
@@ -494,6 +495,13 @@ evalqOnLoad({
     attr(x, "FHEt") <- "ctmat"
     attr(x, "FHEs") <- "FandV"
     x
+  })
+  setMethod("t", signature(x="Rcpp_FandV_ct_mat"), function(x) {
+    res <- x$t()
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
   })
 })
 

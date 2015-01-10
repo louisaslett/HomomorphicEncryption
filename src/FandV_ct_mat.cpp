@@ -90,6 +90,17 @@ FandV_ct_vec FandV_ct_mat::subsetV(IntegerVector i) const {
   }
   return(res);
 }
+FandV_ct_mat FandV_ct_mat::t() const {
+  FandV_ct_mat res(mat, ncol, nrow);
+  
+  for(int i=0; i<ncol; i++) {
+    for(int j=0; j<nrow; j++) {
+      res.mat[i+j*ncol] = mat[j+i*nrow];
+    }
+  }
+  
+  return(res);
+}
 
 // R level ops
 FandV_ct_mat FandV_ct_mat::add(const FandV_ct_mat& x) const {

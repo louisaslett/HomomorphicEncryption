@@ -20,7 +20,8 @@ export(saveFHE,
 
 # Methods which are not S4 generic by default
 exportMethods("diag",
-              "diag<-")
+              "diag<-",
+              "t")
 
 # FandV method dispatch
 S3method(keygen, Rcpp_FandV_par)

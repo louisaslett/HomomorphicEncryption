@@ -35,6 +35,7 @@ class FandV_ct_mat {
     FandV_ct get(int i) const; // Specify vector-like the element counting columnwise
     FandV_ct_mat subset(IntegerVector i, int nrow, int ncol) const; // vector indicies i chosen to form new matrix of nrow x ncol
     FandV_ct_vec subsetV(IntegerVector i) const;
+    FandV_ct_mat t() const;
     
     // R level ops
     FandV_ct_mat add(const FandV_ct_mat& x) const;

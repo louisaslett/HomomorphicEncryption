@@ -21,6 +21,7 @@ test_that("Matrices", {
   expect_that(dec(keys$sk, ct[c(1,3),3,drop=FALSE]), equals(m[c(1,3),3,drop=FALSE]))
   expect_that(dim(ct), equals(c(3,3)))
   expect_that(length(ct), equals(9))
+  expect_that(dec(keys$sk, t(ct)), equals(t(m)))
   
   ct[2,3] <- enc(keys$pk, 20)
   m[2,3] <- 20
