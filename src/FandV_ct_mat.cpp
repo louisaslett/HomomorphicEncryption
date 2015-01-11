@@ -186,10 +186,10 @@ FandV_ct_mat FandV_ct_mat::matmulSerial(const FandV_ct_mat& y) const {
   res.ncol = y.ncol;
   
   // Do naive multiply ... switch for something clever like Strassen's algorithm in future
-  for(unsigned int i=0; i<nrow; i++) {
-    for(unsigned int j=0; j<y.ncol; j++) {
+  for(int i=0; i<nrow; i++) {
+    for(int j=0; j<y.ncol; j++) {
       FandV_ct sum(mat[0].p, mat[0].rlk);
-      for(unsigned int k=0; k<ncol; k++) {
+      for(int k=0; k<ncol; k++) {
         sum = sum.add(mat[i + k*nrow].mul(y.mat[k + j*y.nrow]));
       }
       res.mat[i + j*nrow] = sum;
