@@ -57,18 +57,20 @@ evalqOnLoad({
   
   ##### Vectors of ciphertexts #####
   ### TODO: diff
-  setMethod("c", "Rcpp_FandV_ct", function (x, ..., recursive = FALSE) {
+  setMethod("c", signature(x="Rcpp_FandV_ct"), function (x, ..., recursive = FALSE) {
     res <- new(FandV_ct_vec)
     res$push(x)
     
-    args <- list(...)
-    for(i in 1:length(args)) {
-      if(class(args[[i]])=="Rcpp_FandV_ct") {
-        res$push(args[[i]])
-      } else if(class(args[[i]])=="Rcpp_FandV_ct_vec") {
-        res$pushvec(args[[i]])
-      } else {
-        stop("only Fan and Vercauteren ciphertexts or ciphertext vectors can be concatenated")
+    if(!missing(...)) {
+      args <- list(...)
+      for(i in 1:length(args)) {
+        if(class(args[[i]])=="Rcpp_FandV_ct") {
+          res$push(args[[i]])
+        } else if(class(args[[i]])=="Rcpp_FandV_ct_vec") {
+          res$pushvec(args[[i]])
+        } else {
+          stop("only Fan and Vercauteren ciphertexts or ciphertext vectors can be concatenated")
+        }
       }
     }
     
