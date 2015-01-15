@@ -32,7 +32,9 @@ evalqOnLoad({
   setGeneric("diag<-")
   setGeneric("t")
   setGeneric("dimnames<-")
-  
+  setGeneric("rowSums")
+  setGeneric("colSums")
+    
   ##### Single ciphertexts #####
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
     ct <- e1$add(e2)
@@ -527,6 +529,20 @@ evalqOnLoad({
     res <- x$t()
     
     attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("rowSums", signature(x="Rcpp_FandV_ct_mat"), function(x, ...) {
+    res <- x$rowSumsParallel()
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("colSums", signature(x="Rcpp_FandV_ct_mat"), function(x, ...) {
+    res <- x$colSumsParallel()
+    
+    attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"
     res
   })

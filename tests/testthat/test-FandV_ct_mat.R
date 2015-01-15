@@ -64,6 +64,7 @@ test_that("Matrix operations", {
   p <- pars("FandV")
   keys <- keygen(p)
   
+  # element wise ops
   m <- 20
   m1 <- matrix(1:6,3)
   m2 <- matrix(1:6-6,3)
@@ -79,6 +80,7 @@ test_that("Matrix operations", {
   expect_that(dec(keys$sk, ct1*ct), equals(m1*m))
   expect_that(dec(keys$sk, ct*ct1), equals(m*m1))
   
+  # matrix multiply
   m1 <- matrix(2:7,3)
   m2 <- matrix(1:6-6,2)
   
@@ -86,6 +88,18 @@ test_that("Matrix operations", {
   ct2 <- enc(keys$pk, m2)
   
   expect_that(dec(keys$sk, ct1%*%ct2), equals(m1%*%m2))
+  
+  # row/col sums
+  mM1 <- matrix(1:25,5)
+  mM2 <- matrix(1:30,3)
+  
+  ctM1 <- enc(keys$pk, mM1)
+  ctM2 <- enc(keys$pk, mM2)
+  
+  expect_that(dec(keys$sk, rowSums(ctM1)), equals(rowSums(mM1)))
+  expect_that(dec(keys$sk, rowSums(ctM2)), equals(rowSums(mM2)))
+  expect_that(dec(keys$sk, colSums(ctM1)), equals(colSums(mM1)))
+  expect_that(dec(keys$sk, colSums(ctM2)), equals(colSums(mM2)))
 })
 
 test_that("Matrix binding", {

@@ -45,6 +45,10 @@ class FandV_ct_mat {
     FandV_ct_mat mulct(const FandV_ct& ct) const;
     FandV_ct_mat matmulParallel(const FandV_ct_mat& y) const;
     FandV_ct_mat matmulSerial(const FandV_ct_mat& y) const;
+    FandV_ct_vec rowSumsParallel() const;
+    FandV_ct_vec rowSumsSerial() const;
+    FandV_ct_vec colSumsParallel() const;
+    FandV_ct_vec colSumsSerial() const;
     // ADD VECTOR?  R DOES AND ADDS COLUMN WISE
     //FandV_ct sumParallel() const;
     //FandV_ct sumSerial() const;

@@ -22,7 +22,9 @@ export(saveFHE,
 exportMethods("diag",
               "diag<-",
               "t",
-              "dimnames<-")
+              "dimnames<-",
+              "rowSums",
+              "colSums")
 
 # FandV method dispatch
 S3method(keygen, Rcpp_FandV_par)

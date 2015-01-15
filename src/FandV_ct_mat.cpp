@@ -204,6 +204,92 @@ FandV_ct_mat FandV_ct_mat::matmulSerial(const FandV_ct_mat& y) const {
   return(res);
 }
 
+struct FandV_RowSums : public Worker {
+  // Input matrix to row sum
+  const std::vector<FandV_ct>* x;
+  const unsigned int xnrow, xncol;
+  
+  // Output vector of cipher texts
+  std::vector<FandV_ct>* res;
+  
+  // Constructor
+  FandV_RowSums(const std::vector<FandV_ct>* x_, std::vector<FandV_ct>* res_, const unsigned int xnrow_, const int xncol_) : xnrow(xnrow_), xncol(xncol_) { x=x_; res=res_; }
+  
+  // function call operator that work for the specified range (begin/end)
+  void operator()(std::size_t begin, std::size_t end) {
+    for(std::size_t row = begin; row < end; row++) {
+      for(int i=0; i<xncol; i++) {
+        res->at(row).addEq(x->at(row + i*xnrow));
+      }
+    }
+  }
+};
+FandV_ct_vec FandV_ct_mat::rowSumsParallel() const {
+  // Setup destination
+  FandV_ct_vec res;
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.vec.resize(nrow, zero);
+  
+  FandV_RowSums rowSumsEngine(&mat, &(res.vec), nrow, ncol);
+  parallelFor(0, nrow, rowSumsEngine);
+  
+  return(res);
+}
+FandV_ct_vec FandV_ct_mat::rowSumsSerial() const {
+  FandV_ct_vec res;
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.vec.resize(nrow, zero);
+  for(int j=0; j<nrow; j++) {
+    for(int i=0; i<ncol; i++) {
+      res.vec.at(j).addEq(mat.at(j + i*nrow));
+    }
+  }
+  return(res);
+}
+
+struct FandV_ColSums : public Worker {
+  // Input matrix to row sum
+  const std::vector<FandV_ct>* x;
+  const unsigned int xnrow, xncol;
+  
+  // Output vector of cipher texts
+  std::vector<FandV_ct>* res;
+  
+  // Constructor
+  FandV_ColSums(const std::vector<FandV_ct>* x_, std::vector<FandV_ct>* res_, const unsigned int xnrow_, const int xncol_) : xnrow(xnrow_), xncol(xncol_) { x=x_; res=res_; }
+  
+  // function call operator that work for the specified range (begin/end)
+  void operator()(std::size_t begin, std::size_t end) {
+    for(std::size_t col = begin; col < end; col++) {
+      for(int i=0; i<xnrow; i++) {
+        res->at(col).addEq(x->at(i + col*xnrow));
+      }
+    }
+  }
+};
+FandV_ct_vec FandV_ct_mat::colSumsParallel() const {
+  // Setup destination
+  FandV_ct_vec res;
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.vec.resize(ncol, zero);
+  
+  FandV_ColSums colSumsEngine(&mat, &(res.vec), nrow, ncol);
+  parallelFor(0, ncol, colSumsEngine);
+  
+  return(res);
+}
+FandV_ct_vec FandV_ct_mat::colSumsSerial() const {
+  FandV_ct_vec res;
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.vec.resize(ncol, zero);
+  for(int i=0; i<ncol; i++) {
+    for(int j=0; j<nrow; j++) {
+      res.vec.at(i).addEq(mat.at(j + i*nrow));
+    }
+  }
+  return(res);
+}
+
 void FandV_ct_mat::show() const {
   Rcout << "Matrix of " << nrow << " x " << ncol << " Fan and Vercauteren cipher texts\n";
 }

@@ -281,6 +281,10 @@ RCPP_MODULE(FandV) {
     .method("mulct", &FandV_ct_mat::mulct)
     .method("matmulParallel", &FandV_ct_mat::matmulParallel)
     .method("matmulSerial", &FandV_ct_mat::matmulSerial)
+    .method("rowSumsParallel", &FandV_ct_mat::rowSumsParallel)
+    .method("rowSumsSerial", &FandV_ct_mat::rowSumsSerial)
+    .method("colSumsParallel", &FandV_ct_mat::colSumsParallel)
+    .method("colSumsSerial", &FandV_ct_mat::colSumsSerial)
   ;
   
   function("saveFHE.FandV_keys2", &save_FandV_keys);

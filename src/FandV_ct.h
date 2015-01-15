@@ -24,6 +24,7 @@ class FandV_ct {
     
     // R level ops
     FandV_ct add(const FandV_ct& c) const;
+    void addEq(const FandV_ct& c); // += ... overwrites ct in place
     FandV_ct sub(const FandV_ct& c) const;
     FandV_ct mul(const FandV_ct& c) const;
     

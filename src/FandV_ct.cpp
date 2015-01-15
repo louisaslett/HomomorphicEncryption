@@ -41,6 +41,10 @@ FandV_ct FandV_ct::add(const FandV_ct& c) const {
   
   return(res);
 }
+void FandV_ct::addEq(const FandV_ct& c) {  
+  c0 += c.c0;
+  c1 += c.c1;
+}
 
 FandV_ct FandV_ct::sub(const FandV_ct& c) const {
   FandV_ct res(p, rlk);
