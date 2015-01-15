@@ -104,6 +104,7 @@ test_that("Matrix binding", {
   ctM1 <- enc(keys$pk, mM1)
   ctM2 <- enc(keys$pk, mM2)
   
+  # rbind
   expect_that(dec(keys$sk, rbind(ctS)), is_equivalent_to(rbind(mS)))
   expect_that(dec(keys$sk, rbind(ctS, NULL)), is_equivalent_to(rbind(mS, NULL)))
   expect_that(dec(keys$sk, rbind(NULL, ctS)), is_equivalent_to(rbind(NULL, mS)))
@@ -122,4 +123,24 @@ test_that("Matrix binding", {
   expect_that(dec(keys$sk, rbind(ctM2, ctS)), is_equivalent_to(rbind(mM2, mS)))
   expect_that(dec(keys$sk, rbind(ctS, ctV1, ctM2)), gives_warning())# rbind(mS, mV1, mM2)))
   expect_that(dec(keys$sk, rbind(ctM2, ctS, ctV1)), is_equivalent_to(rbind(mM2, mS, mV1)))
+  
+  # cbind
+  expect_that(dec(keys$sk, cbind(ctS)), is_equivalent_to(cbind(mS)))
+  expect_that(dec(keys$sk, cbind(ctS, NULL)), is_equivalent_to(cbind(mS, NULL)))
+  expect_that(dec(keys$sk, cbind(NULL, ctS)), is_equivalent_to(cbind(NULL, mS)))
+  expect_that(dec(keys$sk, cbind(ctV1)), is_equivalent_to(cbind(mV1)))
+  expect_that(dec(keys$sk, cbind(ctV1, NULL)), is_equivalent_to(cbind(mV1,NULL)))
+  expect_that(dec(keys$sk, cbind(NULL, ctV1)), is_equivalent_to(cbind(NULL, mV1)))
+  expect_that(dec(keys$sk, cbind(ctM1)), is_equivalent_to(cbind(mM1)))
+  expect_that(dec(keys$sk, cbind(ctM1,NULL)), is_equivalent_to(cbind(mM1,NULL)))
+  expect_that(dec(keys$sk, cbind(NULL, ctM1)), is_equivalent_to(cbind(NULL, mM1)))
+  expect_that(dec(keys$sk, cbind(ctM1, ctM1)), is_equivalent_to(cbind(mM1, mM1)))
+  expect_that(dec(keys$sk, cbind(ctM1, ctV1)), is_equivalent_to(cbind(mM1, mV1)))
+  expect_that(dec(keys$sk, cbind(ctM1, ctV2)), gives_warning())# cbind(mM1, mV2)))
+  expect_that(dec(keys$sk, cbind(ctV1, ctM1)), is_equivalent_to(cbind(mV1, mM1)))
+  expect_that(dec(keys$sk, cbind(ctV1, ctM2)), gives_warning())# cbind(mV1, mM2)))
+  expect_that(dec(keys$sk, cbind(ctS, ctM2)), is_equivalent_to(cbind(mS, mM2)))
+  expect_that(dec(keys$sk, cbind(ctM2, ctS)), is_equivalent_to(cbind(mM2, mS)))
+  expect_that(dec(keys$sk, cbind(ctS, ctV1, ctM2)), gives_warning())# cbind(mS, mV1, mM2)))
+  expect_that(dec(keys$sk, cbind(ctM2, ctS, ctV1)), is_equivalent_to(cbind(mM2, mS, mV1)))
 })
