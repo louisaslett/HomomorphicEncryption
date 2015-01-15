@@ -281,6 +281,8 @@ RCPP_MODULE(FandV) {
     .method("mulct", &FandV_ct_mat::mulct)
     .method("matmulParallel", &FandV_ct_mat::matmulParallel)
     .method("matmulSerial", &FandV_ct_mat::matmulSerial)
+    .method("TmatmulParallel", &FandV_ct_mat::TmatmulParallel)
+    .method("matmulTParallel", &FandV_ct_mat::matmulTParallel)
     .method("rowSumsParallel", &FandV_ct_mat::rowSumsParallel)
     .method("rowSumsSerial", &FandV_ct_mat::rowSumsSerial)
     .method("colSumsParallel", &FandV_ct_mat::colSumsParallel)

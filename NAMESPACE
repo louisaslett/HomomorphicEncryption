@@ -24,7 +24,9 @@ exportMethods("diag",
               "t",
               "dimnames<-",
               "rowSums",
-              "colSums")
+              "colSums",
+              "crossprod",
+              "tcrossprod")
 
 # FandV method dispatch
 S3method(keygen, Rcpp_FandV_par)

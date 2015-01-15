@@ -100,6 +100,36 @@ test_that("Matrix operations", {
   expect_that(dec(keys$sk, rowSums(ctM2)), equals(rowSums(mM2)))
   expect_that(dec(keys$sk, colSums(ctM1)), equals(colSums(mM1)))
   expect_that(dec(keys$sk, colSums(ctM2)), equals(colSums(mM2)))
+  
+  # cross products
+  mV1 <- 2:3
+  mV2 <- 4:8
+  mV3 <- 9:13
+  mM1 <- matrix(1:10,2,5)
+  mM2 <- matrix(1:6,2,3)
+  mM3 <- matrix(1:10,5,2)
+  mM4 <- matrix(1:6,3,2)
+  
+  ctV1 <- enc(keys$pk, mV1)
+  ctV2 <- enc(keys$pk, mV2)
+  ctV3 <- enc(keys$pk, mV3)
+  ctM1 <- enc(keys$pk, mM1)
+  ctM2 <- enc(keys$pk, mM2)
+  ctM3 <- enc(keys$pk, mM3)
+  ctM4 <- enc(keys$pk, mM4)
+  
+  expect_that(dec(keys$sk, crossprod(ctM1, ctM2)), equals(crossprod(mM1, mM2)))
+  expect_that(dec(keys$sk, tcrossprod(ctM3, ctM4)), equals(tcrossprod(mM3, mM4)))
+  expect_that(dec(keys$sk, crossprod(ctM1, ctV1)), equals(crossprod(mM1, mV1)))
+  expect_that(dec(keys$sk, crossprod(ctV1, ctM2)), equals(crossprod(mV1, mM2)))
+  #tcrossprod(matrix, vector) will always error for any dimensions/lengths in base R, we replicate that behaviour for consistency
+  expect_that(dec(keys$sk, tcrossprod(ctV2, ctM1)), equals(tcrossprod(mV2, mM1)))
+  expect_that(dec(keys$sk, crossprod(ctM1)), equals(crossprod(mM1)))
+  expect_that(dec(keys$sk, crossprod(ctV2, ctV3)), equals(crossprod(mV2, mV3)))
+  expect_that(dec(keys$sk, crossprod(ctV1)), equals(crossprod(mV1)))
+  expect_that(dec(keys$sk, tcrossprod(ctM1)), equals(tcrossprod(mM1)))
+  expect_that(dec(keys$sk, tcrossprod(ctV1, ctV2)), equals(tcrossprod(mV1, mV2)))
+  expect_that(dec(keys$sk, tcrossprod(ctV2)), equals(tcrossprod(mV2)))
 })
 
 test_that("Matrix binding", {

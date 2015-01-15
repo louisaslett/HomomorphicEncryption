@@ -45,6 +45,8 @@ class FandV_ct_mat {
     FandV_ct_mat mulct(const FandV_ct& ct) const;
     FandV_ct_mat matmulParallel(const FandV_ct_mat& y) const;
     FandV_ct_mat matmulSerial(const FandV_ct_mat& y) const;
+    FandV_ct_mat TmatmulParallel(const FandV_ct_mat& y) const; // t(this) %*% y
+    FandV_ct_mat matmulTParallel(const FandV_ct_mat& y) const; // this %*% t(y)
     FandV_ct_vec rowSumsParallel() const;
     FandV_ct_vec rowSumsSerial() const;
     FandV_ct_vec colSumsParallel() const;

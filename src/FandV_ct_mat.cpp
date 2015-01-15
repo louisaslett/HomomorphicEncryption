@@ -203,6 +203,82 @@ FandV_ct_mat FandV_ct_mat::matmulSerial(const FandV_ct_mat& y) const {
   return(res);
 }
 
+struct FandV_TMatMul : public Worker {
+  // Input values to multiply
+  const std::vector<FandV_ct>* x;
+  const std::vector<FandV_ct>* y;
+  const unsigned int xncol, xnrowynrow, yncol;
+  
+  // Output vector of cipher texts
+  std::vector<FandV_ct>* res;
+  
+  // Constructor
+  FandV_TMatMul(const std::vector<FandV_ct>* x_, const std::vector<FandV_ct>* y_, std::vector<FandV_ct>* res_, const unsigned int xncol_, const int xnrowynrow_, const int yncol_) : xncol(xncol_), xnrowynrow(xnrowynrow_), yncol(yncol_) { x=x_; y=y_; res=res_; }
+  
+  // function call operator that work for the specified range (begin/end)
+  void operator()(std::size_t begin, std::size_t end) {
+    unsigned int i, j, k;
+    for(std::size_t ij = begin; ij < end; ij++) {
+      i = ij/yncol;
+      j = ij%yncol;
+      for(k=0; k<xnrowynrow; k++) {
+        res->at(i + j*xncol).addEq(x->at(k + i*xnrowynrow).mul(y->at(k + j*xnrowynrow)));
+      }
+    }
+  }
+};
+FandV_ct_mat FandV_ct_mat::TmatmulParallel(const FandV_ct_mat& y) const {
+  // Setup destination
+  FandV_ct_mat res;
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.mat.resize(ncol*y.ncol, zero);
+  res.nrow = ncol;
+  res.ncol = y.ncol;
+  
+  FandV_TMatMul TmatmulEngine(&mat, &(y.mat), &(res.mat), ncol, nrow, y.ncol);
+  parallelFor(0, res.nrow*res.ncol, TmatmulEngine);
+  
+  return(res);
+}
+
+struct FandV_MatMulT : public Worker {
+  // Input values to multiply
+  const std::vector<FandV_ct>* x;
+  const std::vector<FandV_ct>* y;
+  const unsigned int xnrow, xncolyncol, ynrow;
+  
+  // Output vector of cipher texts
+  std::vector<FandV_ct>* res;
+  
+  // Constructor
+  FandV_MatMulT(const std::vector<FandV_ct>* x_, const std::vector<FandV_ct>* y_, std::vector<FandV_ct>* res_, const unsigned int xnrow_, const int xncolyncol_, const int ynrow_) : xnrow(xnrow_), xncolyncol(xncolyncol_), ynrow(ynrow_) { x=x_; y=y_; res=res_; }
+  
+  // function call operator that work for the specified range (begin/end)
+  void operator()(std::size_t begin, std::size_t end) {
+    unsigned int i, j, k;
+    for(std::size_t ij = begin; ij < end; ij++) {
+      i = ij/ynrow;
+      j = ij%ynrow;
+      for(k=0; k<xncolyncol; k++) {
+        res->at(i + j*xnrow).addEq(x->at(i + k*xnrow).mul(y->at(j + k*ynrow)));
+      }
+    }
+  }
+};
+FandV_ct_mat FandV_ct_mat::matmulTParallel(const FandV_ct_mat& y) const {
+  // Setup destination
+  FandV_ct_mat res;
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.mat.resize(nrow*y.nrow, zero);
+  res.nrow = nrow;
+  res.ncol = y.nrow;
+  
+  FandV_MatMulT matmulTEngine(&mat, &(y.mat), &(res.mat), nrow, ncol, y.nrow);
+  parallelFor(0, res.nrow*res.ncol, matmulTEngine);
+  
+  return(res);
+}
+
 struct FandV_RowSums : public Worker {
   // Input matrix to row sum
   const std::vector<FandV_ct>* x;

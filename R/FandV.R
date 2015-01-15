@@ -34,6 +34,8 @@ evalqOnLoad({
   setGeneric("dimnames<-")
   setGeneric("rowSums")
   setGeneric("colSums")
+  setGeneric("crossprod")
+  setGeneric("tcrossprod")
     
   ##### Single ciphertexts #####
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
@@ -296,7 +298,7 @@ evalqOnLoad({
   })
   
   ##### Matrices of ciphertexts #####
-  # TODO: norm (those that can be done), crossprod, tcrossprod, diff, rowSums, colSums
+  # TODO: norm (those that can be done), diff
   # gmp package again overrides matrix and makes it S3 dispatch
 #   setMethod("matrix", "Rcpp_FandV_ct_vec", function (data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
 #   })
@@ -486,6 +488,81 @@ evalqOnLoad({
     attr(res, "FHEt") <- "ctmat"
     attr(res, "FHEs") <- "FandV"
     res
+  })
+  setMethod("crossprod", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    res <- x$TmatmulParallel(y)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("crossprod", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    if(nrow(x)!=length(y))
+      stop("non-conformable arguments")
+    y2 <- cbind(y)
+    res <- x$TmatmulParallel(y2)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("crossprod", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    if(nrow(y)!=length(x))
+      stop("non-conformable arguments")
+    x2 <- cbind(x)
+    res <- x2$TmatmulParallel(y)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("crossprod", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    if(length(x)!=length(y))
+      stop("non-conformable arguments")
+    crossprod(cbind(x), cbind(y))
+  })
+  setMethod("crossprod", signature(x="Rcpp_FandV_ct_mat", y="missing"), function(x, y) {
+    crossprod(x, x)
+  })
+  setMethod("crossprod", signature(x="Rcpp_FandV_ct_vec", y="missing"), function(x, y) {
+    crossprod(x, x)
+  })
+  setMethod("tcrossprod", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    res <- x$matmulTParallel(y)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("tcrossprod", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    stop("non-conformable arguments") # It seems R will always error out no matter the vector size of the second argument in tcrossprod???  Assumes all vectors are column here, but elsewhere doesn't?
+#     if(ncol(x)!=length(y))
+#       stop("non-conformable arguments")
+#     y2 <- rbind(y)
+#     res <- x$matmulTParallel(y2)
+#     
+#     attr(res, "FHEt") <- "ctmat"
+#     attr(res, "FHEs") <- "FandV"
+#     res
+  })
+  setMethod("tcrossprod", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    if(ncol(y)!=length(x))
+      stop("non-conformable arguments")
+    x2 <- rbind(x)
+    res <- x2$matmulTParallel(y)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("tcrossprod", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    tcrossprod(cbind(x), cbind(y))
+  })
+  setMethod("tcrossprod", signature(x="Rcpp_FandV_ct_mat", y="missing"), function(x, y) {
+    tcrossprod(x, x)
+  })
+  setMethod("tcrossprod", signature(x="Rcpp_FandV_ct_vec", y="missing"), function(x, y) {
+    tcrossprod(x, x)
   })
   setMethod("dim", signature(x="Rcpp_FandV_ct_mat"), function(x) {
     c(x$nrow, x$ncol)
