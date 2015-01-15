@@ -164,18 +164,17 @@ struct FandV_MatMul : public Worker {
     for(std::size_t ij = begin; ij < end; ij++) {
       i = ij/yncol;
       j = ij%yncol;
-      FandV_ct sum((*x)[0].p, (*x)[0].rlk);
       for(k=0; k<xncolynrow; k++) {
-        sum = sum.add((*x)[i + k*xnrow].mul((*y)[k + j*xncolynrow]));
+        res->at(i + j*xnrow).addEq(x->at(i + k*xnrow).mul(y->at(k + j*xncolynrow)));
       }
-      (*res)[i + j*xnrow] = sum;
     }
   }
 };
 FandV_ct_mat FandV_ct_mat::matmulParallel(const FandV_ct_mat& y) const {
   // Setup destination
   FandV_ct_mat res;
-  res.mat.resize(nrow*y.ncol, mat[0]);
+  FandV_ct zero(mat[0].p, mat[0].rlk);
+  res.mat.resize(nrow*y.ncol, zero);
   res.nrow = nrow;
   res.ncol = y.ncol;
   

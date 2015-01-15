@@ -79,12 +79,12 @@ FandV_ct_vec FandV_ct_vec::add(const FandV_ct_vec& x) const {
   if(sz>=xsz) {
     res.vec = vec;
     for(int i=0; i<sz; i++) {
-      res.vec[i] = vec[i].add(x.vec[i%xsz]);
+      res.vec[i].addEq(x.vec[i%xsz]);
     }
   } else {
     res.vec = x.vec;
     for(int i=0; i<xsz; i++) {
-      res.vec[i] = x.vec[i].add(vec[i%sz]);
+      res.vec[i].addEq(vec[i%sz]);
     }
   }
   return(res);
@@ -126,7 +126,7 @@ FandV_ct_vec FandV_ct_vec::mul(const FandV_ct_vec& x) const {
 FandV_ct_vec FandV_ct_vec::addct(const FandV_ct& ct) const {
   FandV_ct_vec res(vec);
   for(unsigned int i=0; i<vec.size(); i++) {
-    res.vec[i] = vec[i].add(ct);
+    res.vec[i].addEq(ct);
   }
   return(res);
 }
@@ -163,12 +163,12 @@ struct FandV_Sum : public Worker {
   // Accumulate
   void operator()(std::size_t begin, std::size_t end) {
     for(; begin<end; begin++) {
-      value = value.add(input->at(begin));
+      value.addEq(input->at(begin));
     }
   }
   
   void join(const FandV_Sum& rhs) {
-    value = value.add(rhs.value);
+    value.addEq(rhs.value);
   }
 };
 FandV_ct FandV_ct_vec::sumParallel() const {
@@ -180,7 +180,7 @@ FandV_ct FandV_ct_vec::sumSerial() const {
   FandV_ct res(vec[0]);
   
   for(unsigned int i=1; i<vec.size(); i++) {
-    res = res.add(vec[i]);
+    res.addEq(vec[i]);
   }
   
   return(res);
@@ -249,13 +249,13 @@ struct FandV_InnerProd : public Worker {
         res = x->at(begin).mul(y->at(begin));
         resSet = true;
       } else {
-        res = res.add(x->at(begin).mul(y->at(begin)));
+        res.addEq(x->at(begin).mul(y->at(begin)));
       }
     }
   }
   
   void join(const FandV_InnerProd& rhs) {
-    res = res.add(rhs.res);
+    res.addEq(rhs.res);
   }
 };
 FandV_ct FandV_ct_vec::innerprod(const FandV_ct_vec& x) const {
