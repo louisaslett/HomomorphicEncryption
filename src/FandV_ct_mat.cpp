@@ -19,7 +19,7 @@ using namespace RcppParallel;
 
 // Construct from parameters
 FandV_ct_mat::FandV_ct_mat() : nrow(0), ncol(0) { }
-FandV_ct_mat::FandV_ct_mat(const std::vector<FandV_ct> v, const int nrow_, const int ncol_) : nrow(nrow_), ncol(ncol_), mat(v) { }
+FandV_ct_mat::FandV_ct_mat(const std::vector<FandV_ct>& v, const int nrow_, const int ncol_) : nrow(nrow_), ncol(ncol_), mat(v) { }
 
 // Copy constructor
 FandV_ct_mat::FandV_ct_mat(const FandV_ct_mat& ct_mat) : nrow(ct_mat.nrow), ncol(ct_mat.ncol), mat(ct_mat.mat) { }
@@ -61,6 +61,12 @@ void FandV_ct_mat::setmatrix(const FandV_ct_vec& ct_vec, int nrow_, int ncol_, i
   }
   nrow = nrow_;
   ncol = ncol_;
+}
+void FandV_ct_mat::reset(const FandV_ct& ct, const int nrow_, const int ncol_) {
+  std::vector<FandV_ct>().swap(mat); // clear the matrix data store and reset allocation
+  nrow = nrow_;
+  ncol = ncol_;
+  mat.resize(nrow*ncol, ct);
 }
 
 // Access ...

@@ -87,3 +87,39 @@ test_that("Matrix operations", {
   
   expect_that(dec(keys$sk, ct1%*%ct2), equals(m1%*%m2))
 })
+
+test_that("Matrix binding", {
+  p <- pars("FandV")
+  keys <- keygen(p)
+  
+  mS <- 1
+  mV1 <- 2:3
+  mV2 <- 4:6
+  mM1 <- matrix(7:10,2)
+  mM2 <- matrix(11:19,3)
+  
+  ctS <- enc(keys$pk, mS)
+  ctV1 <- enc(keys$pk, mV1)
+  ctV2 <- enc(keys$pk, mV2)
+  ctM1 <- enc(keys$pk, mM1)
+  ctM2 <- enc(keys$pk, mM2)
+  
+  expect_that(dec(keys$sk, rbind(ctS)), is_equivalent_to(rbind(mS)))
+  expect_that(dec(keys$sk, rbind(ctS, NULL)), is_equivalent_to(rbind(mS, NULL)))
+  expect_that(dec(keys$sk, rbind(NULL, ctS)), is_equivalent_to(rbind(NULL, mS)))
+  expect_that(dec(keys$sk, rbind(ctV1)), is_equivalent_to(rbind(mV1)))
+  expect_that(dec(keys$sk, rbind(ctV1, NULL)), is_equivalent_to(rbind(mV1,NULL)))
+  expect_that(dec(keys$sk, rbind(NULL, ctV1)), is_equivalent_to(rbind(NULL, mV1)))
+  expect_that(dec(keys$sk, rbind(ctM1)), is_equivalent_to(rbind(mM1)))
+  expect_that(dec(keys$sk, rbind(ctM1,NULL)), is_equivalent_to(rbind(mM1,NULL)))
+  expect_that(dec(keys$sk, rbind(NULL, ctM1)), is_equivalent_to(rbind(NULL, mM1)))
+  expect_that(dec(keys$sk, rbind(ctM1, ctM1)), is_equivalent_to(rbind(mM1, mM1)))
+  expect_that(dec(keys$sk, rbind(ctM1, ctV1)), is_equivalent_to(rbind(mM1, mV1)))
+  expect_that(dec(keys$sk, rbind(ctM1, ctV2)), gives_warning())# rbind(mM1, mV2)))
+  expect_that(dec(keys$sk, rbind(ctV1, ctM1)), is_equivalent_to(rbind(mV1, mM1)))
+  expect_that(dec(keys$sk, rbind(ctV1, ctM2)), gives_warning())# rbind(mV1, mM2)))
+  expect_that(dec(keys$sk, rbind(ctS, ctM2)), is_equivalent_to(rbind(mS, mM2)))
+  expect_that(dec(keys$sk, rbind(ctM2, ctS)), is_equivalent_to(rbind(mM2, mS)))
+  expect_that(dec(keys$sk, rbind(ctS, ctV1, ctM2)), gives_warning())# rbind(mS, mV1, mM2)))
+  expect_that(dec(keys$sk, rbind(ctM2, ctS, ctV1)), is_equivalent_to(rbind(mM2, mS, mV1)))
+})

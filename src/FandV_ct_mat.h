@@ -15,7 +15,7 @@ class FandV_ct_mat {
   public:
     // Constructors
     FandV_ct_mat();
-    FandV_ct_mat(const std::vector<FandV_ct> v, const int nrow_, const int ncol_);
+    FandV_ct_mat(const std::vector<FandV_ct>& v, const int nrow_, const int ncol_);
     FandV_ct_mat(const FandV_ct_mat& ct_mat);
     ~FandV_ct_mat();
     
@@ -28,6 +28,7 @@ class FandV_ct_mat {
     //void pushvec(const FandV_ct_vec& ct_vec);
     void set(int i, int j, const FandV_ct& ct);
     void setmatrix(const FandV_ct_vec& ct_vec, int nrow_, int ncol_, int byrow);
+    void reset(const FandV_ct& ct, const int nrow_, const int ncol_);
     
     // Access ...
     int size() const;

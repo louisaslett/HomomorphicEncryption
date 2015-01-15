@@ -58,3 +58,19 @@ test_that("Vector operations", {
   expect_that(dec(keys$sk, prod(ct)), equals(24))
   expect_that(dec(keys$sk, a%*%b), equals(-20))
 })
+
+test_that("Vector rep", {
+  p <- pars("FandV")
+  keys <- keygen(p)
+  
+  x <- 1:4
+  ctx <- enc(keys$pk, x)
+  
+  expect_that(dec(keys$sk, rep(ctx, 2)), equals(rep(x, 2)))
+  expect_that(dec(keys$sk, rep(ctx, each=2)), equals(rep(x, each=2)))
+  expect_that(dec(keys$sk, rep(ctx, c(2,2,2,2))), equals(rep(x, c(2,2,2,2))))
+  expect_that(dec(keys$sk, rep(ctx, c(2,1,2,1))), equals(rep(x, c(2,1,2,1))))
+  expect_that(dec(keys$sk, rep(ctx, each=2, len=4)), equals(rep(x, each=2, len=4)))
+  expect_that(dec(keys$sk, rep(ctx, each=2, len=10)), equals(rep(x, each=2, len=10)))
+  expect_that(dec(keys$sk, rep(ctx, each=2, times=3)), equals(rep(x, each=2, times=3)))
+})

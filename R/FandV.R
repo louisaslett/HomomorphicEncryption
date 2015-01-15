@@ -31,6 +31,7 @@ evalqOnLoad({
   setGeneric("diag")
   setGeneric("diag<-")
   setGeneric("t")
+  setGeneric("dimnames<-")
   
   ##### Single ciphertexts #####
   setMethod("+", c("Rcpp_FandV_ct", "Rcpp_FandV_ct"), function(e1, e2) {
@@ -293,7 +294,7 @@ evalqOnLoad({
   })
   
   ##### Matrices of ciphertexts #####
-  # TODO: t, rbind, cbind, norm (those that can be done), crossprod, tcrossprod, diff
+  # TODO: cbind, norm (those that can be done), crossprod, tcrossprod, diff, rowSums, colSums
   # gmp package again overrides matrix and makes it S3 dispatch
 #   setMethod("matrix", "Rcpp_FandV_ct_vec", function (data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
 #   })
@@ -529,6 +530,131 @@ evalqOnLoad({
     attr(res, "FHEs") <- "FandV"
     res
   })
+  setMethod("dimnames<-", signature(x="Rcpp_FandV_ct_mat", value="ANY"), function(x, value) { x }) # Dummy so that rbind works
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_mat", y="missing"), function(x, y) { x })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_mat", y="NULL"), function(x, y) { x })
+  setMethod("rbind2", signature(x="NULL", y="Rcpp_FandV_ct_mat"), function(x, y) { y })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_vec", y="missing"), function(x, y) {
+    res <- new(FandV_ct_mat)
+    res$setmatrix(x, 1, length(x), TRUE)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_vec", y="NULL"), function(x, y) { rbind2(x) })
+  setMethod("rbind2", signature(x="NULL", y="Rcpp_FandV_ct_vec"), function(x, y) { rbind2(y) })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct", y="missing"), function(x, y) {
+    res <- new(FandV_ct_mat)
+    res$reset(x, 1, 1)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct", y="NULL"), function(x, y) { rbind2(x) })
+  setMethod("rbind2", signature(x="NULL", y="Rcpp_FandV_ct"), function(x, y) { rbind2(y) })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    if(ncol(x)!=ncol(y))
+      stop("number of columns of matrices must match")
+    
+    nrx <- nrow(x)
+    nry <- nrow(y)
+    nc <- ncol(x)
+    # Create new matrix of the right size and fill with holding data
+    res <- new(FandV_ct_mat)
+    res$reset(x[1,1], nrx+nry, nc)
+    
+    ## FILL
+    for(i in 0:(nrx-1)) {
+      for(j in 0:(nc-1)) {
+        res$set(i, j, x$get(i + j*nrx))
+      }
+    }
+    for(i in nrx:(nrx+nry-1)) {
+      for(j in 0:(nc-1)) {
+        res$set(i, j, y$get(i-nrx + j*nry))
+      }
+    }
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    if(ncol(x)%%length(y)!=0)
+      warning("number of columns of result is not a multiple of vector length")
+    
+    # Make y into a matrix and then we can be lazy and use the above method
+    y2 <- new(FandV_ct_mat)
+    y2$setmatrix(y, 1, ncol(x), TRUE)
+    
+    rbind2(x, y2)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    if(ncol(y)%%length(x)!=0)
+      warning("number of columns of result is not a multiple of vector length")
+    
+    # Make y into a matrix and then we can be lazy and use the above method
+    x2 <- new(FandV_ct_mat)
+    x2$setmatrix(x, 1, ncol(y), TRUE)
+    
+    rbind2(x2, y)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_mat", y="Rcpp_FandV_ct"), function(x, y) {
+    # Make y into a matrix and then we can be lazy and use the above method
+    y2 <- new(FandV_ct_mat)
+    y2$setmatrix(c(y), 1, ncol(x), TRUE)
+    
+    rbind2(x, y2)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct", y="Rcpp_FandV_ct_mat"), function(x, y) {
+    # Make y into a matrix and then we can be lazy and use the above method
+    x2 <- new(FandV_ct_mat)
+    x2$setmatrix(c(x), 1, ncol(y), TRUE)
+    
+    rbind2(x2, y)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct"), function(x, y) {
+    # Make both matrices
+    x2 <- new(FandV_ct_mat)
+    x2$setmatrix(x, 1, length(x), TRUE)
+    y2 <- new(FandV_ct_mat)
+    y2$setmatrix(c(y), 1, length(x), TRUE)
+    rbind2(x2, y2)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    # Make both matrices
+    x2 <- new(FandV_ct_mat)
+    x2$setmatrix(c(x), 1, length(y), TRUE)
+    y2 <- new(FandV_ct_mat)
+    y2$setmatrix(y, 1, length(y), TRUE)
+    rbind2(x2, y2)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct_vec", y="Rcpp_FandV_ct_vec"), function(x, y) {
+    if(length(x) > length(y))
+      nc <- length(x)
+    else
+      nc <- length(y)
+    if(nc%%length(x)!=0 || nc%%length(y)!=0)
+      warning("number of columns of result is not a multiple of vector length")
+    
+    # Make both matrices
+    x2 <- new(FandV_ct_mat)
+    x2$setmatrix(x, 1, nc, TRUE)
+    y2 <- new(FandV_ct_mat)
+    y2$setmatrix(y, 1, nc, TRUE)
+    rbind2(x2, y2)
+  })
+  setMethod("rbind2", signature(x="Rcpp_FandV_ct", y="Rcpp_FandV_ct"), function(x, y) {
+    # Make both matrices
+    x2 <- new(FandV_ct_mat)
+    x2$setmatrix(c(x), 1, 1, TRUE)
+    y2 <- new(FandV_ct_mat)
+    y2$setmatrix(c(y), 1, 1, TRUE)
+    rbind(x2, y2)
+  })
+  methods:::bind_activation(on = TRUE)
 })
 
 matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
