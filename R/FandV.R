@@ -54,6 +54,18 @@ evalqOnLoad({
     attr(ct, "FHEs") <- "FandV"
     ct
   })
+  setMethod("rep", signature(x="Rcpp_FandV_ct"), function(x, ...) {
+    idx <- rep(1, ...)
+    
+    res <- new(FandV_ct_vec)
+    for(i in idx) {
+      res$push(x)
+    }
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
   
   ##### Vectors of ciphertexts #####
   ### TODO: diff
@@ -219,6 +231,18 @@ evalqOnLoad({
   })
   setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
     res <- e2$mulct(e1)
+    
+    attr(res, "FHEt") <- "ctvec"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("rep", signature(x="Rcpp_FandV_ct_vec"), function(x, ...) {
+    idx <- rep(1:length(x), ...)
+    
+    res <- new(FandV_ct_vec)
+    for(i in idx) {
+      res$push(x[i])
+    }
     
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"
