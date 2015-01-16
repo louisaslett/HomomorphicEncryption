@@ -19,7 +19,8 @@ using namespace flint;
 #include "FandV_ct_vec.h"
 #include "FandV_ct_mat.h"
 
-// Uncomment function definition here and the module export below then call with HomomorphicEncryption:::HEmem()
+// Uncomment function definition here and the module export below then call with
+// HomomorphicEncryption:::HEmem(), or also add to NAMESPACE file.
 //#include <malloc.h>
 //void HEmem() {
 //  malloc_stats();

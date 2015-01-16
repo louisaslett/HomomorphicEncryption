@@ -12,7 +12,8 @@ export(pars,
        dec)
 
 # I/O utility functions
-export(saveFHE,
+export(#HEmem,
+       saveFHE,
        loadFHE,
        save,
        save.image,
