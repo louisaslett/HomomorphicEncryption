@@ -130,6 +130,10 @@ test_that("Matrix operations", {
   expect_that(dec(keys$sk, tcrossprod(ctM1)), equals(tcrossprod(mM1)))
   expect_that(dec(keys$sk, tcrossprod(ctV1, ctV2)), equals(tcrossprod(mV1, mV2)))
   expect_that(dec(keys$sk, tcrossprod(ctV2)), equals(tcrossprod(mV2)))
+  
+  # matrix-vector ops
+  expect_that(dec(keys$sk, ctV1%*%ctM1), equals(mV1 %*% mM1))
+  expect_that(dec(keys$sk, ctM1%*%ctV2), equals(mM1 %*% mV2))
 })
 
 test_that("Matrix binding", {

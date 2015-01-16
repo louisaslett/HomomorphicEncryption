@@ -903,9 +903,12 @@ matrix.Rcpp_FandV_ct <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, .
 
 # See above for why this is here
 `%*%.Rcpp_FandV_ct_vec` <- function(x, y) {
-  if(x$size()!=y$size()) {
+  if(class(y) == "Rcpp_FandV_ct_mat")
+    return(crossprod(x, y))
+  if(class(y) != "Rcpp_FandV_ct_vec")
+    stop("requires cipher text matrix/vector arguments")
+  if(x$size()!=y$size())
     stop("non-conformable arguments")
-  }
   res <- x$innerprod(y)
   
   attr(res, "FHEt") <- "ct"
@@ -914,9 +917,10 @@ matrix.Rcpp_FandV_ct <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, .
 }
 # Again, see above for why this is here
 `%*%.Rcpp_FandV_ct_mat` <- function(x, y) {
-  if(class(y)!="Rcpp_FandV_ct_mat") {
-    stop("can only multiply by another encrypted matrix")
-  }
+  if(class(y) == "Rcpp_FandV_ct_vec")
+    y <- cbind(y)
+  if(class(y) != "Rcpp_FandV_ct_mat")
+    stop("requires cipher text matrix/vector arguments")
   if(x$ncol!=y$nrow) {
     stop("non-conformable arguments")
   }
