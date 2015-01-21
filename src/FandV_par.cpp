@@ -48,6 +48,17 @@ void FandV_par::show() {
   printPoly(Phi);
   Rcout << "\nq = " << q << " (" << qpow << "-bit integer)\nt = " << t << "\n\u0394 = " << Delta << "\n\u03c3 = " << sigma << "\n";
 }
+void FandV_par::show_no_t() {
+  Rcout << "\u03d5 = ";
+  printPoly(Phi);
+  Rcout << "\nq = " << q << " (" << qpow << "-bit integer)\n\u0394 = " << Delta << "\n\u03c3 = " << sigma << "\n";
+}
+void FandV_par::show_t() {
+  Rcout << t;
+}
+std::string FandV_par::get_t() {
+  return(t.to_string());
+}
 
 // Keygen
 void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {

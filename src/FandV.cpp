@@ -207,6 +207,9 @@ RCPP_MODULE(FandV) {
     .constructor<int, double, int, int>()
     .method("keygen", &FandV_par::keygen)
     .method("show", &FandV_par::show)
+    .method("show_no_t", &FandV_par::show_no_t)
+    .method("show_t", &FandV_par::show_t)
+    .method("get_t", &FandV_par::get_t)
   ;
   
   class_<FandV_pk>("FandV_pk")
@@ -221,6 +224,7 @@ RCPP_MODULE(FandV) {
 
   class_<FandV_sk>("FandV_sk")
     .constructor()
+    .method("decraw", &FandV_sk::decraw)
     .method("dec", &FandV_sk::dec)
     .method("show", &FandV_sk::show)
   ;

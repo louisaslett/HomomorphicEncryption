@@ -66,3 +66,17 @@ enc.Rcpp_FandV_pk <- function(pk, m) {
     return(ct)
   }
 }
+
+enc.FandV_CRT_pk <- function(pk, m) {
+  if(!isTRUE(all.equal(round(m), m))) stop("Only integers can be encrypted.")
+  
+  crt <- new("CRT", ct=list())
+  for(i in 1:length(pk)) {
+    crt@ct[[i]] <- enc(pk[[i]], m)
+  }
+  
+  # Prepare return result
+  attr(crt, "FHEt") <- attr(crt@ct[[1]], "FHEt")
+  attr(crt, "FHEs") <- "FandV_CRT"
+  return(crt)
+}

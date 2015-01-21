@@ -76,7 +76,8 @@ class FandV_sk {
     FandV_sk(const FandV_sk& sk);
     
     // Decrypt
-    std::string dec(FandV_ct& ct);
+    std::vector<int> decraw(const FandV_ct& ct) const;
+    std::string dec(const FandV_ct& ct) const;
     
     // Print
     void show();

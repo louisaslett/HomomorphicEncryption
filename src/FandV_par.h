@@ -29,6 +29,9 @@ class FandV_par {
     
     // Print
     void show();
+    void show_no_t();
+    void show_t();
+    std::string get_t();
     
     void keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk);
     

@@ -145,9 +145,10 @@ FandV_sk::FandV_sk() { }
 FandV_sk::FandV_sk(const FandV_sk& sk) : s(sk.s) { }
 
 // Decrypt
-std::string FandV_sk::dec(FandV_ct& ct) {
+std::vector<int> FandV_sk::decraw(const FandV_ct& ct) const {
+  std::vector<int> result;
   fmpz_polyxx res, res2;
-  fmpzxx tmp(1), m(0);
+  fmpzxx tmp(1);
   
   res = ct.c0+((ct.c1*s)%ct.p.Phi);
   fmpz_polyxx_q(res, ct.p.q);
@@ -159,8 +160,21 @@ std::string FandV_sk::dec(FandV_ct& ct) {
   }
   fmpz_polyxx_q(res, ct.p.t);
   
+  result.resize(res.length(), 0);
   for(int i=0; i<res.length(); i++) {
-    m += res.get_coeff(i)*tmp;
+    result[i] = res.get_coeff(i).to<slong>();
+  }
+  
+  return(result);
+}
+std::string FandV_sk::dec(const FandV_ct& ct) const {
+  std::vector<int> res;
+  fmpzxx tmp(1), m(0);
+  
+  res = decraw(ct);
+  
+  for(int i=0; i<res.size(); i++) {
+    m += res[i]*tmp;
     tmp *= 2;
   }
   
