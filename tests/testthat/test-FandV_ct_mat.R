@@ -22,6 +22,7 @@ test_that("Matrices", {
   expect_that(dim(ct), equals(c(3,3)))
   expect_that(length(ct), equals(9))
   expect_that(dec(keys$sk, t(ct)), equals(t(m)))
+  expect_that(dec(keys$sk, enc(keys$pk, matrix(1,1,1))), equals(matrix(1,1,1))) # also want 1x1 matrix to work
   
   ct[2,3] <- enc(keys$pk, 20)
   m[2,3] <- 20
