@@ -141,7 +141,33 @@ FandV_ct_vec FandV_ct_vec::subct(const FandV_ct& ct, const int rev) const {
   }
   return(res);
 }
-FandV_ct_vec FandV_ct_vec::mulct(const FandV_ct& ct) const {
+struct FandV_MulCT : public Worker {   
+  // Source vector
+  const std::vector<FandV_ct>* ctvec;
+  
+  // Constant multiplier
+  const FandV_ct* ct;
+  
+  // Destination vector
+  std::vector<FandV_ct>* res;
+  
+  // Constructors
+  FandV_MulCT(std::vector<FandV_ct>* res_, const std::vector<FandV_ct>* ctvec_, const FandV_ct* ct_)  { res = res_; ctvec = ctvec_; ct = ct_; }
+  
+  // Accumulate
+  void operator()(std::size_t begin, std::size_t end) {
+    for(; begin<end; begin++) {
+      res->at(begin) = ctvec->at(begin).mul(*ct);
+    }
+  }
+};
+FandV_ct_vec FandV_ct_vec::mulctParallel(const FandV_ct& ct) const {
+  FandV_ct_vec res(vec);
+  FandV_MulCT mulct(&(res.vec), &vec, &ct);
+  parallelFor(0, vec.size(), mulct);
+  return(res);
+}
+FandV_ct_vec FandV_ct_vec::mulctSerial(const FandV_ct& ct) const {
   FandV_ct_vec res(vec);
   for(unsigned int i=0; i<vec.size(); i++) {
     res.vec[i] = vec[i].mul(ct);

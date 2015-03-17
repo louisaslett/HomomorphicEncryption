@@ -228,14 +228,14 @@ evalqOnLoad({
     res
   })
   setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct"), function(e1, e2) {
-    res <- e1$mulct(e2)
+    res <- e1$mulctParallel(e2)
     
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"
     res
   })
   setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_vec"), function(e1, e2) {
-    res <- e2$mulct(e1)
+    res <- e2$mulctParallel(e1)
     
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"

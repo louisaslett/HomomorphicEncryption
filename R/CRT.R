@@ -3,11 +3,11 @@ schemeName <- function(name) {
 }
 
 evalqOnLoad({
-  setClass("CRT", slots=c(ct="list"))
+  setClass("CRT", slots=c(ct="list", ctvalid="logical"))
   
   setMethod("show", signature(object="CRT"), function(object) {
     if(attr(object, "FHEt")=="ct")
-      cat(schemeName(attr(object, "FHEs")), "cipher text with Chinese Remainder Theorem message space modulus extension\n")
+      cat(schemeName(attr(object, "FHEs")), " cipher text with Chinese Remainder Theorem message space modulus extension (", sum(object@ctvalid)-1, " comparisons remaining)\n", sep="")
     else if(attr(object, "FHEt") == "ctvec")
       cat("Vector of", length(object@ct[[1]]), schemeName(attr(object, "FHEs")), "cipher texts with Chinese Remainder Theorem message space modulus extension\n")
     else if(attr(object, "FHEt") == "ctmat")

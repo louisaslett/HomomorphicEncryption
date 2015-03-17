@@ -55,6 +55,11 @@ fi
 fi
 fi
 
+dnl Check for not universally available functions
+AC_CHECK_FUNCS([malloc_stats])
+AC_CHECK_HEADERS([malloc.h])
+AC_CONFIG_HEADER(config.h)
+
 dnl Name the substitution variable and instruct configure to construct Makevars
 dnl from Makevars.in
 AC_SUBST(GMP_HOME)

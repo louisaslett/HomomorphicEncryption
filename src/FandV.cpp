@@ -21,10 +21,17 @@ using namespace flint;
 
 // Uncomment function definition here and the module export below then call with
 // HomomorphicEncryption:::HEmem(), or also add to NAMESPACE file.
-//#include <malloc.h>
-//void HEmem() {
-//  malloc_stats();
-//}
+#include "../config.h"
+#ifdef HAVE_MALLOC_H
+#include <malloc.h>
+#endif
+void HEmem() {
+  #ifdef HAVE_MALLOC_STATS
+    malloc_stats();
+  #else
+    Rcout << "malloc_stats() not available on this machine\n";
+  #endif
+}
 
 // Do centred modulo q reduction of all coefficients of polynomial p ... [p]_q
 void fmpz_polyxx_q(fmpz_polyxx& p, fmpzxx q) {
@@ -252,7 +259,8 @@ RCPP_MODULE(FandV) {
     .method("subct", &FandV_ct_vec::subct)
     .method("get", &FandV_ct_vec::get)
     .method("mul", &FandV_ct_vec::mul)
-    .method("mulct", &FandV_ct_vec::mulct)
+    .method("mulctParallel", &FandV_ct_vec::mulctParallel)
+    .method("mulctSerial", &FandV_ct_vec::mulctSerial)
     .method("sumParallel", &FandV_ct_vec::sumParallel)
     .method("sumSerial", &FandV_ct_vec::sumSerial)
     .method("prodParallel", &FandV_ct_vec::prodParallel)
@@ -300,5 +308,5 @@ RCPP_MODULE(FandV) {
   function("load_FandV_ct", &load_FandV_ct);
   function("saveFHE.Rcpp_FandV_ct_vec2", &save_FandV_ct_vec);
   function("load_FandV_ct_vec", &load_FandV_ct_vec);
-//  function("HEmem", &HEmem);
+  function("HEmem", &HEmem);
 }

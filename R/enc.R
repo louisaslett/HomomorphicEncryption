@@ -70,9 +70,10 @@ enc.Rcpp_FandV_pk <- function(pk, m) {
 enc.FandV_CRT_pk <- function(pk, m) {
   if(!isTRUE(all.equal(round(m), m))) stop("Only integers can be encrypted.")
   
-  crt <- new("CRT", ct=list())
+  crt <- new("CRT", ct=list(), ctvalid=c(TRUE))
   for(i in 1:length(pk)) {
     crt@ct[[i]] <- enc(pk[[i]], m)
+    crt@ctvalid[i] <- TRUE
   }
   
   # Prepare return result
