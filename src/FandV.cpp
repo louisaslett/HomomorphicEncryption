@@ -245,6 +245,7 @@ RCPP_MODULE(FandV) {
     .constructor<FandV_par,FandV_rlk>()
     .field("p", &FandV_ct::p)
     .field("rlk", &FandV_ct::rlk)
+    .field("depth", &FandV_ct::depth)
     .method("add", &FandV_ct::add)
     .method("sub", &FandV_ct::sub)
     .method("mul", &FandV_ct::mul)

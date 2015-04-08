@@ -39,6 +39,7 @@ class FandV_ct {
     fmpz_polyxx c0, c1; // Polynomials
     FandV_par p;
     FandV_rlk rlk;
+    int depth;
 };
 
 #endif

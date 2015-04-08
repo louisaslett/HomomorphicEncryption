@@ -15,10 +15,10 @@ using namespace Rcpp;
 #include "FandV.h"
 
 // Construct from parameters
-FandV_ct::FandV_ct(const FandV_par& p_, const FandV_rlk& rlk_) : p(p_), rlk(rlk_) { }
+FandV_ct::FandV_ct(const FandV_par& p_, const FandV_rlk& rlk_) : p(p_), rlk(rlk_), depth(0) { }
 
 // Copy constructor
-FandV_ct::FandV_ct(const FandV_ct& ct) : c0(ct.c0), c1(ct.c1), p(ct.p), rlk(ct.rlk) { }
+FandV_ct::FandV_ct(const FandV_ct& ct) : c0(ct.c0), c1(ct.c1), p(ct.p), rlk(ct.rlk), depth(ct.depth) { }
 
 // Assignment (copy-and-swap idiom)
 void FandV_ct::swap(FandV_ct& a, FandV_ct& b) {
@@ -26,6 +26,7 @@ void FandV_ct::swap(FandV_ct& a, FandV_ct& b) {
   std::swap(a.c1, b.c1);
   std::swap(a.p, b.p);
   std::swap(a.rlk, b.rlk);
+  std::swap(a.depth, b.depth);
 }
 FandV_ct& FandV_ct::operator=(FandV_ct ct) {
   swap(*this, ct);
@@ -61,7 +62,7 @@ FandV_ct FandV_ct::mul(const FandV_ct& c) const {
   res2.realloc(p.Phi.length());
   fmpzxx one(1);
   FandV_ct res(p, rlk);
-  
+  res.depth = depth+c.depth+1;
   
   // c0
   //res.c0 = ((c0*c.c0)%p.Phi); Rcout << res.c0 << "\n"; // Following indented lines are 2x faster at doing modulo cyclotomic poly
