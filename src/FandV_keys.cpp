@@ -173,7 +173,7 @@ std::string FandV_sk::dec(const FandV_ct& ct) const {
   
   res = decraw(ct);
   
-  for(int i=0; i<res.size(); i++) {
+  for(unsigned int i=0; i<res.size(); i++) {
     m += res[i]*tmp;
     tmp *= 2;
   }

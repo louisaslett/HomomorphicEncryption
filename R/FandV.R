@@ -142,12 +142,13 @@ evalqOnLoad({
   })
   setMethod("[<-", signature(x="Rcpp_FandV_ct_vec", value="Rcpp_FandV_ct"), function (x, i, j, ..., value) {
     i <- as.integer(i)
-    if(length(i) > 1)
-      stop("only single element assignment currently supported for FandV ciphertext vectors")
-    if(i<1 || i>x$size()) {
+    idx <- (1:x$size())[i]
+    if(any(is.na(idx))) {
       stop("out of bounds")
     }
-    x$set(i-1, value)
+    for(j in idx) {
+      x$set(idx-1, value)
+    }
     
     attr(x, "FHEt") <- "ctvec"
     attr(x, "FHEs") <- "FandV"
@@ -155,13 +156,15 @@ evalqOnLoad({
   })
   setMethod("[<-", signature(x="Rcpp_FandV_ct_vec", value="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
     i <- as.integer(i)
-    if(length(i) != length(value))
-      stop("only matching source and destination vector sizes supported currently")
-    if(min(i)<1 || max(i)>x$size()) {
+    idx <- (1:x$size())[i]
+    if(any(is.na(idx))) {
       stop("out of bounds")
     }
-    for(j in 1:length(i)) {
-      x$set(i[j]-1, value[j])
+    if(length(i)!=length(value)) {
+      warning("number of items to replace is not a multiple of replacement length.")
+    }
+    for(j in 1:length(idx)) {
+      x$set(idx[j]-1, value$get((j-1)%%value$size()))
     }
     
     attr(x, "FHEt") <- "ctvec"
@@ -193,9 +196,9 @@ evalqOnLoad({
   })
   setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_vec"), function(e1, e2) {
     if(e1$size()%%e2$size()!=0 && e2$size()%%e1$size()!=0) {
-      stop("longer object length is not a multiple of shorter object length")
+      warning("longer object length is not a multiple of shorter object length")
     }
-    res <- e1$mul(e2)
+    res <- e1$mulParallel(e2)
     
     attr(res, "FHEt") <- "ctvec"
     attr(res, "FHEs") <- "FandV"

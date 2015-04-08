@@ -59,6 +59,24 @@ test_that("Vector operations", {
   expect_that(dec(keys$sk, a%*%b), equals(-20))
 })
 
+test_that("Vector ops (imbalanced)", {
+  p <- pars("FandV")
+  k <- keygen(p)
+  x <- 1:10
+  
+  y <- x
+  expect_warning(y <- y * y[5:10])
+  xct <- enc(k$pk, x)
+  expect_warning(xct <- xct * xct[5:10])
+  expect_that(dec(k$sk, xct), equals(y))
+  
+  y <- x
+  expect_warning(y <- y[5:10] * y)
+  xct <- enc(k$pk, x)
+  expect_warning(xct <- xct[5:10] * xct)
+  expect_that(dec(k$sk, xct), equals(y))
+})
+
 test_that("Vector rep", {
   p <- pars("FandV")
   keys <- keygen(p)
@@ -73,4 +91,22 @@ test_that("Vector rep", {
   expect_that(dec(keys$sk, rep(ctx, each=2, len=4)), equals(rep(x, each=2, len=4)))
   expect_that(dec(keys$sk, rep(ctx, each=2, len=10)), equals(rep(x, each=2, len=10)))
   expect_that(dec(keys$sk, rep(ctx, each=2, times=3)), equals(rep(x, each=2, times=3)))
+})
+
+test_that("Vector assignment", {
+  p <- pars("FandV")
+  k <- keygen(p)
+  x <- 1:10
+  
+  y <- x
+  expect_warning(y[1:3] <- y[5:10])
+  xct <- enc(k$pk, x)
+  expect_warning(xct[1:3] <- xct[5:10])
+  expect_that(dec(k$sk, xct), equals(y))
+  
+  y <- x
+  expect_warning(y[1:3] <- y[6:7])
+  xct <- enc(k$pk, x)
+  expect_warning(xct[1:3] <- xct[6:7])
+  expect_that(dec(k$sk, xct), equals(y))
 })

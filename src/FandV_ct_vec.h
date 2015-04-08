@@ -34,7 +34,8 @@ class FandV_ct_vec {
     // R level ops
     FandV_ct_vec add(const FandV_ct_vec& x) const;
     FandV_ct_vec sub(const FandV_ct_vec& x) const;
-    FandV_ct_vec mul(const FandV_ct_vec& x) const;
+    FandV_ct_vec mulParallel(const FandV_ct_vec& x) const;
+    FandV_ct_vec mulSerial(const FandV_ct_vec& x) const;
     FandV_ct_vec addct(const FandV_ct& ct) const;
     FandV_ct_vec subct(const FandV_ct& ct, const int rev) const;
     FandV_ct_vec mulctParallel(const FandV_ct& ct) const;

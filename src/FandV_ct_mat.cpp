@@ -293,7 +293,7 @@ struct FandV_RowSums : public Worker {
   // function call operator that work for the specified range (begin/end)
   void operator()(std::size_t begin, std::size_t end) {
     for(std::size_t row = begin; row < end; row++) {
-      for(int i=0; i<xncol; i++) {
+      for(unsigned int i=0; i<xncol; i++) {
         res->at(row).addEq(x->at(row + i*xnrow));
       }
     }
@@ -336,7 +336,7 @@ struct FandV_ColSums : public Worker {
   // function call operator that work for the specified range (begin/end)
   void operator()(std::size_t begin, std::size_t end) {
     for(std::size_t col = begin; col < end; col++) {
-      for(int i=0; i<xnrow; i++) {
+      for(unsigned int i=0; i<xnrow; i++) {
         res->at(col).addEq(x->at(i + col*xnrow));
       }
     }

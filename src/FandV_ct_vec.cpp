@@ -106,7 +106,42 @@ FandV_ct_vec FandV_ct_vec::sub(const FandV_ct_vec& x) const {
   }
   return(res);
 }
-FandV_ct_vec FandV_ct_vec::mul(const FandV_ct_vec& x) const {
+struct FandV_Mul : public Worker {   
+  // Source vectors
+  const std::vector<FandV_ct>* ctvec;
+  const std::vector<FandV_ct>* ctvecX;
+  const int sz, xsz;
+  
+  // Destination vector
+  std::vector<FandV_ct>* res;
+  
+  // Constructors
+  FandV_Mul(std::vector<FandV_ct>* res_, const std::vector<FandV_ct>* ctvec_, const std::vector<FandV_ct>* ctvecX_, int sz_, int xsz_) : sz(sz_), xsz(xsz_) { res = res_; ctvec = ctvec_; ctvecX = ctvecX_; }
+  
+  // Element wise multiply
+  void operator()(std::size_t begin, std::size_t end) {
+    for(; begin<end; begin++) {
+      if(sz>=xsz)
+        res->at(begin) = ctvec->at(begin).mul(ctvecX->at(begin%xsz));
+      else
+        res->at(begin) = ctvecX->at(begin).mul(ctvec->at(begin%sz));
+    }
+  }
+};
+FandV_ct_vec FandV_ct_vec::mulParallel(const FandV_ct_vec& x) const {
+  int sz = vec.size(), xsz = x.vec.size();
+  
+  FandV_ct_vec res;
+  if(sz>=xsz) {
+    res.vec = vec;
+  } else {
+    res.vec = x.vec;
+  }
+  FandV_Mul mul(&(res.vec), &vec, &(x.vec), sz, xsz);
+  parallelFor(0, res.vec.size(), mul);
+  return(res);
+}
+FandV_ct_vec FandV_ct_vec::mulSerial(const FandV_ct_vec& x) const {
   int sz = vec.size(), xsz = x.vec.size();
   
   FandV_ct_vec res;
@@ -118,7 +153,7 @@ FandV_ct_vec FandV_ct_vec::mul(const FandV_ct_vec& x) const {
   } else {
     res.vec = x.vec;
     for(int i=0; i<xsz; i++) {
-      res.vec[i] = x.vec[i].mul(vec[i%xsz]);
+      res.vec[i] = x.vec[i].mul(vec[i%sz]);
     }
   }
   return(res);
