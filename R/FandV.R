@@ -449,6 +449,58 @@ evalqOnLoad({
     attr(x, "FHEs") <- "FandV"
     x
   })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_mat", i="missing", j="numeric", value="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
+    j <- as.integer(j)
+    tmp <- c(matrix(0:(x$size()-1), nrow=x$nrow, ncol=x$ncol)[,j])
+    if(any(is.na(tmp))) {
+      stop("out of bounds")
+    }
+    if(length(tmp)%%length(value)!=0) {
+      stop("number of items to replace is not a multiple of replacement length.")
+    }
+    for(k in 1:length(tmp)) {
+      x$setelt(tmp[k], value[(k-1)%%length(value)+1])
+    }
+    
+    attr(x, "FHEt") <- "ctmat"
+    attr(x, "FHEs") <- "FandV"
+    x
+  })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_mat", i="numeric", j="missing", value="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
+    i <- as.integer(i)
+    tmp <- c(matrix(0:(x$size()-1), nrow=x$nrow, ncol=x$ncol)[i,])
+    if(any(is.na(tmp))) {
+      stop("out of bounds")
+    }
+    if(length(tmp)%%length(value)!=0) {
+      stop("number of items to replace is not a multiple of replacement length.")
+    }
+    for(k in 1:length(tmp)) {
+      x$setelt(tmp[k], value[(k-1)%%length(value)+1])
+    }
+    
+    attr(x, "FHEt") <- "ctmat"
+    attr(x, "FHEs") <- "FandV"
+    x
+  })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_mat", i="numeric", j="numeric", value="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
+    i <- as.integer(i)
+    j <- as.integer(j)
+    tmp <- c(matrix(0:(x$size()-1), nrow=x$nrow, ncol=x$ncol)[i,j])
+    if(any(is.na(tmp))) {
+      stop("out of bounds")
+    }
+    if(length(tmp)%%length(value)!=0) {
+      stop("number of items to replace is not a multiple of replacement length.")
+    }
+    for(k in 1:length(tmp)) {
+      x$setelt(tmp[k], value[(k-1)%%length(value)+1])
+    }
+    
+    attr(x, "FHEt") <- "ctmat"
+    attr(x, "FHEs") <- "FandV"
+    x
+  })
   setMethod("[<-", signature(x="Rcpp_FandV_ct_mat", value="Rcpp_FandV_ct"), function (x, i, j, ..., value) {
     stop("only single element assignment currently supported for FandV ciphertext vectors")
   })

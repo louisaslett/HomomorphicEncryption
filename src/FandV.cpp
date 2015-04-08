@@ -287,6 +287,7 @@ RCPP_MODULE(FandV) {
     .method("subsetV", &FandV_ct_mat::subsetV)
     .method("t", &FandV_ct_mat::t)
     .method("set", &FandV_ct_mat::set)
+    .method("setelt", &FandV_ct_mat::setelt)
     .method("setmatrix", &FandV_ct_mat::setmatrix)
     .method("reset", &FandV_ct_mat::reset)
     .method("show", &FandV_ct_mat::show)

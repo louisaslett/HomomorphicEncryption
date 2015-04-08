@@ -27,6 +27,7 @@ class FandV_ct_mat {
     //void push(const FandV_ct& ct);
     //void pushvec(const FandV_ct_vec& ct_vec);
     void set(int i, int j, const FandV_ct& ct);
+    void setelt(int i, const FandV_ct& ct);
     void setmatrix(const FandV_ct_vec& ct_vec, int nrow_, int ncol_, int byrow);
     void reset(const FandV_ct& ct, const int nrow_, const int ncol_);
     
