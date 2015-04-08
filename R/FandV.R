@@ -153,6 +153,21 @@ evalqOnLoad({
     attr(x, "FHEs") <- "FandV"
     x
   })
+  setMethod("[<-", signature(x="Rcpp_FandV_ct_vec", value="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
+    i <- as.integer(i)
+    if(length(i) != length(value))
+      stop("only matching source and destination vector sizes supported currently")
+    if(min(i)<1 || max(i)>x$size()) {
+      stop("out of bounds")
+    }
+    for(j in 1:length(i)) {
+      x$set(i[j]-1, value[j])
+    }
+    
+    attr(x, "FHEt") <- "ctvec"
+    attr(x, "FHEs") <- "FandV"
+    x
+  })
   setMethod("[<-", signature(x="Rcpp_FandV_ct_vec"), function (x, i, j, ..., value) {
     stop("only a ciphertext can be assigned to this vector")
   })
