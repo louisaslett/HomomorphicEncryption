@@ -36,6 +36,7 @@ FandV_ct& FandV_ct::operator=(FandV_ct ct) {
 // R level ops
 FandV_ct FandV_ct::add(const FandV_ct& c) const {
   FandV_ct res(p, rlk);
+  res.depth = std::max(depth, c.depth);
   
   res.c0 = c0+c.c0;
   res.c1 = c1+c.c1;
@@ -43,12 +44,15 @@ FandV_ct FandV_ct::add(const FandV_ct& c) const {
   return(res);
 }
 void FandV_ct::addEq(const FandV_ct& c) {  
+  depth = std::max(depth, c.depth);
+  
   c0 += c.c0;
   c1 += c.c1;
 }
 
 FandV_ct FandV_ct::sub(const FandV_ct& c) const {
   FandV_ct res(p, rlk);
+  res.depth = std::max(depth, c.depth);
   
   res.c0 = c0-c.c0;
   res.c1 = c1-c.c1;
