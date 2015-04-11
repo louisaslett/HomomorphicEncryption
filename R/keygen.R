@@ -65,35 +65,35 @@ keygen.Rcpp_FandV_par <- function(p) {
   res
 }
 
-keygen.FandV_CRT <- function(p) {
-  res <- list(pk=list(), sk=list(), rlk=list())
-  for(i in 1:length(p)) {
-    pk <- new(FandV_pk)
-    sk <- new(FandV_sk)
-    rlk <- new(FandV_rlk)
-    p[[i]]$keygen(pk, sk, rlk)
-    attr(pk, "FHEt") <- "pk"
-    attr(pk, "FHEs") <- "FandV"
-    attr(sk, "FHEt") <- "sk"
-    attr(sk, "FHEs") <- "FandV"
-    attr(rlk, "FHEt") <- "rlk"
-    attr(rlk, "FHEs") <- "FandV"
-    res$pk[[i]] <- pk
-    res$sk[[i]] <- sk
-    res$rlk[[i]] <- rlk
-    list(sk=sk, pk=pk, rlk=rlk)
-  }
-  class(res$pk) <- "FandV_CRT_pk"
-  attr(res$pk, "FHEt") <- "pk"
-  attr(res$pk, "FHEs") <- "FandV_CRT"
-  class(res$sk) <- "FandV_CRT_sk"
-  attr(res$sk, "FHEt") <- "sk"
-  attr(res$sk, "FHEs") <- "FandV_CRT"
-  class(res$rlk) <- "FandV_CRT_rlk"
-  attr(res$rlk, "FHEt") <- "rlk"
-  attr(res$rlk, "FHEs") <- "FandV_CRT"
-  class(res) <- "FandV_CRT_keys"
-  attr(res, "FHEt") <- "keys"
-  attr(res, "FHEs") <- "FandV_CRT"
-  res
-}
+# keygen.FandV_CRT <- function(p) {
+#   res <- list(pk=list(), sk=list(), rlk=list())
+#   for(i in 1:length(p)) {
+#     pk <- new(FandV_pk)
+#     sk <- new(FandV_sk)
+#     rlk <- new(FandV_rlk)
+#     p[[i]]$keygen(pk, sk, rlk)
+#     attr(pk, "FHEt") <- "pk"
+#     attr(pk, "FHEs") <- "FandV"
+#     attr(sk, "FHEt") <- "sk"
+#     attr(sk, "FHEs") <- "FandV"
+#     attr(rlk, "FHEt") <- "rlk"
+#     attr(rlk, "FHEs") <- "FandV"
+#     res$pk[[i]] <- pk
+#     res$sk[[i]] <- sk
+#     res$rlk[[i]] <- rlk
+#     list(sk=sk, pk=pk, rlk=rlk)
+#   }
+#   class(res$pk) <- "FandV_CRT_pk"
+#   attr(res$pk, "FHEt") <- "pk"
+#   attr(res$pk, "FHEs") <- "FandV_CRT"
+#   class(res$sk) <- "FandV_CRT_sk"
+#   attr(res$sk, "FHEt") <- "sk"
+#   attr(res$sk, "FHEs") <- "FandV_CRT"
+#   class(res$rlk) <- "FandV_CRT_rlk"
+#   attr(res$rlk, "FHEt") <- "rlk"
+#   attr(res$rlk, "FHEs") <- "FandV_CRT"
+#   class(res) <- "FandV_CRT_keys"
+#   attr(res, "FHEt") <- "keys"
+#   attr(res, "FHEs") <- "FandV_CRT"
+#   res
+# }

@@ -71,61 +71,61 @@ dec.Rcpp_FandV_sk <- function(sk, ct) {
   }
 }
 
-# Note: currently this CRT code does not work for big integers in the way the 
-# regular FandV does because we call into the numbers package to do CRT
-# reconstruction ... on the to-do list to bring that in house and do bigints
-dec.CRT <- function(sk, crt) {
-  # Decrypt the raw polynomials
-  aL <- list()
-  m <- NULL
-  for(i in 1:length(crt@ct)) {
-    aL[[i]] <- sk[[i]]$decraw(crt@ct[[i]])
-    m <- c(m, crt@ct[[i]]$p$get_t())
-  }
-  # Even up the number of elements in each list item so that we can rbind them
-  mx <- max(unlist(lapply(aL, length)))
-  aL <- lapply(aL, function(x, max) { c(x, rep(0, max-length(x))) }, max=mx) # NB could do this better by unlisting and straight into matrix byrow, BUT not if aL ever becomes bigz's so leaving like this for now
-  a <- aL[[1]]
-  for(i in 2:length(aL)) {
-    a <- rbind(a, aL[[i]])
-  }
-  #print(a)
-  #print(as.integer(m))
-  # Do CRT recovery on each coefficient to get the result polynomial
-  res <- chinese(as.bigz(a[,1]), as.bigz(m))
-  if(dim(a)[2]>1)
-    for(i in 2:(dim(a)[2])) {
-      res <- c(res, chinese(as.bigz(a[,i]), as.bigz(m)))
-    }
-  #print(res)
-  res[res>prod(as.bigz(m))%/%2] <- res[res>prod(as.bigz(m))%/%2]-prod(as.bigz(m)) # centered reduction
-  #print(res)
-  # Recover value
-  c(t(res) %*% 2^(0:(length(res)-1)))
-}
-
-dec.FandV_CRT_sk <- function(sk, ct) {
-  if(attr(ct@ct[[1]], "FHEt") == "ct") {
-    res <- dec.CRT(sk, ct)
-    if(res < 2147483647 && res > -2147483647)
-      return(as.integer(res))
-    else
-      return(res)
-  } else if(attr(ct@ct[[1]], "FHEt") == "ctvec") {
-    # Construct crt object containing just first element of vector
-    crt <- new("CRT", ct=list())
-    for(i in 1:length(ct@ct))
-      crt@ct[[i]] <- ct@ct[[i]][1]
-    # Decrypt this
-    res <- dec.CRT(sk, crt)
-    # Rinse and repeat for remaining elements
-    for(j in 2:length(ct@ct[[i]])) {
-      for(i in 1:length(ct@ct))
-        crt@ct[[i]] <- ct@ct[[i]][j]
-      res <- c(res, dec.CRT(sk, crt))
-    }
-  } else if(attr(ct@ct[[1]], "FHEt") == "ctmat") {
-    
-  }
-  
-}
+# # Note: currently this CRT code does not work for big integers in the way the 
+# # regular FandV does because we call into the numbers package to do CRT
+# # reconstruction ... on the to-do list to bring that in house and do bigints
+# dec.CRT <- function(sk, crt) {
+#   # Decrypt the raw polynomials
+#   aL <- list()
+#   m <- NULL
+#   for(i in 1:length(crt@ct)) {
+#     aL[[i]] <- sk[[i]]$decraw(crt@ct[[i]])
+#     m <- c(m, crt@ct[[i]]$p$get_t())
+#   }
+#   # Even up the number of elements in each list item so that we can rbind them
+#   mx <- max(unlist(lapply(aL, length)))
+#   aL <- lapply(aL, function(x, max) { c(x, rep(0, max-length(x))) }, max=mx) # NB could do this better by unlisting and straight into matrix byrow, BUT not if aL ever becomes bigz's so leaving like this for now
+#   a <- aL[[1]]
+#   for(i in 2:length(aL)) {
+#     a <- rbind(a, aL[[i]])
+#   }
+#   #print(a)
+#   #print(as.integer(m))
+#   # Do CRT recovery on each coefficient to get the result polynomial
+#   res <- chinese(as.bigz(a[,1]), as.bigz(m))
+#   if(dim(a)[2]>1)
+#     for(i in 2:(dim(a)[2])) {
+#       res <- c(res, chinese(as.bigz(a[,i]), as.bigz(m)))
+#     }
+#   #print(res)
+#   res[res>prod(as.bigz(m))%/%2] <- res[res>prod(as.bigz(m))%/%2]-prod(as.bigz(m)) # centered reduction
+#   #print(res)
+#   # Recover value
+#   c(t(res) %*% 2^(0:(length(res)-1)))
+# }
+# 
+# dec.FandV_CRT_sk <- function(sk, ct) {
+#   if(attr(ct@ct[[1]], "FHEt") == "ct") {
+#     res <- dec.CRT(sk, ct)
+#     if(res < 2147483647 && res > -2147483647)
+#       return(as.integer(res))
+#     else
+#       return(res)
+#   } else if(attr(ct@ct[[1]], "FHEt") == "ctvec") {
+#     # Construct crt object containing just first element of vector
+#     crt <- new("CRT", ct=list())
+#     for(i in 1:length(ct@ct))
+#       crt@ct[[i]] <- ct@ct[[i]][1]
+#     # Decrypt this
+#     res <- dec.CRT(sk, crt)
+#     # Rinse and repeat for remaining elements
+#     for(j in 2:length(ct@ct[[i]])) {
+#       for(i in 1:length(ct@ct))
+#         crt@ct[[i]] <- ct@ct[[i]][j]
+#       res <- c(res, dec.CRT(sk, crt))
+#     }
+#   } else if(attr(ct@ct[[1]], "FHEt") == "ctmat") {
+#     
+#   }
+#   
+# }
