@@ -4,7 +4,7 @@
 #' 
 #' Currently only the scheme of Fan and Vercauteren (\code{"FandV"}) is implemented.
 #' 
-#' For "FandV" you may specify:
+#' For \code{"FandV"} you may specify:
 #' \describe{
 #'   \item{\code{d}}{power of the cyclotomic polynomial ring (default 4096);}
 #'   \item{\code{sigma}}{the standard deviation of the discrete Gaussian used to 
@@ -29,6 +29,9 @@
 #' Encryption. IACR ePrint. Retrieved from \url{https://eprint.iacr.org/2012/144}
 #' 
 #' @seealso
+#' \code{\link{parsHelp}} for automatic assistance selecting parameters which 
+#' achieve a certain security level and multiplicative depth.
+#' 
 #' \code{\link{keygen}} to generate encryption keys using these parameters.
 #' 
 #' @examples
@@ -68,7 +71,22 @@ pars <- function(scheme, ...) {
       if(log2(args$t)>p$qpow) stop("message space modulus (t) cannot exceed coefficient modulus (2^qpow).")
       p$t <- args$t
     }
-    p <- new(FandV_par, p$d, p$sigma, p$qpow, p$t)
+    
+    # Figure out multiplicative depth this can support
+    L <- 1
+    while(FandV_testDepth(L, d=as.bigz(p$d), q=as.bigz(2)^(p$qpow), t=p$t, B_err=as.bigz(3*p$sigma))) {
+      L <- L+1
+    }
+    L <- L-1
+    
+    # Figure out security provided
+    lambda <- 2
+    while(FandV_maxqLP11(p$d, lambda, p$sigma) > p$qpow) {
+      lambda <- lambda+1
+    }
+    lambda <- lambda-1
+    
+    p <- new(FandV_par, p$d, p$sigma, p$qpow, p$t, lambda, L)
     attr(p, "FHEt") <- "pars"
     attr(p, "FHEs") <- "FandV"
     return(p)

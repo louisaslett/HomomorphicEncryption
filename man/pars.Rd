@@ -20,7 +20,7 @@ Use this function to create an encryption scheme parameters object.
 \details{
 Currently only the scheme of Fan and Vercauteren (\code{"FandV"}) is implemented.
 
-For "FandV" you may specify:
+For \code{"FandV"} you may specify:
 \describe{
   \item{\code{d}}{power of the cyclotomic polynomial ring (default 4096);}
   \item{\code{sigma}}{the standard deviation of the discrete Gaussian used to
@@ -54,6 +54,9 @@ Fan, J., & Vercauteren, F. (2012). Somewhat Practical Fully Homomorphic
 Encryption. IACR ePrint. Retrieved from \url{https://eprint.iacr.org/2012/144}
 }
 \seealso{
+\code{\link{parsHelp}} for automatic assistance selecting parameters which
+achieve a certain security level and multiplicative depth.
+
 \code{\link{keygen}} to generate encryption keys using these parameters.
 }
 

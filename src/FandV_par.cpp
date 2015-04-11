@@ -13,7 +13,7 @@ using namespace Rcpp;
 #include "FandV_keys.h"
 
 // Construct from parameters
-FandV_par::FandV_par(int d_, double sigma_, int qpow_, int t_) : sigma(sigma_), qpow(qpow_), q(1), t(t_), T(1) {
+FandV_par::FandV_par(int d_, double sigma_, int qpow_, int t_, int lambda_, int L_) : sigma(sigma_), qpow(qpow_), q(1), t(t_), T(1), lambda(lambda_), L(L_) {
   arith_cyclotomic_polynomial(Phi._data().inner, 2*d_); // Phi is 2d-th Cyclotomic polynomial
   
   q = q << qpow; // q=2^qpow
@@ -22,7 +22,7 @@ FandV_par::FandV_par(int d_, double sigma_, int qpow_, int t_) : sigma(sigma_), 
 }
 
 // Copy constructor
-FandV_par::FandV_par(const FandV_par& par) : sigma(par.sigma), qpow(par.qpow), q(par.q), t(par.t), T(par.T), Delta(par.Delta), Phi(par.Phi) { }
+FandV_par::FandV_par(const FandV_par& par) : sigma(par.sigma), qpow(par.qpow), q(par.q), t(par.t), T(par.T), Delta(par.Delta), Phi(par.Phi), lambda(par.lambda), L(par.L) { }
 
 // Swap function
 void FandV_par::swap(FandV_par& a, FandV_par& b) {
@@ -33,6 +33,8 @@ void FandV_par::swap(FandV_par& a, FandV_par& b) {
   std::swap(a.T, b.T);
   std::swap(a.Delta, b.Delta);
   std::swap(a.Phi, b.Phi);
+  std::swap(a.lambda, b.lambda);
+  std::swap(a.L, b.L);
 }
 
 // Assignment (copy-and-swap idiom)
@@ -46,7 +48,7 @@ void FandV_par::show() {
   Rcout << "Fan and Vercauteren parameters\n";
   Rcout << "\u03d5 = ";
   printPoly(Phi);
-  Rcout << "\nq = " << q << " (" << qpow << "-bit integer)\nt = " << t << "\n\u0394 = " << Delta << "\n\u03c3 = " << sigma << "\n";
+  Rcout << "\nq = " << q << " (" << qpow << "-bit integer)\nt = " << t << "\n\u0394 = " << Delta << "\n\u03c3 = " << sigma << "\nSecurity level \u2248 " << lambda << "-bits\nSupports multiplicative depth of " << L << " with overwhelming probability (i.e. lower bound, likely more possible)\n";
 }
 void FandV_par::show_no_t() {
   Rcout << "\u03d5 = ";

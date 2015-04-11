@@ -211,7 +211,7 @@ RCPP_EXPOSED_CLASS(FandV_ct_mat)
 
 RCPP_MODULE(FandV) {
   class_<FandV_par>("FandV_par")
-    .constructor<int, double, int, int>()
+    .constructor<int, double, int, int, int, int>()
     .method("keygen", &FandV_par::keygen)
     .method("show", &FandV_par::show)
     .method("show_no_t", &FandV_par::show_no_t)
