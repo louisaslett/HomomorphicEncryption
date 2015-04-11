@@ -15,8 +15,12 @@ else
   if test [ -n "${GMP_HOME}" ] ; then
 GMP_HOME="${GMP_HOME}"
 else
-  if test [ -n "/usr/local/lib/libgmp.so" ] ; then
+  if test [ -e "/usr/local/lib/libgmp.so" -o -e "/usr/local/lib/libgmp.dylib" ] ; then
 GMP_HOME="/usr/local"
+else
+  if test [ -e "/usr/lib/libgmp.so" -o -e "/usr/lib/libgmp.so" ] ; then
+GMP_HOME="/usr"
+fi
 fi
 fi
 fi
@@ -32,8 +36,12 @@ else
   if test [ -n "${MPFR_HOME}" ] ; then
 MPFR_HOME="${MPFR_HOME}"
 else
-  if test [ -n "/usr/local/lib/libmpfr.so" ] ; then
+  if test [ -e "/usr/local/lib/libmpfr.so" -o -e "/usr/local/lib/libmpfr.dylib" ] ; then
 MPFR_HOME="/usr/local"
+else
+  if test [ -e "/usr/lib/libmpfr.so" -o -e "/usr/lib/libmpfr.dylib" ] ; then
+MPFR_HOME="/usr"
+fi
 fi
 fi
 fi
@@ -49,8 +57,12 @@ else
   if test [ -n "${FLINT_HOME}" ] ; then
 FLINT_HOME="${FLINT_HOME}"
 else
-  if test [ -n "/usr/local/lib/libflint.so" ] ; then
+  if test [ -e "/usr/local/lib/libflint.so" -o -e "/usr/local/lib/libflint.dylib" ] ; then
 FLINT_HOME="/usr/local"
+else
+  if test [ -e "/usr/lib/libflint.so" -o -e "/usr/lib/libflint.dylib" ] ; then
+FLINT_HOME="/usr"
+fi
 fi
 fi
 fi
