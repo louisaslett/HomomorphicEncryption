@@ -22,9 +22,9 @@ using namespace RcppParallel;
 using namespace flint;
 
 //// Public keys ////
-FandV_pk::FandV_pk() : p(0, 0.0, 0, 1) { }
+FandV_pk::FandV_pk(FandV_rlk_locker* rlkl, size_t rlki) : p(0, 0.0, 0, 1), rlkl(rlkl), rlki(rlki) { }
 
-FandV_pk::FandV_pk(const FandV_pk& pk) : p(pk.p), rlk(pk.rlk), p0(pk.p0), p1(pk.p1) { }
+FandV_pk::FandV_pk(const FandV_pk& pk) : p(pk.p), rlkl(pk.rlkl), rlki(pk.rlki), p0(pk.p0), p1(pk.p1) { }
 
 // Encrypt
 void FandV_pk::enc(int m, FandV_ct& ct) const {
@@ -77,13 +77,13 @@ struct FandV_EncVec : public Worker {
   }
 };
 void FandV_pk::encvec(IntegerVector m, FandV_ct_vec& ctvec) {
-  FandV_ct ct(p, rlk);
+  FandV_ct ct(p, rlkl, rlki);
   ctvec.vec.resize(m.size(), ct);
   FandV_EncVec encEngine(this, &m, &(ctvec.vec));
   parallelFor(0, m.size(), encEngine);
 }
 void FandV_pk::encmat(IntegerVector m, int nrow, int ncol, FandV_ct_mat& ctmat) {
-  FandV_ct ct(p, rlk);
+  FandV_ct ct(p, rlkl, rlki);
   ctmat.mat.resize(m.size(), ct);
   ctmat.nrow = nrow;
   ctmat.ncol = ncol;
@@ -108,7 +108,7 @@ void FandV_pk::save(FILE* fp) const {
   print(fp, p1);
   fprintf(fp, "\n");
   
-  rlk.save(fp);
+  rlkl->x[rlki].save(fp);
   p.save(fp);
 }
 FandV_pk::FandV_pk(FILE* fp) {
@@ -132,7 +132,7 @@ FandV_pk::FandV_pk(FILE* fp) {
   read(fp, p1);
   
   len = getline(&buf, &bufn, fp); // Advance past the new line
-  rlk = FandV_rlk(fp);
+  rlki = rlkl->add(FandV_rlk(fp));
   len = getline(&buf, &bufn, fp); // Advance past the new line
   p = FandV_par(fp);
   free(buf);
@@ -272,4 +272,20 @@ FandV_rlk::FandV_rlk(FILE* fp) {
   len = getline(&buf, &bufn, fp); // Advance past the new line
   p = FandV_par(fp);
   free(buf);
+}
+
+FandV_rlk_locker::FandV_rlk_locker() { }
+
+int FandV_rlk_locker::add(const FandV_rlk &rlk) {
+  for(int i=0; i<x.size(); i++) {
+    if(x[i].rlk00 == rlk.rlk00 && x[i].rlk01 == rlk.rlk01 && x[i].rlk10 == rlk.rlk10 && x[i].rlk11 == rlk.rlk11) {
+      return(i);
+    }
+  }
+  x.push_back(rlk);
+  return(x.size()-1);
+}
+
+void FandV_rlk_locker::show() const {
+  Rcout << "Locker contains " << x.size() << " Fan and Vercauteren relinearisation keys\n";
 }

@@ -19,8 +19,8 @@ using namespace flint;
 #include "FandV_ct_vec.h"
 #include "FandV_ct_mat.h"
 
-// Uncomment function definition here and the module export below then call with
-// HomomorphicEncryption:::HEmem(), or also add to NAMESPACE file.
+// More detailed info on memory usage.  Rcpp modules exist outside R's direct
+// control, so gc() useless for finding out memory usage.
 #include "../config.h"
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
@@ -205,6 +205,7 @@ RCPP_EXPOSED_CLASS(FandV_par)
 RCPP_EXPOSED_CLASS(FandV_pk)
 RCPP_EXPOSED_CLASS(FandV_sk)
 RCPP_EXPOSED_CLASS(FandV_rlk)
+RCPP_EXPOSED_CLASS(FandV_rlk_locker)
 RCPP_EXPOSED_CLASS(FandV_ct)
 RCPP_EXPOSED_CLASS(FandV_ct_vec)
 RCPP_EXPOSED_CLASS(FandV_ct_mat)
@@ -220,9 +221,9 @@ RCPP_MODULE(FandV) {
   ;
   
   class_<FandV_pk>("FandV_pk")
-    .constructor()
+    .constructor<FandV_rlk_locker*, size_t>()
     .field("p", &FandV_pk::p)
-    .field("rlk", &FandV_pk::rlk)
+    .field("rlki", &FandV_pk::rlki)
     .method("enc", &FandV_pk::enc)
     .method("encvec", &FandV_pk::encvec)
     .method("encmat", &FandV_pk::encmat)
@@ -241,10 +242,16 @@ RCPP_MODULE(FandV) {
     .method("show", &FandV_rlk::show)
   ;
   
+  class_<FandV_rlk_locker>("FandV_rlk_locker")
+    .constructor()
+    .method("add", &FandV_rlk_locker::add)
+    .method("show", &FandV_rlk_locker::show)
+  ;
+  
   class_<FandV_ct>("FandV_ct")
-    .constructor<FandV_par,FandV_rlk>()
+    .constructor<FandV_par,FandV_rlk_locker*,size_t>()
     .field("p", &FandV_ct::p)
-    .field("rlk", &FandV_ct::rlk)
+    .field("rlki", &FandV_ct::rlki)
     .field("depth", &FandV_ct::depth)
     .method("add", &FandV_ct::add)
     .method("sub", &FandV_ct::sub)

@@ -256,8 +256,8 @@ struct FandV_Prod : public Worker {
   FandV_ct value;
   
   // Constructors
-  FandV_Prod(const std::vector<FandV_ct>* input_) : valueSet(false), value(input_->at(0).p, input_->at(0).rlk) { input = input_; }
-  FandV_Prod(const FandV_Prod& prod, Split) : valueSet(false), value(prod.input->at(0).p, prod.input->at(0).rlk) { input = prod.input; }
+  FandV_Prod(const std::vector<FandV_ct>* input_) : valueSet(false), value(input_->at(0).p, input_->at(0).rlkl, input_->at(0).rlki) { input = input_; }
+  FandV_Prod(const FandV_Prod& prod, Split) : valueSet(false), value(prod.input->at(0).p, prod.input->at(0).rlkl, prod.input->at(0).rlki) { input = prod.input; }
   
   // Accumulate
   void operator()(std::size_t begin, std::size_t end) {
@@ -300,8 +300,8 @@ struct FandV_InnerProd : public Worker {
   FandV_ct res;
   
   // Constructors
-  FandV_InnerProd(const std::vector<FandV_ct>* x_, const std::vector<FandV_ct>* y_) : resSet(false), res(x_->at(0).p, x_->at(0).rlk) { x = x_; y = y_; }
-  FandV_InnerProd(const FandV_InnerProd& innerprod, Split) : resSet(false), res(innerprod.x->at(0).p, innerprod.x->at(0).rlk) { x = innerprod.x; y = innerprod.y; }
+  FandV_InnerProd(const std::vector<FandV_ct>* x_, const std::vector<FandV_ct>* y_) : resSet(false), res(x_->at(0).p, x_->at(0).rlkl, x_->at(0).rlki) { x = x_; y = y_; }
+  FandV_InnerProd(const FandV_InnerProd& innerprod, Split) : resSet(false), res(innerprod.x->at(0).p, innerprod.x->at(0).rlkl, innerprod.x->at(0).rlki) { x = innerprod.x; y = innerprod.y; }
   
   // Accumulate
   void operator()(std::size_t begin, std::size_t end) {

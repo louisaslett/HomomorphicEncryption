@@ -24,9 +24,12 @@ NULL
 
 loadModule("FandV", TRUE)
 
+rlkLocker <- 42 # Setup var in the namespace of the package ...
 # http://stackoverflow.com/questions/18151619/operator-overloading-in-r-reference-classes
 # evalqOnLoad used in package RcppBDT
 evalqOnLoad({
+  rlkLocker <<- new(FandV_rlk_locker) # ... then overwrite in evalqOnLoad once Rcpp modules loaded
+  
   ##### Missing S4 generics #####
   setGeneric("diag")
   setGeneric("diag<-")
@@ -303,7 +306,7 @@ evalqOnLoad({
     if(missing(ncol) && !missing(nrow))
       ncol <- nrow
     
-    tmp <- new(FandV_ct, x[1]$p, x[1]$rlk)
+    tmp <- new(FandV_ct, x[1]$p, rlkLocker, x[1]$rlki)
     
     res <- matrix(tmp, nrow, ncol)
     for(i in 0:(min(c(nrow,ncol))-1)) {

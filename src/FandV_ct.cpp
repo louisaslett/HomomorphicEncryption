@@ -15,17 +15,18 @@ using namespace Rcpp;
 #include "FandV.h"
 
 // Construct from parameters
-FandV_ct::FandV_ct(const FandV_par& p_, const FandV_rlk& rlk_) : p(p_), rlk(rlk_), depth(0) { }
+FandV_ct::FandV_ct(const FandV_par& p_, FandV_rlk_locker* rlkl_, size_t rlki_) : p(p_), rlkl(rlkl_), rlki(rlki_), depth(0) { }
 
 // Copy constructor
-FandV_ct::FandV_ct(const FandV_ct& ct) : c0(ct.c0), c1(ct.c1), p(ct.p), rlk(ct.rlk), depth(ct.depth) { }
+FandV_ct::FandV_ct(const FandV_ct& ct) : c0(ct.c0), c1(ct.c1), p(ct.p), rlkl(ct.rlkl), rlki(ct.rlki), depth(ct.depth) { }
 
 // Assignment (copy-and-swap idiom)
 void FandV_ct::swap(FandV_ct& a, FandV_ct& b) {
   std::swap(a.c0, b.c0);
   std::swap(a.c1, b.c1);
   std::swap(a.p, b.p);
-  std::swap(a.rlk, b.rlk);
+  std::swap(a.rlkl, b.rlkl);
+  std::swap(a.rlki, b.rlki);
   std::swap(a.depth, b.depth);
 }
 FandV_ct& FandV_ct::operator=(FandV_ct ct) {
@@ -35,7 +36,7 @@ FandV_ct& FandV_ct::operator=(FandV_ct ct) {
 
 // R level ops
 FandV_ct FandV_ct::add(const FandV_ct& c) const {
-  FandV_ct res(p, rlk);
+  FandV_ct res(p, rlkl, rlki);
   res.depth = std::max(depth, c.depth);
   
   res.c0 = c0+c.c0;
@@ -51,7 +52,7 @@ void FandV_ct::addEq(const FandV_ct& c) {
 }
 
 FandV_ct FandV_ct::sub(const FandV_ct& c) const {
-  FandV_ct res(p, rlk);
+  FandV_ct res(p, rlkl, rlki);
   res.depth = std::max(depth, c.depth);
   
   res.c0 = c0-c.c0;
@@ -65,7 +66,7 @@ FandV_ct FandV_ct::mul(const FandV_ct& c) const {
   c2.realloc(p.Phi.length());
   res2.realloc(p.Phi.length());
   fmpzxx one(1);
-  FandV_ct res(p, rlk);
+  FandV_ct res(p, rlkl, rlki);
   res.depth = depth+c.depth+1;
   
   // c0
@@ -128,6 +129,7 @@ FandV_ct FandV_ct::mul(const FandV_ct& c) const {
     c2.set_coeff(i, c2.get_coeff(i)/p.T);
   }
   
+  FandV_rlk& rlk = (rlkl->x)[rlki];
   //res.c0 = res.c0 + ((rlk.rlk00*res2)%p.Phi) + ((rlk.rlk10*c2)%p.Phi); // Following indented lines are 2x faster at doing modulo cyclotomic poly
     res.c0 = res.c0 + rlk.rlk00*res2 + rlk.rlk10*c2;
     for(int i=0; i<p.Phi.length()-1; i++) {
@@ -167,6 +169,7 @@ void FandV_ct::save(FILE* fp) const {
   fprintf(fp, "\n");
   print(fp, c1);
   fprintf(fp, "\n");
+  FandV_rlk& rlk = (rlkl->x[rlki]);
   rlk.save(fp);
   p.save(fp);
 }
@@ -191,7 +194,8 @@ FandV_ct::FandV_ct(FILE* fp) {
   read(fp, c1);
   
   len = getline(&buf, &bufn, fp); // Advance past the new line
-  rlk = FandV_rlk(fp);
+  FandV_rlk rlk = FandV_rlk(fp);
+  rlki = rlkl->add(rlk);
   
   len = getline(&buf, &bufn, fp); // Advance past the new line
   p = FandV_par(fp);

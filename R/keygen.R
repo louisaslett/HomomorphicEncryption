@@ -48,7 +48,7 @@ keygen <- function(p) {
 }
 
 keygen.Rcpp_FandV_par <- function(p) {
-  pk <- new(FandV_pk)
+  pk <- new(FandV_pk, rlkLocker, 0)
   sk <- new(FandV_sk)
   rlk <- new(FandV_rlk)
   p$keygen(pk, sk, rlk)

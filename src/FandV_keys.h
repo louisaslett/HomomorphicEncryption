@@ -14,6 +14,8 @@ using namespace flint;
 
 #include "FandV_par.h"
 
+#include <vector>
+
 class FandV_ct;
 class FandV_ct_vec;
 class FandV_ct_mat;
@@ -42,10 +44,23 @@ class FandV_rlk {
     fmpz_polyxx rlk00, rlk01, rlk10, rlk11;
 };
 
+class FandV_rlk_locker {
+  public:
+    // Constructors
+    FandV_rlk_locker();
+    
+    // Add a relin key to the locker and return the index
+    int add(const FandV_rlk &rlk);
+    void show() const;
+    
+    // The locker containing relin keys
+    std::vector<FandV_rlk> x;
+};
+
 class FandV_pk {
   public:
     // Constructors/Destructors
-    FandV_pk();
+    FandV_pk(FandV_rlk_locker* rlkl, size_t rlki);
     FandV_pk(const FandV_pk& pk);
     
     // Encrypt
@@ -63,7 +78,8 @@ class FandV_pk {
     FandV_pk(FILE* fp);
 
     FandV_par p;
-    FandV_rlk rlk;
+    FandV_rlk_locker* rlkl;
+    size_t rlki;
     
   private:
     fmpz_polyxx p0, p1; // Cyclotomic polynomial defining ring modulo

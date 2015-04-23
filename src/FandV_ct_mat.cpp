@@ -176,7 +176,7 @@ struct FandV_MatMul : public Worker {
 FandV_ct_mat FandV_ct_mat::matmulParallel(const FandV_ct_mat& y) const {
   // Setup destination
   FandV_ct_mat res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.mat.resize(nrow*y.ncol, zero);
   res.nrow = nrow;
   res.ncol = y.ncol;
@@ -196,7 +196,7 @@ FandV_ct_mat FandV_ct_mat::matmulSerial(const FandV_ct_mat& y) const {
   // Do naive multiply ... switch for something clever like Strassen's algorithm in future
   for(int i=0; i<nrow; i++) {
     for(int j=0; j<y.ncol; j++) {
-      FandV_ct sum(mat[0].p, mat[0].rlk);
+      FandV_ct sum(mat[0].p, mat[0].rlkl, mat[0].rlki);
       for(int k=0; k<ncol; k++) {
         sum = sum.add(mat[i + k*nrow].mul(y.mat[k + j*y.nrow]));
       }
@@ -233,7 +233,7 @@ struct FandV_TMatMul : public Worker {
 FandV_ct_mat FandV_ct_mat::TmatmulParallel(const FandV_ct_mat& y) const {
   // Setup destination
   FandV_ct_mat res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.mat.resize(ncol*y.ncol, zero);
   res.nrow = ncol;
   res.ncol = y.ncol;
@@ -271,7 +271,7 @@ struct FandV_MatMulT : public Worker {
 FandV_ct_mat FandV_ct_mat::matmulTParallel(const FandV_ct_mat& y) const {
   // Setup destination
   FandV_ct_mat res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.mat.resize(nrow*y.nrow, zero);
   res.nrow = nrow;
   res.ncol = y.nrow;
@@ -305,7 +305,7 @@ struct FandV_RowSums : public Worker {
 FandV_ct_vec FandV_ct_mat::rowSumsParallel() const {
   // Setup destination
   FandV_ct_vec res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.vec.resize(nrow, zero);
   
   FandV_RowSums rowSumsEngine(&mat, &(res.vec), nrow, ncol);
@@ -315,7 +315,7 @@ FandV_ct_vec FandV_ct_mat::rowSumsParallel() const {
 }
 FandV_ct_vec FandV_ct_mat::rowSumsSerial() const {
   FandV_ct_vec res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.vec.resize(nrow, zero);
   for(int j=0; j<nrow; j++) {
     for(int i=0; i<ncol; i++) {
@@ -348,7 +348,7 @@ struct FandV_ColSums : public Worker {
 FandV_ct_vec FandV_ct_mat::colSumsParallel() const {
   // Setup destination
   FandV_ct_vec res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.vec.resize(ncol, zero);
   
   FandV_ColSums colSumsEngine(&mat, &(res.vec), nrow, ncol);
@@ -358,7 +358,7 @@ FandV_ct_vec FandV_ct_mat::colSumsParallel() const {
 }
 FandV_ct_vec FandV_ct_mat::colSumsSerial() const {
   FandV_ct_vec res;
-  FandV_ct zero(mat[0].p, mat[0].rlk);
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
   res.vec.resize(ncol, zero);
   for(int i=0; i<ncol; i++) {
     for(int j=0; j<nrow; j++) {

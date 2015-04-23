@@ -131,7 +131,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   fmpz_polyxx_q(rlk.rlk00, pk.p.q);
   
   // Make sure public key holds a copy of rlk so it can be passed onto ciphertexts
-  pk.rlk = rlk;
+  pk.rlki = pk.rlkl->add(rlk);
 }
 
 // Save/load

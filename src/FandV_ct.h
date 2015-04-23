@@ -15,7 +15,8 @@ using namespace flint;
 class FandV_ct {
   public:
     // Constructors
-    FandV_ct(const FandV_par& p_, const FandV_rlk& rlk_);
+    FandV_ct(const FandV_par& p_, FandV_rlk_locker* rlkl_, size_t rlki_);
+    //FandV_ct(const FandV_par& p_, const FandV_rlk& rlk_);
     FandV_ct(const FandV_ct& ct);
     
     // Operators
@@ -38,7 +39,8 @@ class FandV_ct {
     // For performance keep public
     fmpz_polyxx c0, c1; // Polynomials
     FandV_par p;
-    FandV_rlk rlk;
+    FandV_rlk_locker* rlkl;
+    size_t rlki;
     int depth;
 };
 

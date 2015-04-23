@@ -49,7 +49,7 @@ enc.Rcpp_FandV_pk <- function(pk, m) {
     attr(ct, "FHEs") <- "FandV"
     return(ct)
   } else if(length(m) == 1) {
-    ct <- new(FandV_ct, pk$p, pk$rlk)
+    ct <- new(FandV_ct, pk$p, rlkLocker, pk$rlki)
     pk$enc(m, ct)
     
     # Prepare return result
