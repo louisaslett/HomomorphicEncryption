@@ -40,7 +40,6 @@ class FandV_rlk {
     void save(FILE* fp) const;
     FandV_rlk(FILE* fp);
     
-    FandV_par p;
     fmpz_polyxx rlk00, rlk01, rlk10, rlk11;
 };
 
@@ -75,7 +74,7 @@ class FandV_pk {
 
     // Save/load
     void save(FILE* fp) const;
-    FandV_pk(FILE* fp);
+    FandV_pk(FILE* fp, const FandV_par& p_, FandV_rlk_locker* rlkl_, size_t rlki_);
 
     FandV_par p;
     FandV_rlk_locker* rlkl;

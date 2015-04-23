@@ -64,7 +64,7 @@ class FandV_ct_mat {
     
     // Save/load
     void save(FILE* fp) const;
-    FandV_ct_mat(FILE* fp);
+    FandV_ct_mat(FILE* fp, const FandV_par& p, FandV_rlk_locker* rlkl, size_t rlki);
     
     // For performance keep public
     int nrow;

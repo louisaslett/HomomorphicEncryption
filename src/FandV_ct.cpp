@@ -164,21 +164,22 @@ void FandV_ct::show() const {
 
 // Save/load
 void FandV_ct::save(FILE* fp) const {
-  fprintf(fp, "=> FHE package object <=\nRcpp_FandV_ct\n");
+  fprintf(fp, "=> FHE pkg obj <=\nRcpp_FandV_ct\n");
+  // c0
   print(fp, c0);
   fprintf(fp, "\n");
+  // c1
   print(fp, c1);
   fprintf(fp, "\n");
-  FandV_rlk& rlk = (rlkl->x[rlki]);
-  rlk.save(fp);
-  p.save(fp);
+  // depth
+  fprintf(fp, "%d\n", depth);
 }
-FandV_ct::FandV_ct(FILE* fp) {
+FandV_ct::FandV_ct(FILE* fp, const FandV_par& p_, FandV_rlk_locker* rlkl_, size_t rlki_) : p(p_), rlkl(rlkl_), rlki(rlki_) {
   // Check for header line
   char *buf = NULL; size_t bufn = 0;
   size_t len;
   len = getline(&buf, &bufn, fp);
-  if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (CT)\n";
     free(buf);
     return;
@@ -190,15 +191,12 @@ FandV_ct::FandV_ct(FILE* fp) {
     return;
   }
   
+  // c0
   read(fp, c0);
+  // c1
   read(fp, c1);
-  
-  len = getline(&buf, &bufn, fp); // Advance past the new line
-  FandV_rlk rlk = FandV_rlk(fp);
-  rlki = rlkl->add(rlk);
-  
-  len = getline(&buf, &bufn, fp); // Advance past the new line
-  p = FandV_par(fp);
+  // depth
+  len = fscanf(fp, "%d\n", &depth);
   
   free(buf);
 }

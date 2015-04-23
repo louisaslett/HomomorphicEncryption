@@ -336,7 +336,7 @@ void FandV_ct_vec::save(FILE* fp) const {
     vec[i].save(fp);
   }
 }
-FandV_ct_vec::FandV_ct_vec(FILE* fp) {
+FandV_ct_vec::FandV_ct_vec(FILE* fp, const FandV_par& p, FandV_rlk_locker* rlkl, size_t rlki) {
   // Check for header line
   char *buf = NULL; size_t bufn = 0;
   size_t len;
@@ -354,10 +354,9 @@ FandV_ct_vec::FandV_ct_vec(FILE* fp) {
   }
   
   int vecsz;
-  len = fscanf(fp, "n=%d\n", &vecsz); Rcout << vecsz << "\n";
+  len = fscanf(fp, "n=%d\n", &vecsz);
   for(int i=0; i<vecsz; i++) {
-    FandV_ct ct(fp);
-    len = getline(&buf, &bufn, fp); // Advance past the new line
+    FandV_ct ct(fp, p, rlkl, rlki);
     vec.push_back(ct);
   }
   free(buf);

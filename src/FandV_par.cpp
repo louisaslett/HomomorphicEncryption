@@ -136,18 +136,24 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
 
 // Save/load
 void FandV_par::save(FILE* fp) const {
-  fprintf(fp, "=> FHE package object <=\nRcpp_FandV_par\n");
+  fprintf(fp, "=> FHE pkg obj <=\nRcpp_FandV_par\n");
   
+  // sigma, qpow
   fprintf(fp, "%f:%d\n", sigma, qpow);
   
+  // q
   print(fp, q);
   fprintf(fp, "\n");
+  // t
   print(fp, t);
   fprintf(fp, "\n");
+  // T
   print(fp, T);
   fprintf(fp, "\n");
+  // Delta
   print(fp, Delta);
   fprintf(fp, "\n");
+  // Phi
   print(fp, Phi);
   fprintf(fp, "\n");
 }
@@ -156,7 +162,7 @@ FandV_par::FandV_par(FILE* fp) {
   char *buf = NULL; size_t bufn = 0;
   size_t len;
   len = getline(&buf, &bufn, fp);
-  if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (PAR)\n";
     free(buf);
     return;
@@ -168,12 +174,17 @@ FandV_par::FandV_par(FILE* fp) {
     return;
   }
   
+  // sigma, qpow
   len = fscanf(fp, "%lf:%d\n", &sigma, &qpow);
-  
+  // q
   read(fp, q);
+  // t
   read(fp, t);
+  // T
   read(fp, T);
+  // Delta
   read(fp, Delta);
+  // Phi
   read(fp, Phi);
   
   free(buf);

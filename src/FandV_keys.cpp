@@ -107,11 +107,8 @@ void FandV_pk::save(FILE* fp) const {
   fprintf(fp, "\n");
   print(fp, p1);
   fprintf(fp, "\n");
-  
-  rlkl->x[rlki].save(fp);
-  p.save(fp);
 }
-FandV_pk::FandV_pk(FILE* fp) {
+FandV_pk::FandV_pk(FILE* fp, const FandV_par& p_, FandV_rlk_locker* rlkl_, size_t rlki_) : p(p_), rlkl(rlkl_), rlki(rlki_) {
   // Check for header line
   char *buf = NULL; size_t bufn = 0;
   size_t len;
@@ -131,10 +128,6 @@ FandV_pk::FandV_pk(FILE* fp) {
   read(fp, p0);
   read(fp, p1);
   
-  len = getline(&buf, &bufn, fp); // Advance past the new line
-  rlki = rlkl->add(FandV_rlk(fp));
-  len = getline(&buf, &bufn, fp); // Advance past the new line
-  p = FandV_par(fp);
   free(buf);
 }
 
@@ -217,9 +210,9 @@ FandV_sk::FandV_sk(FILE* fp) {
 
 
 //// Relinearisation keys ////
-FandV_rlk::FandV_rlk() : p(0, 0.0, 0, 1) { }
+FandV_rlk::FandV_rlk() { }
 
-FandV_rlk::FandV_rlk(const FandV_rlk& rlk) : p(rlk.p), rlk00(rlk.rlk00), rlk01(rlk.rlk01), rlk10(rlk.rlk10), rlk11(rlk.rlk11) { }
+FandV_rlk::FandV_rlk(const FandV_rlk& rlk) : rlk00(rlk.rlk00), rlk01(rlk.rlk01), rlk10(rlk.rlk10), rlk11(rlk.rlk11) { }
 
 void FandV_rlk::show() {
   Rcout << "Fan and Vercauteren relinearisation key\n";
@@ -236,7 +229,7 @@ void FandV_rlk::show() {
 
 // Save/load
 void FandV_rlk::save(FILE* fp) const {
-  fprintf(fp, "=> FHE package object <=\nRcpp_FandV_rlk\n");
+  fprintf(fp, "=> FHE pkg obj <=\nRcpp_FandV_rlk\n");
   print(fp, rlk00);
   fprintf(fp, "\n");
   print(fp, rlk01);
@@ -245,14 +238,13 @@ void FandV_rlk::save(FILE* fp) const {
   fprintf(fp, "\n");
   print(fp, rlk11);
   fprintf(fp, "\n");
-  p.save(fp);
 }
 FandV_rlk::FandV_rlk(FILE* fp) {
   // Check for header line
   char *buf = NULL; size_t bufn = 0;
   size_t len;
   len = getline(&buf, &bufn, fp);
-  if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (RLK)\n";
     free(buf);
     return;
@@ -269,8 +261,6 @@ FandV_rlk::FandV_rlk(FILE* fp) {
   read(fp, rlk10);
   read(fp, rlk11);
   
-  len = getline(&buf, &bufn, fp); // Advance past the new line
-  p = FandV_par(fp);
   free(buf);
 }
 

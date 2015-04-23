@@ -94,21 +94,49 @@ void save_FandV_ct(const FandV_ct& ct, const std::string& file) {
     perror("Error");
   }
   
+  // header
+  fprintf(fp, "=> FHE pkg obj <=\nRcpp_FandV_ct\n");
+  // pars
+  ct.p.save(fp);
+  // rlk
+  (ct.rlkl->x[ct.rlki]).save(fp);
+  // ct content
   ct.save(fp);
   
   fclose(fp);
 }
-FandV_ct load_FandV_ct(const std::string& file) {
+FandV_ct load_FandV_ct(const std::string& file, FandV_rlk_locker* rlkl) {
   const char *file_c = file.c_str();
   
   FILE *fp = fopen(file_c, "r");
   if(fp == NULL) {
     perror("Error");
   }
-  
-  FandV_ct ct(fp);
+
+  // Check for header line
+  char *buf = NULL; size_t bufn = 0;
+  size_t len;
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain an FHE object (CT (a))\n";
+  }
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("Rcpp_FandV_ct\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain a single ciphertext object\n";
+  }
+
+  // pars
+  FandV_par p(fp);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // rlk
+  FandV_rlk rlk(fp);
+  int rlki = rlkl->add(rlk);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // ct content
+  FandV_ct ct(fp, p, rlkl, rlki);
   
   fclose(fp);
+  free(buf);
   
   return(ct);
 }
@@ -121,23 +149,106 @@ void save_FandV_ct_vec(const FandV_ct_vec& ct_vec, const std::string& file) {
     perror("Error");
   }
   
+  // header
+  fprintf(fp, "=> FHE pkg obj <=\nRcpp_FandV_ct_vec\n");
+  // pars
+  ct_vec.vec[1].p.save(fp);
+  // rlk
+  (ct_vec.vec[1].rlkl->x[ct_vec.vec[1].rlki]).save(fp);
+  // ct content
   ct_vec.save(fp);
   
   fclose(fp);
 }
-FandV_ct_vec load_FandV_ct_vec(const std::string& file) {
+FandV_ct_vec load_FandV_ct_vec(const std::string& file, FandV_rlk_locker* rlkl) {
   const char *file_c = file.c_str();
   
   FILE *fp = fopen(file_c, "r");
   if(fp == NULL) {
     perror("Error");
   }
-  
-  FandV_ct_vec ct_vec(fp);
+
+  // Check for header line
+  char *buf = NULL; size_t bufn = 0;
+  size_t len;
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain an FHE object (VEC (a))\n";
+  }
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("Rcpp_FandV_ct_vec\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain a ciphertext vector object\n";
+  }
+
+  // pars
+  FandV_par p(fp);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // rlk
+  FandV_rlk rlk(fp);
+  int rlki = rlkl->add(rlk);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // ct_vec content
+  FandV_ct_vec ct_vec(fp, p, rlkl, rlki);
   
   fclose(fp);
+  free(buf);
   
   return(ct_vec);
+}
+
+void save_FandV_ct_mat(const FandV_ct_mat& ct_mat, const std::string& file) {
+  const char *file_c = file.c_str();
+  
+  FILE *fp = fopen(file_c, "w");
+  if(fp == NULL) {
+    perror("Error");
+  }
+  
+  // header
+  fprintf(fp, "=> FHE pkg obj <=\nRcpp_FandV_ct_mat\n");
+  // pars
+  ct_mat.mat[1].p.save(fp);
+  // rlk
+  (ct_mat.mat[1].rlkl->x[ct_mat.mat[1].rlki]).save(fp);
+  // ct content
+  ct_mat.save(fp);
+  
+  fclose(fp);
+}
+FandV_ct_mat load_FandV_ct_mat(const std::string& file, FandV_rlk_locker* rlkl) {
+  const char *file_c = file.c_str();
+  
+  FILE *fp = fopen(file_c, "r");
+  if(fp == NULL) {
+    perror("Error");
+  }
+
+  // Check for header line
+  char *buf = NULL; size_t bufn = 0;
+  size_t len;
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain an FHE object (MAT (a))\n";
+  }
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("Rcpp_FandV_ct_mat\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain a ciphertext matrix object\n";
+  }
+
+  // pars
+  FandV_par p(fp);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // rlk
+  FandV_rlk rlk(fp);
+  int rlki = rlkl->add(rlk);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // ct_vec content
+  FandV_ct_mat ct_mat(fp, p, rlkl, rlki);
+  
+  fclose(fp);
+  free(buf);
+  
+  return(ct_mat);
 }
 
 void save_FandV_keys(const List& keys, const std::string& file) {
@@ -148,18 +259,23 @@ void save_FandV_keys(const List& keys, const std::string& file) {
     perror("Error");
   }
   
-  fprintf(fp, "=> FHE package object <=\nFandV_keys\n");
+  fprintf(fp, "=> FHE pkg obj <=\nFandV_keys\n");
   
-  FandV_sk sk = keys["sk"];
-  sk.save(fp);
-  FandV_pk pk = keys["pk"];
-  pk.save(fp);
   FandV_rlk rlk = keys["rlk"];
+  FandV_pk pk = keys["pk"];
+  FandV_sk sk = keys["sk"];
+  
+  // pars + rlk
+  pk.p.save(fp);
   rlk.save(fp);
+  // pk
+  pk.save(fp);
+  // sk
+  sk.save(fp);
   
   fclose(fp);
 }
-List load_FandV_keys(const std::string& file) {
+List load_FandV_keys(const std::string& file, FandV_rlk_locker* rlkl) {
   const char *file_c = file.c_str();
   List keys;
   
@@ -172,7 +288,7 @@ List load_FandV_keys(const std::string& file) {
   char *buf = NULL; size_t bufn = 0;
   size_t len;
   len = getline(&buf, &bufn, fp);
-  if(strncmp("=> FHE package object <=\n", buf, len) != 0) {
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
     Rcout << "Error: file does not contain an FHE object (KEYS)\n";
     free(buf);
     return(keys);
@@ -184,11 +300,18 @@ List load_FandV_keys(const std::string& file) {
     return(keys);
   }
   
-  FandV_sk sk(fp);
+  // pars
+  FandV_par p(fp);
   len = getline(&buf, &bufn, fp); // Advance past the new line
-  FandV_pk pk(fp);
-  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // rlk
   FandV_rlk rlk(fp);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  int rlki = rlkl->add(rlk);
+  // pk
+  FandV_pk pk(fp, p, rlkl, rlki);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // sk
+  FandV_sk sk(fp);
   
   keys["sk"] = sk;
   keys["pk"] = pk;
@@ -318,5 +441,7 @@ RCPP_MODULE(FandV) {
   function("load_FandV_ct", &load_FandV_ct);
   function("saveFHE.Rcpp_FandV_ct_vec2", &save_FandV_ct_vec);
   function("load_FandV_ct_vec", &load_FandV_ct_vec);
+  function("saveFHE.Rcpp_FandV_ct_mat2", &save_FandV_ct_mat);
+  function("load_FandV_ct_mat", &load_FandV_ct_mat);
   function("HEmem", &HEmem);
 }

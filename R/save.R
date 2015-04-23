@@ -36,7 +36,7 @@ saveFHE <- function(object, file) {
 #' @rdname saveFHE
 loadFHE <- function(file) {
   header <- readLines(file, n=2)
-  if(header[1] != "=> FHE package object <=") {
+  if(header[1] != "=> FHE pkg obj <=") {
     stop("File does not contain a ciphertext or key object")
   }
   file <- path.expand(file)

@@ -51,7 +51,7 @@ class FandV_ct_vec {
     
     // Save/load
     void save(FILE* fp) const;
-    FandV_ct_vec(FILE* fp);
+    FandV_ct_vec(FILE* fp, const FandV_par& p, FandV_rlk_locker* rlkl, size_t rlki);
     
     // For performance keep public
     std::vector<FandV_ct> vec;

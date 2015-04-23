@@ -1005,21 +1005,28 @@ matrix.Rcpp_FandV_ct <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, .
 }
 
 loadFHE.Rcpp_FandV_ct <- function(file) {
-  res <- load_FandV_ct(file)
+  res <- load_FandV_ct(file, rlkLocker)
   attr(res, "FHEt") <- "ct"
   attr(res, "FHEs") <- "FandV"
   res
 }
 
 loadFHE.Rcpp_FandV_ct_vec <- function(file) {
-  res <- load_FandV_ct_vec(file)
+  res <- load_FandV_ct_vec(file, rlkLocker)
   attr(res, "FHEt") <- "ctvec"
   attr(res, "FHEs") <- "FandV"
   res
 }
 
+loadFHE.Rcpp_FandV_ct_mat <- function(file) {
+  res <- load_FandV_ct_mat(file, rlkLocker)
+  attr(res, "FHEt") <- "ctmat"
+  attr(res, "FHEs") <- "FandV"
+  res
+}
+
 loadFHE.FandV_keys <- function(file) {
-  res <- load_FandV_keys(file)
+  res <- load_FandV_keys(file, rlkLocker)
   attr(res$pk, "FHEt") <- "pk"
   attr(res$pk, "FHEs") <- "FandV"
   attr(res$sk, "FHEt") <- "sk"
@@ -1043,4 +1050,7 @@ saveFHE.Rcpp_FandV_ct <- function(object, file) {
 }
 saveFHE.Rcpp_FandV_ct_vec <- function(object, file) {
   saveFHE.Rcpp_FandV_ct_vec2(object, path.expand(file))
+}
+saveFHE.Rcpp_FandV_ct_mat <- function(object, file) {
+  saveFHE.Rcpp_FandV_ct_mat2(object, path.expand(file))
 }

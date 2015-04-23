@@ -37,6 +37,7 @@ S3method(dec, Rcpp_FandV_sk)
 S3method(saveFHE, FandV_keys)
 S3method(saveFHE, Rcpp_FandV_ct)
 S3method(saveFHE, Rcpp_FandV_ct_vec)
+S3method(saveFHE, Rcpp_FandV_ct_mat)
 S3method("%*%", Rcpp_FandV_ct_vec) # See FandV.R for why this is necessary
 S3method("%*%", Rcpp_FandV_ct_mat)
 S3method("matrix", Rcpp_FandV_ct)

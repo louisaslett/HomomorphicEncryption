@@ -34,7 +34,7 @@ class FandV_ct {
     
     // Save/load
     void save(FILE* fp) const;
-    FandV_ct(FILE* fp);
+    FandV_ct(FILE* fp, const FandV_par& p_, FandV_rlk_locker* rlkl_, size_t rlki_);
     
     // For performance keep public
     fmpz_polyxx c0, c1; // Polynomials
