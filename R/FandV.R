@@ -275,13 +275,13 @@ evalqOnLoad({
     res
   })
   setMethod("sum", c("Rcpp_FandV_ct_vec", "logical"), function(x, na.rm) {
-    if(x$size() < 20) {
+    if(x$size() < 40) {
       res <- x$sumSerial()
     } else if(defaultNumThreads()*20>x$size()) {
       setThreadOptions(x$size()%/%20)
       res <- x$sumParallel()
+      setThreadOptions()
     } else {
-      setThreadOptions(defaultNumThreads())
       res <- x$sumParallel()
     }
     
