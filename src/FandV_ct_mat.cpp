@@ -134,6 +134,46 @@ FandV_ct_mat FandV_ct_mat::mul(const FandV_ct_mat& x) const {
   }
   return(res);
 }
+
+struct FandV_MulCtVec : public Worker {
+  // Input values to multiply
+  const std::vector<FandV_ct>* x;
+  const std::vector<FandV_ct>* y;
+  
+  // Output vector of cipher texts
+  std::vector<FandV_ct>* res;
+  
+  // Constructor
+  FandV_MulCtVec(const std::vector<FandV_ct>* x_, const std::vector<FandV_ct>* y_, std::vector<FandV_ct>* res_) : x(x_), y(y_), res(res_) { }
+  
+  // function call operator that work for the specified range (begin/end)
+  void operator()(std::size_t begin, std::size_t end) {
+    for(std::size_t i = begin; i < end; i++) {
+      res->at(i) = x->at(i).mul(y->at(i%(y->size())));
+    }
+  }
+};
+FandV_ct_mat FandV_ct_mat::mulctvecParallel(const FandV_ct_vec& ctvec) const {
+  // Setup destination
+  FandV_ct_mat res;
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
+  res.mat.resize(nrow*ncol, zero);
+  res.nrow = nrow;
+  res.ncol = ncol;
+  
+  FandV_MulCtVec mulEngine(&mat, &(ctvec.vec), &(res.mat));
+  parallelFor(0, nrow*ncol, mulEngine);
+  
+  return(res);
+}
+FandV_ct_mat FandV_ct_mat::mulctvecSerial(const FandV_ct_vec& ctvec) const {
+  FandV_ct_mat res(mat, nrow, ncol);
+  for(unsigned int i=0; i<mat.size(); i++) {
+    res.mat[i] = mat[i].mul(ctvec.get(i%ctvec.size()));
+  }
+  return(res);
+}
+
 FandV_ct_mat FandV_ct_mat::addct(const FandV_ct& ct) const {
   FandV_ct_mat res(mat, nrow, ncol);
   for(unsigned int i=0; i<mat.size(); i++) {
@@ -141,13 +181,30 @@ FandV_ct_mat FandV_ct_mat::addct(const FandV_ct& ct) const {
   }
   return(res);
 }
-FandV_ct_mat FandV_ct_mat::mulct(const FandV_ct& ct) const {
+FandV_ct_mat FandV_ct_mat::mulctParallel(const FandV_ct& ct) const {
+  // Setup destination
+  FandV_ct_mat res;
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
+  res.mat.resize(nrow*ncol, zero);
+  res.nrow = nrow;
+  res.ncol = ncol;
+  
+  std::vector<FandV_ct> tmp;
+  tmp.push_back(ct);
+  
+  FandV_MulCtVec mulEngine(&mat, &tmp, &(res.mat));
+  parallelFor(0, nrow*ncol, mulEngine);
+  
+  return(res);
+}
+FandV_ct_mat FandV_ct_mat::mulctSerial(const FandV_ct& ct) const {
   FandV_ct_mat res(mat, nrow, ncol);
   for(unsigned int i=0; i<mat.size(); i++) {
     res.mat[i] = mat[i].mul(ct);
   }
   return(res);
 }
+
 
 struct FandV_MatMul : public Worker {
   // Input values to multiply

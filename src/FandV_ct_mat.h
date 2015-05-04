@@ -43,7 +43,10 @@ class FandV_ct_mat {
     FandV_ct_mat add(const FandV_ct_mat& x) const;
     FandV_ct_mat mul(const FandV_ct_mat& x) const;
     FandV_ct_mat addct(const FandV_ct& ct) const;
-    FandV_ct_mat mulct(const FandV_ct& ct) const;
+    FandV_ct_mat mulctParallel(const FandV_ct& ct) const;
+    FandV_ct_mat mulctSerial(const FandV_ct& ct) const;
+    FandV_ct_mat mulctvecParallel(const FandV_ct_vec& ctvec) const;
+    FandV_ct_mat mulctvecSerial(const FandV_ct_vec& ctvec) const;
     FandV_ct_mat matmulParallel(const FandV_ct_mat& y) const;
     FandV_ct_mat matmulSerial(const FandV_ct_mat& y) const;
     FandV_ct_mat TmatmulParallel(const FandV_ct_mat& y) const; // t(this) %*% y

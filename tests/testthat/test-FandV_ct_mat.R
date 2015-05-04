@@ -67,10 +67,12 @@ test_that("Matrix operations", {
   
   # element wise ops
   m <- 20
+  mV <- 1:3
   m1 <- matrix(1:6,3)
   m2 <- matrix(1:6-6,3)
   
   ct <- enc(keys$pk, m)
+  ctV <- enc(keys$pk, mV)
   ct1 <- enc(keys$pk, m1)
   ct2 <- enc(keys$pk, m2)
   
@@ -80,6 +82,8 @@ test_that("Matrix operations", {
   expect_that(dec(keys$sk, ct+ct1), equals(m+m1))
   expect_that(dec(keys$sk, ct1*ct), equals(m1*m))
   expect_that(dec(keys$sk, ct*ct1), equals(m*m1))
+  expect_that(dec(keys$sk, ct1*ctV), equals(m1*mV))
+  expect_that(dec(keys$sk, ctV*ct1), equals(mV*m1))
   
   # matrix multiply
   m1 <- matrix(2:7,3)

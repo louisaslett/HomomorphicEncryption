@@ -549,14 +549,36 @@ evalqOnLoad({
     res
   })
   setMethod("*", c("Rcpp_FandV_ct_mat", "Rcpp_FandV_ct"), function(e1, e2) {
-    res <- e1$mulct(e2)
+    res <- e1$mulctParallel(e2)
     
     attr(res, "FHEt") <- "ctmat"
     attr(res, "FHEs") <- "FandV"
     res
   })
   setMethod("*", c("Rcpp_FandV_ct", "Rcpp_FandV_ct_mat"), function(e1, e2) {
-    res <- e2$mulct(e1)
+    res <- e2$mulctParallel(e1)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct_mat", "Rcpp_FandV_ct_vec"), function(e1, e2) {
+    if(length(e2) > nrow(e1)*ncol(e1))
+      stop("dims [product ", nrow(e1)*ncol(e1),"] do not match the length of object [", length(e2), "]")
+    if((ncol(e1)*nrow(e1))%%length(e2)!=0)
+      warning("longer object length is not a multiple of shorter object length")
+    res <- e1$mulctvecParallel(e2)
+    
+    attr(res, "FHEt") <- "ctmat"
+    attr(res, "FHEs") <- "FandV"
+    res
+  })
+  setMethod("*", c("Rcpp_FandV_ct_vec", "Rcpp_FandV_ct_mat"), function(e1, e2) {
+    if(length(e1) > nrow(e2)*ncol(e2))
+      stop("dims [product ", nrow(e2)*ncol(e2),"] do not match the length of object [", length(e1), "]")
+    if((ncol(e2)*nrow(e2))%%length(e1)!=0)
+      warning("longer object length is not a multiple of shorter object length")
+    res <- e2$mulctvecParallel(e1)
     
     attr(res, "FHEt") <- "ctmat"
     attr(res, "FHEs") <- "FandV"
