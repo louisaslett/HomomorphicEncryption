@@ -53,7 +53,11 @@ test_that("Matrices", {
   expect_that(dec(keys$sk, matrix(ct, ncol=3)), equals(matrix(m, ncol=3)))
   expect_that(dec(keys$sk, matrix(ct, 3, 3)), equals(matrix(m, 3, 3)))
   expect_that(dec(keys$sk, matrix(ct, 3, byrow=TRUE)), equals(matrix(m, 3, byrow=TRUE)))
-    
+  
+  m <- 1:4
+  ct <- enc(keys$pk, m)
+  expect_that(dec(keys$sk, matrix(ct, 4, 5, byrow=TRUE)), equals(matrix(m, 4, 5, byrow=TRUE)))
+  
   m <- 20
   ct <- enc(keys$pk, m)
   expect_that(dec(keys$sk, matrix(ct)), equals(matrix(m)))

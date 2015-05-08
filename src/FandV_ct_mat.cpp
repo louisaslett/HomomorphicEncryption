@@ -56,9 +56,9 @@ void FandV_ct_mat::setmatrix(const FandV_ct_vec& ct_vec, int nrow_, int ncol_, i
       }
     }
   } else {
-    for(int i=0; i<nrow_; i++) {
-      for(int j=0; j<ncol_; j++) {
-        mat.push_back(ct_vec.get((i + j*nrow_)%ct_vec.size()));
+    for(int j=0; j<ncol_; j++) {
+      for(int i=0; i<nrow_; i++) {
+        mat.push_back(ct_vec.get((j + i*ncol_)%ct_vec.size()));
       }
     }
   }
