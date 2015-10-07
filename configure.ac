@@ -57,14 +57,25 @@ else
   if test [ -n "${FLINT_HOME}" ] ; then
 FLINT_HOME="${FLINT_HOME}"
 else
-  if test [ -e "/usr/local/lib/libflint.so" -o -e "/usr/local/lib/libflint.dylib" ] ; then
+  if test [ -e "/usr/local/include/flint/flint.h" ] ; then
 FLINT_HOME="/usr/local"
 else
-  if test [ -e "/usr/lib/libflint.so" -o -e "/usr/lib/libflint.dylib" ] ; then
+  if test [ -e "/usr/include/flint/flint.h" ] ; then
 FLINT_HOME="/usr"
 fi
 fi
 fi
+fi
+
+dnl Catch non lib directories
+dnl Ubuntu etc
+if test [ -e "${FLINT_HOME}/lib/libflint.so" -o -e "${FLINT_HOME}/lib/libflint.dylib" ] ; then
+  LIBDIR="lib"
+else
+  dnl Fedora
+  if test [ -e "${FLINT_HOME}/lib64/libflint.so" -o -e "${FLINT_HOME}/lib64/libflint.dylib" ] ; then
+    LIBDIR="lib64"
+  fi
 fi
 
 dnl Check for not universally available functions
@@ -77,5 +88,6 @@ dnl from Makevars.in
 AC_SUBST(GMP_HOME)
 AC_SUBST(MPFR_HOME)
 AC_SUBST(FLINT_HOME)
+AC_SUBST(LIBDIR)
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT

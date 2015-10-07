@@ -620,6 +620,7 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+LIBDIR
 FLINT_HOME
 MPFR_HOME
 GMP_HOME
@@ -2153,14 +2154,22 @@ else
   if test  -n "${FLINT_HOME}"  ; then
 FLINT_HOME="${FLINT_HOME}"
 else
-  if test  -e "/usr/local/lib/libflint.so" -o -e "/usr/local/lib/libflint.dylib"  ; then
+  if test  -e "/usr/local/include/flint/flint.h"  ; then
 FLINT_HOME="/usr/local"
 else
-  if test  -e "/usr/lib/libflint.so" -o -e "/usr/lib/libflint.dylib"  ; then
+  if test  -e "/usr/include/flint/flint.h"  ; then
 FLINT_HOME="/usr"
 fi
 fi
 fi
+fi
+
+if test  -e "${FLINT_HOME}/lib/libflint.so" -o -e "${FLINT_HOME}/lib/libflint.dylib"  ; then
+  LIBDIR="lib"
+else
+    if test  -e "${FLINT_HOME}/lib64/libflint.so" -o -e "${FLINT_HOME}/lib64/libflint.dylib"  ; then
+    LIBDIR="lib64"
+  fi
 fi
 
 ac_ext=c
@@ -3374,6 +3383,7 @@ fi
 done
 
 ac_config_headers="$ac_config_headers config.h"
+
 
 
 

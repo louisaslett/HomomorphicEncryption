@@ -16,8 +16,8 @@ unencrypted data.
 \tabular{ll}{
 Package: \tab HomomorphicEncryption\cr
 Type: \tab Package\cr
-Version: \tab 0.1\cr
-Date: \tab 2014-07-18\cr
+Version: \tab 0.2\cr
+Date: \tab 2015-08-19\cr
 License: \tab GPL-2\cr
 }
 }
@@ -27,11 +27,9 @@ Louis Aslett
 Maintainer: Louis Aslett <aslett@stats.ox.ac.uk>
 }
 \references{
-~~ Literature or other references for background information ~~
+Aslett, L. J. M., Esperança, P. M. and Holmes, C. C. (2015), A review of homomorphic encryption and software tools for encrypted statistical machine learning. Technical report, University of Oxford.
 }
 \keyword{ package }
-%\seealso{
-%}
 \examples{
 # Generate cryptographic parameters
 p <- pars("FandV")

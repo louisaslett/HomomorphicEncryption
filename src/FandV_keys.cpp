@@ -267,7 +267,7 @@ FandV_rlk::FandV_rlk(FILE* fp) {
 FandV_rlk_locker::FandV_rlk_locker() { }
 
 int FandV_rlk_locker::add(const FandV_rlk &rlk) {
-  for(int i=0; i<x.size(); i++) {
+  for(unsigned int i=0; i<x.size(); i++) {
     if(x[i].rlk00 == rlk.rlk00 && x[i].rlk01 == rlk.rlk01 && x[i].rlk10 == rlk.rlk10 && x[i].rlk11 == rlk.rlk11) {
       return(i);
     }
