@@ -40,7 +40,27 @@ enc <- function(pk, m) {
 enc.Rcpp_FandV_pk <- function(pk, m) {
   if(!isTRUE(all.equal(round(m), m))) stop("Only integers can be encrypted.")
   
-  if(is.matrix(m)) {
+  if(is.bigz(m)) {
+    ct <- new(FandV_ct, pk$p, rlkLocker, pk$rlki)
+    
+    sgn <- sign(m)
+    m <- abs(m)
+    
+    binary <- c()
+    while(m > 1) {
+      binary <- c(binary, as.integer(m%%2))
+      m <- m%/%2
+    }
+    binary <- c(binary, as.integer(m))
+    binary <- binary*sgn
+    
+    pk$encbinary(binary, ct)
+    
+    # Prepare return result
+    attr(ct, "FHEt") <- "ct"
+    attr(ct, "FHEs") <- "FandV"
+    return(ct)
+  } else if(is.matrix(m)) {
     ct <- new(FandV_ct_mat)
     pk$encmat(as.vector(m), nrow(m), ncol(m), ct)
     

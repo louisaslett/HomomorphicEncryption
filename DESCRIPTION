@@ -1,8 +1,8 @@
 Package: HomomorphicEncryption
 Type: Package
 Title: Fully Homomorphic Encryption
-Version: 0.2
-Date: 2015-08-19
+Version: 0.3
+Date: 2016-01-29
 Author: Louis Aslett
 Maintainer: Louis Aslett <louis.aslett@stats.ox.ac.uk>
 Description: A reference implementation of homomorphic encryption schemes.
@@ -16,8 +16,7 @@ Imports:
     Rcpp (>= 0.11.2),
     methods,
     RcppParallel
-LinkingTo:
-    Rcpp,
+LinkingTo: Rcpp,
     RcppParallel
 Depends:
     gmp
@@ -26,3 +25,4 @@ Suggests:
     microbenchmark
 RcppModules: FandV
 Encoding: UTF-8
+RoxygenNote: 5.0.1

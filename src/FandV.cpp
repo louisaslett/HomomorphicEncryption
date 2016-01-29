@@ -348,6 +348,7 @@ RCPP_MODULE(FandV) {
     .field("p", &FandV_pk::p)
     .field("rlki", &FandV_pk::rlki)
     .method("enc", &FandV_pk::enc)
+    .method("encbinary", &FandV_pk::encbinary)
     .method("encvec", &FandV_pk::encvec)
     .method("encmat", &FandV_pk::encmat)
     .method("show", &FandV_pk::show)

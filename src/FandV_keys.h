@@ -64,6 +64,7 @@ class FandV_pk {
     
     // Encrypt
     void enc(int m, FandV_ct& ct) const;
+    void encbinary(IntegerVector m, FandV_ct& ct) const;
     void encvec(IntegerVector m, FandV_ct_vec& ctvec);
     void encmat(IntegerVector m, int nrow, int ncol, FandV_ct_mat& ctmat);
     

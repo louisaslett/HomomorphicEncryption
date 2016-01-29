@@ -57,7 +57,33 @@ void FandV_pk::enc(int m, FandV_ct& ct) const {
   ct.c1 = ((p1*u)%p.Phi);
   fmpz_polyxx_q(ct.c1, p.q);
 }
-
+// TIDY THIS FUNCTION TO BE CALLED BY enc TO REDUCE REDUNDANCY
+void FandV_pk::encbinary(IntegerVector m, FandV_ct& ct) const {
+  ct.c0.realloc(p.Phi.length());
+  ct.c1.realloc(p.Phi.length());
+  
+  fmpz_polyxx u, mP;
+  u.realloc(p.Phi.length());
+  mP.realloc(m.length());
+  
+  // Random numbers
+  for(int i=0; i<p.Phi.length(); i++) {
+    u.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // u
+    ct.c0.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // e1
+    ct.c1.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // e2
+  }
+  
+  // Binary conversion of message
+  for(int i=0; i<m.length(); i++) {
+    mP.set_coeff(i, m[i]);
+  }
+  
+  ct.c0 = ((p0*u)%p.Phi) + ct.c0 + p.Delta*mP;
+  fmpz_polyxx_q(ct.c0, p.q);
+  
+  ct.c1 = ((p1*u)%p.Phi);
+  fmpz_polyxx_q(ct.c1, p.q);
+}
 struct FandV_EncVec : public Worker {
   // Input values to encrypt & key
   const IntegerVector* input;

@@ -16,8 +16,8 @@ unencrypted data.
 \tabular{ll}{
 Package: \tab HomomorphicEncryption\cr
 Type: \tab Package\cr
-Version: \tab 0.2\cr
-Date: \tab 2015-08-19\cr
+Version: \tab 0.3\cr
+Date: \tab 2016-01-29\cr
 License: \tab GPL-2\cr
 }
 }
