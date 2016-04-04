@@ -323,6 +323,67 @@ List load_FandV_keys(const std::string& file, FandV_rlk_locker* rlkl) {
   return(keys);
 }
 
+void save_FandV_pk(const FandV_pk& pk, const std::string& file) {
+  const char *file_c = file.c_str();
+  
+  FILE *fp = fopen(file_c, "w");
+  if(fp == NULL) {
+    perror("Error");
+  }
+  
+  fprintf(fp, "=> FHE pkg obj <=\nFandV_pk\n");
+  
+  FandV_rlk& rlk = (pk.rlkl->x)[pk.rlki];
+
+  // pars + rlk
+  pk.p.save(fp);
+  rlk.save(fp);
+  // pk
+  pk.save(fp);
+
+  fclose(fp);
+}
+FandV_pk load_FandV_pk(const std::string& file, FandV_rlk_locker* rlkl) {
+  const char *file_c = file.c_str();
+
+  FILE *fp = fopen(file_c, "r");
+  if(fp == NULL) {
+    perror("Error");
+  }
+  
+  // Check for header line
+  char *buf = NULL; size_t bufn = 0;
+  size_t len;
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("=> FHE pkg obj <=\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain an FHE object (KEYS)\n";
+    free(buf);
+    return(FandV_pk(rlkl, 0));
+  }
+  len = getline(&buf, &bufn, fp);
+  if(strncmp("FandV_pk\n", buf, len) != 0) {
+    Rcout << "Error: file does not contain public key objects\n";
+    free(buf);
+    return(FandV_pk(rlkl, 0));
+  }
+  
+  // pars
+  FandV_par p(fp);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  // rlk
+  FandV_rlk rlk(fp);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+  int rlki = rlkl->add(rlk);
+  // pk
+  FandV_pk pk(fp, p, rlkl, rlki);
+  len = getline(&buf, &bufn, fp); // Advance past the new line
+
+  fclose(fp);
+  
+  free(buf);
+  return(pk);
+}
+
 
 RCPP_EXPOSED_CLASS(FandV_par)
 RCPP_EXPOSED_CLASS(FandV_pk)
@@ -442,6 +503,8 @@ RCPP_MODULE(FandV) {
   
   function("saveFHE.FandV_keys2", &save_FandV_keys);
   function("load_FandV_keys", &load_FandV_keys);
+  function("saveFHE.Rcpp_FandV_pk2", &save_FandV_pk);
+  function("load_FandV_pk", &load_FandV_pk);
   function("saveFHE.Rcpp_FandV_ct2", &save_FandV_ct);
   function("load_FandV_ct", &load_FandV_ct);
   function("saveFHE.Rcpp_FandV_ct_vec2", &save_FandV_ct_vec);
