@@ -153,6 +153,19 @@ struct FandV_MulCtVec : public Worker {
     }
   }
 };
+FandV_ct_mat FandV_ct_mat::mulctmatParallel(const FandV_ct_mat& ctmat) const {
+  // Setup destination
+  FandV_ct_mat res;
+  FandV_ct zero(mat[0].p, mat[0].rlkl, mat[0].rlki);
+  res.mat.resize(nrow*ncol, zero);
+  res.nrow = nrow;
+  res.ncol = ncol;
+  
+  FandV_MulCtVec mulEngine(&mat, &(ctmat.mat), &(res.mat));
+  parallelFor(0, nrow*ncol, mulEngine);
+  
+  return(res);
+}
 FandV_ct_mat FandV_ct_mat::mulctvecParallel(const FandV_ct_vec& ctvec) const {
   // Setup destination
   FandV_ct_mat res;

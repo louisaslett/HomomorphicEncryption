@@ -429,6 +429,7 @@ RCPP_MODULE(FandV) {
     .method("mulctSerial", &FandV_ct_mat::mulctSerial)
     .method("mulctvecParallel", &FandV_ct_mat::mulctvecParallel)
     .method("mulctvecSerial", &FandV_ct_mat::mulctvecSerial)
+    .method("mulctmatParallel", &FandV_ct_mat::mulctmatParallel)
     .method("matmulParallel", &FandV_ct_mat::matmulParallel)
     .method("matmulSerial", &FandV_ct_mat::matmulSerial)
     .method("TmatmulParallel", &FandV_ct_mat::TmatmulParallel)

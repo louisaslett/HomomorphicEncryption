@@ -1,0 +1,4 @@
+HomomorphicEncryption 0.3.0
+===========================
+  
+  * Added missing parallelism for elementwise matrix multiplication.

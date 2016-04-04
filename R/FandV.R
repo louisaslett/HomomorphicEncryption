@@ -524,7 +524,7 @@ evalqOnLoad({
     if(e1$nrow!=e2$nrow || e2$ncol!=e2$ncol) {
       stop("non-conformable matrix sizes")
     }
-    res <- e1$mul(e2)
+    res <- e1$mulctmatParallel(e2)
     
     attr(res, "FHEt") <- "ctmat"
     attr(res, "FHEs") <- "FandV"
