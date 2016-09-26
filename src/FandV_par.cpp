@@ -13,7 +13,7 @@ using namespace Rcpp;
 #include "FandV_keys.h"
 
 // Construct from parameters
-FandV_par::FandV_par(int d_, double sigma_, int qpow_, int t_, int lambda_, int L_) : sigma(sigma_), qpow(qpow_), q(1), t(t_), T(1), lambda(lambda_), L(L_) {
+FandV_par::FandV_par(int d_, double sigma_, int qpow_, std::string t_, int lambda_, int L_) : sigma(sigma_), qpow(qpow_), q(1), t(t_.c_str()), T(1), lambda(lambda_), L(L_) {
   arith_cyclotomic_polynomial(Phi._data().inner, 2*d_); // Phi is 2d-th Cyclotomic polynomial
   
   q = q << qpow; // q=2^qpow

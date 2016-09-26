@@ -86,7 +86,7 @@ pars <- function(scheme, ...) {
     }
     lambda <- lambda-1
     
-    p <- new(FandV_par, p$d, p$sigma, p$qpow, p$t, lambda, L)
+    p <- new(FandV_par, p$d, p$sigma, p$qpow, as.character(as.bigz(p$t)), lambda, L) # as.char allows possible bigz
     attr(p, "FHEt") <- "pars"
     attr(p, "FHEs") <- "FandV"
     return(p)

@@ -22,7 +22,7 @@ using namespace RcppParallel;
 using namespace flint;
 
 //// Public keys ////
-FandV_pk::FandV_pk(FandV_rlk_locker* rlkl, size_t rlki) : p(0, 0.0, 0, 1), rlkl(rlkl), rlki(rlki) { }
+FandV_pk::FandV_pk(FandV_rlk_locker* rlkl, size_t rlki) : p(0, 0.0, 0, "1"), rlkl(rlkl), rlki(rlki) { }
 
 FandV_pk::FandV_pk(const FandV_pk& pk) : p(pk.p), rlkl(pk.rlkl), rlki(pk.rlki), p0(pk.p0), p1(pk.p1) { }
 

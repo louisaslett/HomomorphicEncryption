@@ -20,7 +20,7 @@ class FandV_rlk;
 class FandV_par {
   public:
     // Constructors
-    FandV_par(int d_=4096, double sigma_=16.0, int qpow_=128, int t_=32768, int lambda_=0, int L_=0);
+    FandV_par(int d_=4096, double sigma_=16.0, int qpow_=128, std::string t_="32768", int lambda_=0, int L_=0);
     FandV_par(const FandV_par& par);
     
     // Operators
