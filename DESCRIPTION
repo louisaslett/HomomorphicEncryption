@@ -1,8 +1,8 @@
 Package: HomomorphicEncryption
 Type: Package
 Title: Fully Homomorphic Encryption
-Version: 0.3.1
-Date: 2016-09-26
+Version: 0.3.2
+Date: 2016-09-28
 Author: Louis Aslett
 Maintainer: Louis Aslett <louis.aslett@stats.ox.ac.uk>
 Description: A reference implementation of homomorphic encryption schemes.

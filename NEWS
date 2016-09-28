@@ -1,3 +1,8 @@
+HomomorphicEncryption 0.3.2
+===========================
+  
+  * Fix to error in parsHelp bounds calculation.
+
 HomomorphicEncryption 0.3.1
 ===========================
   

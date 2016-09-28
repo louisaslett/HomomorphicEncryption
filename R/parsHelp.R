@@ -137,11 +137,12 @@ FandV_testDepth <- function(L, d=as.bigz(2)^11, q=as.bigz(2)^80, t=as.bigz(2)^10
   }
   
   rhs <- function(q, t) {
-    2^{log2(q)-log2(t)-1}
+    #2^{log2(q)-log2(t)-1}
+    (q %/% t - q %% t) %/% 2
   }
   
   lwq <- floor(log(q, w)) + 1
-  delta <- as.bigz(sqrt(as.integer(d))) # possibly quite weak upper bound based on Cauchy Schwartz
+  delta <- as.bigz(sqrt(as.integer(d))) # possibly quite weak upper bound based on Cauchy Schwartz (http://web.stevens.edu/algebraic/Files/SCPQ/SCPQ-2012-11-01-talk-Peikert.pdf)
   LHS <- C1(delta, t, B_key)^L * V(delta, B_key, B_err) + L * C1(delta, t, B_key)^{L-1} * C2(delta, t, B_key, B_err, lwq, w)
   I(rhs(q, t)-LHS>0)
 }

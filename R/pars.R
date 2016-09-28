@@ -74,7 +74,7 @@ pars <- function(scheme, ...) {
     
     # Figure out multiplicative depth this can support
     L <- 1
-    while(FandV_testDepth(L, d=as.bigz(p$d), q=as.bigz(2)^(p$qpow), t=p$t, B_err=as.bigz(3*p$sigma))) {
+    while(FandV_testDepth(L, d=as.bigz(p$d), q=as.bigz(2)^(p$qpow), t=as.bigz(p$t), B_err=as.bigz(3*p$sigma))) {
       L <- L+1
     }
     L <- L-1
