@@ -79,7 +79,7 @@ dec.Rcpp_FandV_sk <- function(sk, ct) {
 #   aL <- list()
 #   m <- NULL
 #   for(i in 1:length(crt@ct)) {
-#     aL[[i]] <- sk[[i]]$decraw(crt@ct[[i]])
+#     aL[[i]] <- sk[[i]]$decraw(crt@ct[[i]])   #### NOTE: had to change decraw away from returning ints, so this won't work now if uncommented
 #     m <- c(m, crt@ct[[i]]$p$get_t())
 #   }
 #   # Even up the number of elements in each list item so that we can rbind them

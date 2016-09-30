@@ -417,7 +417,7 @@ RCPP_MODULE(FandV) {
 
   class_<FandV_sk>("FandV_sk")
     .constructor()
-    .method("decraw", &FandV_sk::decraw)
+    //.method("decraw", &FandV_sk::decraw)
     .method("dec", &FandV_sk::dec)
     .method("show", &FandV_sk::show)
   ;

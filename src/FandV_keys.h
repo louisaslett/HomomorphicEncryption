@@ -92,7 +92,7 @@ class FandV_sk {
     FandV_sk(const FandV_sk& sk);
     
     // Decrypt
-    std::vector<int> decraw(const FandV_ct& ct) const;
+    fmpz_polyxx decraw(const FandV_ct& ct) const;
     std::string dec(const FandV_ct& ct) const;
     
     // Print

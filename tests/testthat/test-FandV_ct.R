@@ -37,3 +37,14 @@ test_that("Multiplication", {
   expect_that(dec(keys$sk, (ct1*ct2)*ct3), equals(-24))
   expect_that(dec(keys$sk, ct1*(ct2*ct3)), equals(-24))
 })
+
+test_that("Large coefficient values", {
+  p <- parsHelp("FandV", L=4, max=as.bigz(10)^27)
+  keys <- keygen(p)
+  ct <- enc(keys$pk, 1)
+  for(i in 1:75) {
+    ct <- ct + ct
+  }
+  
+  expect_that(dec(keys$sk, ct), equals(as.bigz("37778931862957161709568")))
+})
