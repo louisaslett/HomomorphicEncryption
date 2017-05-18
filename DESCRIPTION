@@ -24,5 +24,6 @@ Suggests:
     testthat,
     microbenchmark
 RcppModules: FandV
+SystemRequirements: C++11
 Encoding: UTF-8
 RoxygenNote: 6.0.1

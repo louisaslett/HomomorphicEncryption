@@ -3,9 +3,6 @@
 \name{FandV}
 \alias{FandV}
 \title{Fan and Vercauteren encryption scheme}
-\usage{
-p <- pars("FandV")
-}
 \description{
 The Fan and Vercauteren scheme is implemented in this package.
 }

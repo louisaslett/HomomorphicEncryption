@@ -1,9 +1,10 @@
 useDynLib(HomomorphicEncryption)
 
-import(methods)
-import(gmp)
-import(Rcpp)
-importFrom(RcppParallel, RcppParallelLibs)
+import("methods")
+import("gmp")
+import("Rcpp")
+importFrom("RcppParallel", "RcppParallelLibs", "defaultNumThreads", "setThreadOptions")
+importFrom("stats", "optimise", "uniroot")
 
 # Main encryption functions
 export(pars,
@@ -28,7 +29,9 @@ exportMethods("diag",
               "rowSums",
               "colSums",
               "crossprod",
-              "tcrossprod")
+              "tcrossprod",
+              "rbind2",
+              "cbind2")
 
 # FandV method dispatch
 S3method(keygen, Rcpp_FandV_par)
@@ -44,12 +47,10 @@ S3method("%*%", Rcpp_FandV_ct_mat)
 S3method("matrix", Rcpp_FandV_ct)
 S3method("matrix", Rcpp_FandV_ct_vec)
 
-export("matrix.Rcpp_FandV_ct")
-
 # # FandV_CRT method dispatch
 # S3method(print, FandV_CRT)
 # S3method(print, FandV_CRT_keys)
-# S3method(print, FandV_CRT_pk)
+# S3method(print, FandV_CRT_pk) 
 # S3method(print, FandV_CRT_sk)
 # S3method(print, FandV_CRT_rlk)
 # S3method(keygen, FandV_CRT)

@@ -6,9 +6,6 @@
 #' 
 #' @name FandV
 #' 
-#' @usage
-#' p <- pars("FandV")
-#' 
 #' @examples
 #' # Benchmark the performance of the scheme
 #' library(microbenchmark)

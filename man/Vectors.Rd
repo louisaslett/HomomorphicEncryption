@@ -6,17 +6,6 @@
 \alias{sum}
 \alias{prod}
 \title{Vectors of cipher texts}
-\usage{
-enc(keys$pk1, c(m1, m2, ...))
-c(ct1, ct2)
-
-ct1 + ct2
-ct1 - ct2
-ct1 * ct2
-ct1 \%*\% ct2
-sum(ct1)
-prod(ct1)
-}
 \description{
 Vectors of cipher texts can be seemlessly created and manipulated in the same
 way one normally works with vectors in R.
@@ -24,10 +13,20 @@ way one normally works with vectors in R.
 \details{
 Vectors of cipher texts can be seemlessly created either at encryption time
 by passing a vector message argument to \code{\link{enc}}, or after encryption
-using the standard concatenation operator \code{\link[base]{c}}.
+using the standard concatenation operator \code{\link[base]{c}}:
+
+\code{enc(keys$pk, c(m1, m2, ...))} \cr
+\code{c(ct1, ct2)}
 
 Standard operations which can be used on regular vectors can also be used
-on vectors of cipher texts, where the scheme supports it.
+on vectors of cipher texts, where the scheme supports it:
+
+\code{ct1 + ct2} \cr
+\code{ct1 - ct2} \cr
+\code{ct1 * ct2} \cr
+\code{ct1 \%*\% ct2} \cr
+\code{sum(ct1)} \cr
+\code{prod(ct1)}
 
 As with regular scalar operations, note that not all homomorphic encryption 
 schemes will support all vector operations.
