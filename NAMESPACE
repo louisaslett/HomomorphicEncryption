@@ -3,7 +3,7 @@ useDynLib(HomomorphicEncryption)
 import(methods)
 import(gmp)
 import(Rcpp)
-import(RcppParallel)
+importFrom(RcppParallel, RcppParallelLibs)
 
 # Main encryption functions
 export(pars,
