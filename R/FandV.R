@@ -964,7 +964,6 @@ evalqOnLoad({
     y2$setmatrix(c(y), 1, 1, TRUE)
     cbind2(x2, y2)
   })
-  methods:::bind_activation(on = TRUE)
 })
 
 matrix.Rcpp_FandV_ct_vec <- function(data = NA, nrow = 1, ncol = 1, byrow = FALSE, ...) {
