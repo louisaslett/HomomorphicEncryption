@@ -47,9 +47,6 @@ ct <- enc(keys$pk, 1)
 dec(keys$sk, ct)
 
 }
-\author{
-Louis Aslett
-}
 \references{
 Fan, J., & Vercauteren, F. (2012). Somewhat Practical Fully Homomorphic
 Encryption. IACR ePrint. Retrieved from \url{https://eprint.iacr.org/2012/144}
@@ -60,4 +57,6 @@ achieve a certain security level and multiplicative depth.
 
 \code{\link{keygen}} to generate encryption keys using these parameters.
 }
-
+\author{
+Louis Aslett
+}

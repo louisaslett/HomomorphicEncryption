@@ -84,13 +84,13 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   qo2p1 = (qo2p1 << (pk.p.qpow-1)) + fmpzxx(1);
   
   // Size up the polynomials
-  sk.s.realloc(pk.p.Phi.length());
-  pk.p0.realloc(pk.p.Phi.length());
-  pk.p1.realloc(pk.p.Phi.length());
-  e.realloc(pk.p.Phi.length());
+  sk.s.realloc(pk.p.Phi.length()-1);
+  pk.p0.realloc(pk.p.Phi.length()-1);
+  pk.p1.realloc(pk.p.Phi.length()-1);
+  e.realloc(pk.p.Phi.length()-1);
   
   // Generate random parts
-  for(unsigned int i=0; i<pk.p.Phi.length(); i++) {
+  for(unsigned int i=0; i<pk.p.Phi.length()-1; i++) {
     // s
     sk.s.set_coeff(i, lround(R::runif(0.0,1.0)));
     
@@ -109,7 +109,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   fmpz_polyxx_q(pk.p0, pk.p.q);
   
   // Relin key
-  for(unsigned int i=0; i<pk.p.Phi.length(); i++) {
+  for(unsigned int i=0; i<pk.p.Phi.length()-1; i++) {
     // a0
     fmpz_rand(tmp, pk.p.qpow); // tmp \in (0, 2^q-1)
     tmp -= qo2p1; // tmp - 2^{q-1} + 1 \in (-2^{q-1}, 2^{q-1}]

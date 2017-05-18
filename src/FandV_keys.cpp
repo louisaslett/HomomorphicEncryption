@@ -36,7 +36,7 @@ void FandV_pk::enc(int m, FandV_ct& ct) const {
   mP.realloc(31);
   
   // Random numbers
-  for(int i=0; i<p.Phi.length(); i++) {
+  for(int i=0; i<p.Phi.length()-1; i++) {
     u.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // u
     ct.c0.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // e1
     ct.c1.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // e2
@@ -67,7 +67,7 @@ void FandV_pk::encbinary(IntegerVector m, FandV_ct& ct) const {
   mP.realloc(m.length());
   
   // Random numbers
-  for(int i=0; i<p.Phi.length(); i++) {
+  for(int i=0; i<p.Phi.length()-1; i++) {
     u.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // u
     ct.c0.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // e1
     ct.c1.set_coeff(i, lround(R::rnorm(0.0,p.sigma))); // e2

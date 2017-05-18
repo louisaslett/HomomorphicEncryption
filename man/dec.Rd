@@ -36,10 +36,9 @@ ct <- enc(keys$pk, 1)
 dec(keys$sk, ct)
 
 }
-\author{
-Louis Aslett
-}
 \seealso{
 \code{\link{enc}} to encrypt messages to ciphertexts which this function decrypts.
 }
-
+\author{
+Louis Aslett
+}

@@ -24,4 +24,3 @@ microbenchmark({ ct1 * ct2 }, unit="ms")
 microbenchmark({ dec(keys$sk, ct1) }, unit="ms")
 
 }
-

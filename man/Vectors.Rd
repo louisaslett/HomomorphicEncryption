@@ -3,8 +3,8 @@
 \name{Vectors}
 \alias{Vectors}
 \alias{c}
-\alias{prod}
 \alias{sum}
+\alias{prod}
 \title{Vectors of cipher texts}
 \usage{
 enc(keys$pk1, c(m1, m2, ...))
@@ -56,4 +56,3 @@ dec(keys$sk, ctSub)
 dec(keys$sk, ctMul)
 dec(keys$sk, ctIP)
 }
-

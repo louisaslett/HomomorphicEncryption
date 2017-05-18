@@ -67,9 +67,6 @@ dec(keys$sk, prod(ct))
 factorial(8)
 
 }
-\author{
-Louis Aslett
-}
 \references{
 Fan, J., & Vercauteren, F. (2012). Somewhat Practical Fully Homomorphic
 Encryption. IACR ePrint. Retrieved from \url{https://eprint.iacr.org/2012/144}
@@ -86,4 +83,6 @@ encryption. In \emph{Topics in Cryptology–CT-RSA 2011} (pp. 319-339).
 
 \code{\link{keygen}} to generate encryption keys using these parameters.
 }
-
+\author{
+Louis Aslett
+}
