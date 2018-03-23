@@ -1,6 +1,6 @@
 AC_INIT([HomomorphicEncryption], 0.1)
 
-dnl Louis Aslett (aslett@stats.ox.ac.uk)
+dnl Louis Aslett (louis.aslett@durham.ac.uk)
 dnl September 2014
 
 dnl Allow user to specify location of libraries etc

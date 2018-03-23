@@ -24,7 +24,7 @@ License: \tab GPL-2\cr
 \author{
 Louis Aslett
 
-Maintainer: Louis Aslett <aslett@stats.ox.ac.uk>
+Maintainer: Louis Aslett <louis.aslett@durham.ac.uk>
 }
 \references{
 Aslett, L. J. M., Esperança, P. M. and Holmes, C. C. (2015), A review of homomorphic encryption and software tools for encrypted statistical machine learning. Technical report, University of Oxford.
