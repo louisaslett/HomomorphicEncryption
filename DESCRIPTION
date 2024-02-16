@@ -1,10 +1,10 @@
 Package: HomomorphicEncryption
 Type: Package
 Title: Fully Homomorphic Encryption
-Version: 0.3.4
-Date: 2016-09-30
-Author: Louis Aslett
+Version: 0.3.5
 Maintainer: Louis Aslett <louis.aslett@durham.ac.uk>
+Authors@R: person("Louis", "Aslett", email = "louis.aslett@durham.ac.uk",
+                  role = c("aut", "cre", "cph"))
 Description: A reference implementation of homomorphic encryption schemes.
     These are encryption schemes which allow limited operations (such as
     addition and multiplication) to be performed on the cipher text directly
@@ -13,10 +13,11 @@ Description: A reference implementation of homomorphic encryption schemes.
 License: GPL-2
 ByteCompile: yes
 Imports:
-    Rcpp (>= 0.11.2),
+    Rcpp (>= 1.0.12),
     methods,
     RcppParallel
-LinkingTo: Rcpp,
+LinkingTo:
+    Rcpp,
     RcppParallel
 Depends:
     gmp
@@ -26,4 +27,4 @@ Suggests:
 RcppModules: FandV
 SystemRequirements: C++11
 Encoding: UTF-8
-RoxygenNote: 6.0.1
+RoxygenNote: 7.3.1
