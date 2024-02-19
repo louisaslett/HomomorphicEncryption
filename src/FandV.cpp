@@ -26,7 +26,7 @@ using namespace flint;
 #include <malloc.h>
 #endif
 void HEmem() {
-  #ifdef HAVE_MALLOC_STATS
+  #ifdef HAVE_MALLOC_H
     malloc_stats();
   #else
     Rcout << "malloc_stats() not available on this machine\n";

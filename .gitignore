@@ -4,6 +4,8 @@
 src/*.o
 src/*.so
 src/*.dll
-config.*
-auto*
 src/Makevars
+config.*
+cleanup
+bindeps
+configure.log
