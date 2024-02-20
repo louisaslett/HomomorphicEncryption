@@ -1,0 +1,12 @@
+WINLIBS = ../windows/flint
+PKG_CPPFLAGS = -I$(WINLIBS)/include -I$(WINLIBS)/include/flint
+
+PKG_LIBS = -L${WINLIBS}/lib -lflint -lgmp -lmpfr
+
+all: clean winlibs
+
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)

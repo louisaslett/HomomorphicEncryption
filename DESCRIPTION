@@ -20,6 +20,7 @@ LinkingTo:
     Rcpp,
     RcppParallel
 Depends:
+    R (>= 4.2.0),
     gmp
 Suggests:
     testthat,
