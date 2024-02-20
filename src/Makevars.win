@@ -1,7 +1,7 @@
-WINLIBS = ../windows/flint
-PKG_CPPFLAGS = -I$(WINLIBS)/include -I$(WINLIBS)/include/flint
+WINLIBS = ../windows
+PKG_CPPFLAGS = -I$(WINLIBS)/include -I$(WINLIBS)/include/flint -D __WINDOWS__
 
-PKG_LIBS = -L${WINLIBS}/lib -lflint -lgmp -lmpfr
+PKG_LIBS = -L${WINLIBS}/lib -lflint -L$(LIB_MPFR)/lib -lmpfr -L$(LIB_GMP)/lib -lgmp 
 
 all: clean winlibs
 

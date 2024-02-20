@@ -10,6 +10,7 @@ using namespace Rcpp;
 using namespace RcppParallel;
 
 #include <iostream>
+#include "getline.h"
 #include <math.h>
 
 #include "FandV_ct.h"

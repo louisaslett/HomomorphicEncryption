@@ -9,6 +9,7 @@ using namespace Rcpp;
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
+#include "getline.h"
 #include <string.h>
 
 #include "FandV_ct.h"

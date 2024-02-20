@@ -1,4 +1,8 @@
-if(!file.exists("../windows/flint/include/flint/fmpz_polyxx.h")){
+if(!file.exists("../windows/include/flint/fmpz_polyxx.h") || !file.exists("../config.h")) {
+  # Windows does not have malloc_stats() in malloc.h, so create config.h accordingly
+  file.create("../config.h")
+  #writeLines("#define HAVE_MALLOC_H", "../config.h")
+  # Grab the missing static library
   unlink("../windows", recursive = TRUE)
   url <- "https://www.louisaslett.com/HomomorphicEncryption/deps/libflint-win-x86.tar.gz"
   download.file(url, basename(url), quiet = TRUE)
@@ -6,5 +10,5 @@ if(!file.exists("../windows/flint/include/flint/fmpz_polyxx.h")){
   untar(basename(url), exdir = "../windows", tar = 'internal')
   unlink(basename(url))
   setwd("../windows")
-  file.rename(list.files(), 'flint')
+  #file.rename(list.files(), 'flint')
 }

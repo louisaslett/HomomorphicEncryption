@@ -12,6 +12,7 @@ using namespace flint;
 
 #include <vector>
 #include <stdio.h>
+#include "getline.h"
 
 #include "FandV_par.h"
 #include "FandV_keys.h"

@@ -7,6 +7,7 @@
 using namespace Rcpp;
 
 #include <arith.h>
+#include "getline.h"
 
 #include "FandV_par.h"
 #include "FandV.h"
@@ -92,7 +93,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
   // Generate random parts
   for(unsigned int i=0; i<pk.p.Phi.length()-1; i++) {
     // s
-    sk.s.set_coeff(i, lround(R::runif(0.0,1.0)));
+    sk.s.set_coeff(i, (int) lround(R::runif(0.0,1.0)));
     
     // a
     fmpz_rand(tmp, pk.p.qpow); // tmp \in (0, 2^q-1)
@@ -101,7 +102,7 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
     pk.p1.set_coeff(i, tmp);
     
     // e
-    e.set_coeff(i, lround(R::rnorm(0.0,pk.p.sigma)));
+    e.set_coeff(i, (int) lround(R::rnorm(0.0,pk.p.sigma)));
   }
   // -(a.s+e) ...
   pk.p0 = -( ((pk.p0*sk.s)%pk.p.Phi) + e );
@@ -120,8 +121,8 @@ void FandV_par::keygen(FandV_pk& pk, FandV_sk& sk, FandV_rlk& rlk) {
     rlk.rlk11.set_coeff(i, tmp);
     
     // e
-    rlk.rlk00.set_coeff(i, lround(R::rnorm(0.0,pk.p.sigma)));
-    rlk.rlk10.set_coeff(i, lround(R::rnorm(0.0,pk.p.sigma)));
+    rlk.rlk00.set_coeff(i, (int) lround(R::rnorm(0.0,pk.p.sigma)));
+    rlk.rlk10.set_coeff(i, (int) lround(R::rnorm(0.0,pk.p.sigma)));
   }
   // e var will now hold s^2
   e = ((sk.s*sk.s)%pk.p.Phi);
