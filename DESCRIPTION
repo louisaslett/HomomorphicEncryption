@@ -26,6 +26,7 @@ Suggests:
     testthat,
     microbenchmark
 RcppModules: FandV
-SystemRequirements: C++11
+SystemRequirements: C++11, flint: flint-devel (rpm), libflint-dev (deb),
+    flint (homebrew)
 Encoding: UTF-8
 RoxygenNote: 7.3.1
