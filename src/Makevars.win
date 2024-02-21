@@ -1,7 +1,10 @@
 WINLIBS = ../windows
-PKG_CPPFLAGS = -I$(WINLIBS)/include -I$(WINLIBS)/include/flint -D __WINDOWS__
+PKG_CPPFLAGS = -I$(WINLIBS)/include -I$(WINLIBS)/include/flint -D__WINDOWS__ -DRCPP_PARALLEL_USE_TBB=1
 
-PKG_LIBS = -L${WINLIBS}/lib -lflint -L$(LIB_MPFR)/lib -lmpfr -L$(LIB_GMP)/lib -lgmp 
+PKG_LIBS = -L${WINLIBS}/lib -lflint \
+    -L$(LIB_MPFR)/lib -lmpfr -L$(LIB_GMP)/lib -lgmp \
+    $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" \
+              -e "RcppParallel::RcppParallelLibs()")
 
 all: clean winlibs
 

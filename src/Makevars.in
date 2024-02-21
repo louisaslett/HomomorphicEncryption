@@ -1,2 +1,2 @@
 PKG_CPPFLAGS=@cflags@
-PKG_LIBS=@libs@
+PKG_LIBS=@libs@ $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
