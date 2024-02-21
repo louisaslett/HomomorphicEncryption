@@ -67,11 +67,16 @@
 #' dec(keys$sk, prod(ct))
 #' factorial(7)
 #' 
-#' # But notice this is quite conservative
-#' # This will usually give the right answer too
+#' # ... but notice this is quite conservative
+#' # The following will usually give the right answer too
 #' ct <- enc(keys$pk, 1:8)
 #' dec(keys$sk, prod(ct))
 #' factorial(8)
+#' 
+#' # ... however, another multiply will usually fail:
+#' ct <- enc(keys$pk, 1:9)
+#' dec(keys$sk, prod(ct))
+#' factorial(9)
 #' 
 #' @author Louis Aslett
 parsHelp <- function(scheme, ...) {
@@ -170,6 +175,6 @@ FandV_maxqLN14 <- function(d, lambda, sigma, epsilon=2^{-64}) {
 FandV_maxqLP11 <- function(d, lambda, sigma, epsilon=2^{-64}) {
   l2delta <- 1.8/(lambda+110)
   l2alpha <- log2(sqrt(log(1/epsilon)/pi))
-  uniroot(function(x) { 2*sqrt(d*x*l2delta)-l2alpha-x+log2(sigma) }, interval=c(1,10000000))$root
+  floor(uniroot(function(x) { 2*sqrt(d*x*l2delta)-l2alpha-x+log2(sigma) }, interval=c(1,10000000))$root)
 }
 

@@ -60,11 +60,16 @@ ct <- enc(keys$pk, 1:7)
 dec(keys$sk, prod(ct))
 factorial(7)
 
-# But notice this is quite conservative
-# This will usually give the right answer too
+# ... but notice this is quite conservative
+# The following will usually give the right answer too
 ct <- enc(keys$pk, 1:8)
 dec(keys$sk, prod(ct))
 factorial(8)
+
+# ... however, another multiply will usually fail:
+ct <- enc(keys$pk, 1:9)
+dec(keys$sk, prod(ct))
+factorial(9)
 
 }
 \references{
