@@ -6,7 +6,7 @@
 #ifndef FandV_H
 #define FandV_H
 
-#include <fmpz_polyxx.h>
+#include <flint/fmpz_polyxx.h>
 using namespace flint;
 
 void fmpz_polyxx_q(fmpz_polyxx& p, fmpzxx q);

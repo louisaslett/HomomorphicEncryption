@@ -6,8 +6,8 @@
 #ifndef FandV_par_H
 #define FandV_par_H
 
-#include <fmpzxx.h>
-#include <fmpz_polyxx.h>
+#include <flint/fmpzxx.h>
+#include <flint/fmpz_polyxx.h>
 using namespace flint;
 
 #include <Rcpp.h>

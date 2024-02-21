@@ -9,7 +9,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include <fmpz_polyxx.h>
+#include <flint/fmpz_polyxx.h>
 using namespace flint;
 
 #include "FandV_par.h"

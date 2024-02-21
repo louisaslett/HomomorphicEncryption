@@ -14,7 +14,7 @@ PKG_DEB_NAME="libflint-dev"
 PKG_RPM_NAME="flint-devel"
 #PKG_CSW_NAME="" # Solaris pkg?
 PKG_BREW_NAME="flint"
-PKG_TEST_HEADER="<fmpz_polyxx.h>"
+PKG_TEST_HEADER="<flint/fmpz_polyxx.h>"
 PKG_LIBS="-lflint -lgmp -lmpfr"
 PKG_CFLAGS=""
 
@@ -83,7 +83,7 @@ if [ $? -eq 0 ]; then
 else
   echo "" >> config.h
 fi
-echo "rm -f config.h" >> cleanup
+echo "rm -f config.h configure.log" >> cleanup
 chmod +x cleanup
 
 # Write to Makevars

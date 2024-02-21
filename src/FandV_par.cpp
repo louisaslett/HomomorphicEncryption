@@ -6,7 +6,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include <arith.h>
+#include <flint/arith.h>
 #include "getline.h"
 
 #include "FandV_par.h"

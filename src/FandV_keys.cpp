@@ -19,7 +19,7 @@ using namespace RcppParallel;
 #include "FandV_ct_mat.h"
 #include "FandV.h"
 
-#include <fmpz_polyxx.h>
+#include <flint/fmpz_polyxx.h>
 using namespace flint;
 
 //// Public keys ////

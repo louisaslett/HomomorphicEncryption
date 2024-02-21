@@ -6,8 +6,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include <fmpzxx.h>
-#include <fmpz_polyxx.h>
+#include <flint/fmpzxx.h>
+#include <flint/fmpz_polyxx.h>
 using namespace flint;
 
 #include <vector>
