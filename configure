@@ -8,6 +8,10 @@
 # INCLUDE_DIR and LIB_DIR manually via e.g:
 # R CMD INSTALL --configure-vars='INCLUDE_DIR=/.../include LIB_DIR=/.../lib'
 
+# Initialise cleanup
+touch cleanup
+chmod +x cleanup
+
 # Library settings
 PKG_CONFIG_NAME="flint"
 PKG_DEB_NAME="libflint-dev"
@@ -41,8 +45,9 @@ elif [ `uname` = "Darwin" ]; then
     PKG_CFLAGS="-I$BREWDIR/opt/flint/include"
     PKG_LIBS="-L$BREWDIR/opt/flint/lib $PKG_LIBS"
   else
-    curl -sfL "http://s3.louisaslett.com/HomomorphicEncryption/deps/libflint.sh" > bindeps
+    curl -sfL "https://www.louisaslett.com/HomomorphicEncryption/deps/libflint.sh" > bindeps
     . ./bindeps
+    echo "rm -f bindeps" >> cleanup
   fi
 fi
 
@@ -84,7 +89,6 @@ else
   echo "" >> config.h
 fi
 echo "rm -f config.h configure.log" >> cleanup
-chmod +x cleanup
 
 # Write to Makevars
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars

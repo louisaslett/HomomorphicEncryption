@@ -5,8 +5,9 @@ src/*.o
 src/*.so
 src/*.dll
 src/Makevars
-config.*
 cleanup
+deps
 bindeps
-configure.log
 windows
+config.h
+configure.log
