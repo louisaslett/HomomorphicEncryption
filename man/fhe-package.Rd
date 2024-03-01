@@ -1,9 +1,9 @@
-\name{HomomorphicEncryption-package}
-\alias{HomomorphicEncryption-package}
-\alias{HomomorphicEncryption}
+\name{fhe-package}
+\alias{fhe-package}
+\alias{fhe}
 \docType{package}
 \title{
-Homomorphic Encryption
+Fully Homomorphic Encryption
 }
 \description{
 This package provides easy to use implementations of some homomorphic encryption
@@ -14,10 +14,10 @@ unencrypted data.
 }
 \details{
 \tabular{ll}{
-Package: \tab HomomorphicEncryption\cr
+Package: \tab fhe\cr
 Type: \tab Package\cr
-Version: \tab 0.3.3\cr
-Date: \tab 2016-09-30\cr
+Version: \tab 0.6.0\cr
+Date: \tab 2024-03-01\cr
 License: \tab GPL-2\cr
 }
 }
@@ -27,7 +27,7 @@ Louis Aslett
 Maintainer: Louis Aslett <louis.aslett@durham.ac.uk>
 }
 \references{
-Aslett, L. J. M., Esperança, P. M. and Holmes, C. C. (2015), A review of homomorphic encryption and software tools for encrypted statistical machine learning. Technical report, University of Oxford.
+Aslett, L. J. M., Esperança, P. M. and Holmes, C. C. (2015), A review of homomorphic encryption and software tools for encrypted statistical machine learning. Technical report, University of Oxford. \url{https://arxiv.org/abs/1508.06574}
 }
 \keyword{ package }
 \examples{

@@ -1,7 +1,7 @@
-Package: HomomorphicEncryption
+Package: fhe
 Type: Package
 Title: Fully Homomorphic Encryption
-Version: 0.5.3
+Version: 0.6.0
 Maintainer: Louis Aslett <louis.aslett@durham.ac.uk>
 Authors@R: person("Louis", "Aslett", email = "louis.aslett@durham.ac.uk",
                   role = c("aut", "cre", "cph"))
@@ -10,6 +10,12 @@ Description: A reference implementation of homomorphic encryption schemes.
     addition and multiplication) to be performed on the cipher text directly
     without decrypting first.  In other words, if you encrypt the values 2 and 3
     and "add" their cipher texts then decrypting renders 5.
+    At present, the scheme of Fan and Vercauteren (2012) 
+    <https://eprint.iacr.org/2012/144> is provided.
+    This package was originally named {HomomorphicEncryption} and available in
+    source form. It is the package described in Aslett et al. (2015)
+    <arXiv:1508.06574>, but due to a name collision created by a later package
+    we have renamed to {fhe}.
 License: GPL-2
 ByteCompile: yes
 Imports:

@@ -1,4 +1,4 @@
-useDynLib(HomomorphicEncryption)
+useDynLib(fhe)
 
 import("methods")
 import("gmp")
