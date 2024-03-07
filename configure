@@ -46,7 +46,7 @@ elif [ `uname` = "Darwin" ]; then
 #    PKG_CFLAGS="-I$BREWDIR/include"
 #    PKG_LIBS="-L$BREWDIR/lib $PKG_LIBS"
 #  else
-    curl -sfL "https://www.louisaslett.com/HomomorphicEncryption/deps/libflint.sh" > bindeps
+    curl -sfL "https://www.louisaslett.com/fhe/libflint.sh" > bindeps
     . ./bindeps
     echo "rm -f bindeps" >> cleanup
 #  fi

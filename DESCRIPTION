@@ -1,7 +1,7 @@
 Package: fhe
 Type: Package
 Title: Fully Homomorphic Encryption
-Version: 0.6.0
+Version: 0.6.1
 Maintainer: Louis Aslett <louis.aslett@durham.ac.uk>
 Authors@R: person("Louis", "Aslett", email = "louis.aslett@durham.ac.uk",
                   role = c("aut", "cre", "cph"))
